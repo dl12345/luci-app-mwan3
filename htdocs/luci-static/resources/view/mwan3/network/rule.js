@@ -8,7 +8,7 @@
 return view.extend({
 	load: function() {
 		return Promise.all([
-			fs.exec_direct('/usr/libexec/luci-mwan3', ['ipset', 'dump']),
+			fs.exec_direct('/usr/libexec/luci-mwan3', ['nftset', 'dump']),
 			uci.load('mwan3')
 		]);
 	},
@@ -104,13 +104,13 @@ return view.extend({
 		o.modalonly = true;
 		o.depends('sticky', '1');
 
-		o = s.option(form.Value, 'ipset', _('IPset'),
-			_('Name of IPset rule. Requires IPset rule in /etc/dnsmasq.conf (eg "ipset=/youtube.com/youtube")'));
+		o = s.option(form.Value, 'ipset', _('NFT set'),
+			_('Name of nft set. Requires nftset rule in /etc/dnsmasq.conf (eg "nftset=/youtube.com/4#inet#fw4#youtube")'));
 		o.value('', _('-- Please choose --'));
-		let ipsets = data[0].split(/\n/);
-		for (let ips of ipsets) {
-			if (ips.length > 0)
-				o.value(ips);
+		let nftsets = data[0].split(/\n/);
+		for (let s_name of nftsets) {
+			if (s_name.length > 0)
+				o.value(s_name);
 		}
 		o.modalonly = true;
 
