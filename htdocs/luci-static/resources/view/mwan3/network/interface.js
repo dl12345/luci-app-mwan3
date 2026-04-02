@@ -68,6 +68,12 @@ return view.extend({
 		o.value('ipv6', _('IPv6'));
 		o.modalonly = true;
 
+		o = s.option(form.Flag, 'track_gateway', _('Track gateway'),
+			_('Automatically track the next hop peer. Applies only to point to point connections.'));
+		o.depends('family', 'ipv4');
+		o.default = '0';
+		o.modalonly = true;
+
 		o = s.option(form.DynamicList, 'track_ip', _('Tracking hostname or IP address'),
 			_('This hostname or IP address will be pinged to determine if the link is up or down. Leave blank to assume interface is always online'));
 		o.datatype = 'host';
