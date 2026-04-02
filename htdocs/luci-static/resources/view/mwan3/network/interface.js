@@ -284,7 +284,7 @@ return view.extend({
 		o.value('10');
 
 		o = s.option(form.DynamicList, 'flush_conntrack', _('Flush conntrack table'),
-			_('Flush global firewall conntrack table on interface events'));
+			_('Flush the entire global conntrack table on selected events. Per-interface conntrack entries are already flushed automatically on ifdown.'));
 		o.value('ifup', _('ifup (netifd)'));
 		o.value('ifdown', _('ifdown (netifd)'));
 		o.value('connected', _('connected (mwan3)'));
