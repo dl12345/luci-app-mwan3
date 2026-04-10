@@ -55,7 +55,7 @@ function renderInterfacePanel(iface, d) {
 			break;
 		case 'paused':
 			trackText  = _('Paused');
-			trackColor = COLORS.warning;
+			trackColor = COLORS.muted;
 			break;
 		case 'down':
 			trackText  = _('Down');
@@ -70,7 +70,7 @@ function renderInterfacePanel(iface, d) {
 			trackColor = COLORS.muted;
 	}
 
-	var header = E('div', { 'style': 'display:flex; align-items:center; gap:0.8em; margin-bottom:0.5em; border:2px solid #999; border-radius:4px; padding:0.4em 0.7em; font-size:1.1em' }, [
+	var header = E('div', { 'style': 'display:flex; align-items:center; gap:0.8em; margin-bottom:0.5em; border:2px solid ' + statusColor + '; border-radius:4px; padding:0.4em 0.7em; font-size:1.1em' }, [
 		E('strong', { 'style': 'font-size:1.05em' }, iface),
 		colorText(statusText, statusColor),
 		E('strong', { 'style': 'font-size:1.05em' }, _('Tracking') + ':'),
@@ -89,8 +89,17 @@ function renderInterfacePanel(iface, d) {
 			E('tr', { 'class': 'tr cbi-section-table-titles' }, [
 				E('th', { 'class': 'th' }, _('Target IP')),
 				E('th', { 'class': 'th', 'style': 'text-align:right' }, _('Status')),
+				E('th', { 'class': 'th', 'style': 'text-align:right' }, _('Latency')),
+				E('th', { 'class': 'th', 'style': 'text-align:right' }, _('Packet Loss')),
 			]),
 		];
+
+		var statusOrder = { 'up': 0, 'down': 1, 'skipped': 2 };
+		trackIps = trackIps.slice().sort(function(a, b) {
+			var oa = statusOrder[a.status] !== undefined ? statusOrder[a.status] : 3;
+			var ob = statusOrder[b.status] !== undefined ? statusOrder[b.status] : 3;
+			return oa - ob;
+		});
 
 		trackIps.forEach(function(t) {
 			var statusEl;
@@ -107,16 +116,28 @@ function renderInterfacePanel(iface, d) {
 				default:
 					statusEl = colorText(t.status || _('Unknown'), COLORS.muted);
 			}
+			var latencyEl, lossEl;
+			if (!d.check_quality) {
+				latencyEl = E('em', { 'style': 'color:' + COLORS.muted }, _('Not enabled'));
+				lossEl    = E('em', { 'style': 'color:' + COLORS.muted }, _('Not enabled'));
+			} else {
+				latencyEl = E('span', {}, t.latency + ' ms');
+				lossEl    = E('span', {}, t.packetloss + '%');
+			}
 			rows.push(E('tr', { 'class': 'tr' }, [
 				E('td', { 'class': 'td' }, t.ip),
 				E('td', { 'class': 'td', 'style': 'text-align:right' }, statusEl),
+				E('td', { 'class': 'td', 'style': 'text-align:right' }, latencyEl),
+				E('td', { 'class': 'td', 'style': 'text-align:right' }, lossEl),
 			]));
 		});
 
 		body = E('table', { 'class': 'table cbi-section-table', 'style': 'width:100%; table-layout:fixed' }, [
 			E('colgroup', {}, [
-				E('col', { 'style': 'width:70%' }),
-				E('col', { 'style': 'width:30%' }),
+				E('col', { 'style': 'width:40%' }),
+				E('col', { 'style': 'width:20%' }),
+				E('col', { 'style': 'width:20%' }),
+				E('col', { 'style': 'width:20%' }),
 			]),
 			...rows,
 		]);
