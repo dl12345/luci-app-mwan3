@@ -15,6 +15,13 @@ document.querySelector('head').appendChild(E('link', {
 	'href': L.resource('view/mwan3/mwan3.css')
 }));
 
+const COLORS = {
+	success: '#5cb85c',
+	danger:  '#d9534f',
+	warning: '#f0ad4e',
+	muted:   '#888888',
+};
+
 return baseclass.extend({
 	title: _('MultiWAN Manager'),
 
@@ -28,89 +35,49 @@ return baseclass.extend({
 		if (!result[0].interfaces)
 			return null;
 
-		var container = E('div', { 'id': 'mwan3-service-status' });
-		var iface;
-		for ( iface in result[0].interfaces) {
-			var state = '';
-			var css = '';
-			var time = '';
-			var tname = '';
-			switch (result[0].interfaces[iface].status) {
+		var container = E('div', { 'style': 'display:flex; flex-wrap:wrap; gap:0.5em' });
+
+		for (var iface in result[0].interfaces) {
+			var d = result[0].interfaces[iface];
+			var state, color, time, tname;
+
+			switch (d.status) {
 				case 'online':
-					state = _('Online');
-					css = 'alert-message success';
-					time = '%t'.format(result[0].interfaces[iface].online);
-					tname = _('Uptime');
+					state  = _('Online');
+					color  = COLORS.success;
+					time   = '%t'.format(d.online);
+					tname  = _('Online');
 					break;
 				case 'offline':
-					state = _('Offline');
-					css = 'alert-message danger';
-					time = '%t'.format(result[0].interfaces[iface].offline);
-					tname = _('Downtime');
+					state  = _('Offline');
+					color  = COLORS.danger;
+					time   = '%t'.format(d.offline);
+					tname  = _('Offline');
 					break;
 				case 'notracking':
-					state = _('No Tracking');
-					if ((result[0].interfaces[iface].uptime) > 0) {
-						css = 'alert-message success';
-						time = '%t'.format(result[0].interfaces[iface].uptime);
-						tname = _('Uptime');
-					}
-					else {
-						css = 'alert-message warning';
-						time = '';
-						tname = '';
-					}
+					state  = _('No Tracking');
+					color  = d.uptime > 0 ? COLORS.success : COLORS.warning;
+					time   = d.uptime > 0 ? '%t'.format(d.uptime) : null;
+					tname  = _('Uptime');
 					break;
 				default:
-					css = 'alert-message warning';
-					state = _('Disabled');
-					time = '';
-					tname = '';
-					break;
+					state  = _('Disabled');
+					color  = COLORS.muted;
+					time   = null;
+					tname  = null;
 			}
 
-			if (time !== '' ) {
-				container.appendChild(
-					E('div', { 'class': css }, [
-						E('div', {}, [
-							E('strong', {}, [
-								_('Interface'), ':', ' '
-							]),
-							iface
-						]),
-						E('div', {}, [
-							E('strong', {}, [
-								_('Status'), ':', ' '
-							]),
-							state
-						]),
-						E('div', {}, [
-							E('strong', {}, [
-								tname, ':', ' '
-							]),
-							time
-						])
-					])
-				);
-			}
-			else {
-				container.appendChild(
-					E('div', { 'class': css }, [
-						E('div', {}, [
-							E('strong', {}, [
-								_('Interface'), ':', ' '
-							]),
-							iface
-						]),
-						E('div', {}, [
-							E('strong', {}, [
-								_('Status'), ':', ' '
-							]),
-							state
-						])
-					])
-				);
-			}
+			var children = [
+				E('div', {}, [ E('strong', {}, _('Interface') + ':\u00a0'), iface ]),
+				E('div', {}, [ E('strong', {}, _('Status') + ':\u00a0'), E('span', { 'style': 'color:' + color }, state) ]),
+			];
+
+			if (time)
+				children.push(E('div', {}, [ E('strong', {}, tname + ':\u00a0'), time ]));
+
+			container.appendChild(E('div', {
+				'style': 'flex:1 1 auto; border:2px solid ' + color + '; border-radius:4px; padding:0.5em 0.8em',
+			}, children));
 		}
 
 		return container;

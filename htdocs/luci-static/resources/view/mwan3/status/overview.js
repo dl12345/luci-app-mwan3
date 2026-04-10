@@ -17,84 +17,99 @@ document.querySelector('head').appendChild(E('link', {
 	'href': L.resource('view/mwan3/mwan3.css')
 }));
 
+const COLORS = {
+	success: '#5cb85c',
+	danger:  '#d9534f',
+	warning: '#f0ad4e',
+	muted:   '#888888',
+};
+
 function renderInterfaces(interfaces) {
 	if (!interfaces)
 		return [ E('em', {}, _('No interfaces found')) ];
 
 	return Object.keys(interfaces).map(function(iface) {
 		var d = interfaces[iface];
-		var status, css, time, tname;
+		var status, color, time, tname;
 
 		switch (d.status) {
 			case 'online':
 				status = _('Online');
-				css = 'success';
+				color = COLORS.success;
 				time = '%t'.format(d.online);
 				tname = _('Online');
 				break;
 			case 'offline':
 				status = _('Offline');
-				css = 'danger';
+				color = COLORS.danger;
 				time = '%t'.format(d.offline);
 				tname = _('Offline');
 				break;
 			case 'notracking':
 				status = _('No Tracking');
-				css = d.uptime > 0 ? 'success' : 'warning';
+				color = d.uptime > 0 ? COLORS.success : COLORS.warning;
 				time = d.uptime > 0 ? '%t'.format(d.uptime) : null;
 				tname = _('Uptime');
 				break;
 			default:
 				status = _('Disabled');
-				css = 'warning';
+				color = COLORS.muted;
 				time = null;
 				tname = null;
 		}
 
 		var children = [
 			E('div', {}, [ E('strong', {}, _('Interface') + ':\u00a0'), iface ]),
-			E('div', {}, [ E('strong', {}, _('Status') + ':\u00a0'), status ]),
+			E('div', {}, [ E('strong', {}, _('Status') + ':\u00a0'), E('span', { 'style': 'color:' + color }, status) ]),
 		];
 
 		if (time)
 			children.push(E('div', {}, [ E('strong', {}, tname + ':\u00a0'), time ]));
 
-		return E('div', { 'class': 'alert-message ' + css, 'style': 'flex:1 1 auto' }, children);
+		return E('div', {
+			'style': 'flex:1 1 auto; border:2px solid ' + color + '; border-radius:4px; padding:0.5em 0.8em',
+		}, children);
 	});
 }
 
 function renderPolicies(policies) {
 	if (!policies)
-		return E('em', {}, _('No policy data available'));
+		return [ E('em', {}, _('No policy data available')) ];
 
-	var rows = [];
-
+	var cards = [];
 	var shown = {};
+
 	[ 'ipv4', 'ipv6' ].forEach(function(family) {
 		var fam = (policies[family] || {});
 		Object.keys(fam).forEach(function(pname) {
 			if (shown[pname]) return;
 			shown[pname] = true;
-			rows.push(E('tr', { 'class': 'tr cbi-section-table-titles' }, [
-				E('th', { 'class': 'th', 'colspan': '2' }, pname),
-			]));
-			fam[pname].forEach(function(m) {
-				rows.push(E('tr', { 'class': 'tr' }, [
-					E('td', { 'class': 'td', 'style': 'padding-left:1.5em' }, m.interface),
-					E('td', { 'class': 'td', 'style': 'text-align:right' }, m.percent + '%'),
-				]));
+
+			var members = fam[pname].map(function(m) {
+				var color;
+				if (m.percent > 0)
+					color = COLORS.success;
+				else if (m.status === 'online')
+					color = COLORS.warning;
+				else
+					color = COLORS.muted;
+
+				return E('div', { 'style': 'padding-left:1em; color:' + color }, [
+					m.interface + ' (' + m.percent + '%)',
+				]);
 			});
+
+			cards.push(E('div', {
+				'style': 'flex:1 1 auto; border:2px solid #999; border-radius:4px; padding:0.5em 0.8em',
+			}, [
+				E('div', { 'style': 'font-weight:bold; margin-bottom:0.3em' },
+					_('Policy') + ': ' + pname),
+				...members,
+			]));
 		});
 	});
 
-	return E('table', { 'class': 'table cbi-section-table',
-		'style': 'width:100%; table-layout:fixed' }, [
-		E('colgroup', {}, [
-			E('col', { 'style': 'width:70%' }),
-			E('col', { 'style': 'width:30%' }),
-		]),
-		...rows,
-	]);
+	return cards.length ? cards : [ E('em', {}, _('No policies configured')) ];
 }
 
 function renderRules(rules) {
@@ -137,14 +152,13 @@ function updateLiveStatus(result) {
 	if (ifaceEl) {
 		while (ifaceEl.firstChild) ifaceEl.removeChild(ifaceEl.firstChild);
 		renderInterfaces(result.interfaces).forEach(function(el) {
-			el.style.flex = '1 1 auto';
 			ifaceEl.appendChild(el);
 		});
 	}
 
 	if (policyEl) {
 		while (policyEl.firstChild) policyEl.removeChild(policyEl.firstChild);
-		policyEl.appendChild(renderPolicies(result.policies));
+		renderPolicies(result.policies).forEach(function(el) { policyEl.appendChild(el); });
 	}
 }
 
@@ -174,12 +188,8 @@ return view.extend({
 			]),
 
 			E('div', { 'class': 'cbi-section', 'style': 'margin-top:1em' }, [
-				E('div', { 'style': 'display:flex; justify-content:space-between; align-items:baseline' }, [
-					E('h3', { 'style': 'margin:0' }, _('Policies')),
-					E('h3', { 'style': 'margin:0' }, _('Share')),
-				]),
-				E('div', { 'id': 'mwan3-overview-policies' }, [
-					renderPolicies(result.policies),
+				E('div', { 'id': 'mwan3-overview-policies', 'style': 'display:flex; flex-wrap:wrap; gap:0.5em' }, [
+					...renderPolicies(result.policies),
 				]),
 			]),
 
