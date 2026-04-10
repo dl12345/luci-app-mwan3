@@ -33,6 +33,9 @@
 				"/usr/sbin/mwan3 internal ipv4": [
 					"exec"
 				],
+				"/usr/sbin/mwan3 internal ipv6": [
+					"exec"
+				],
 				"/usr/sbin/mwan3 ifup *": [
 					"exec"
 				],
