@@ -82,7 +82,7 @@ jobs:
           TAG="${GITHUB_REF_NAME:-unknown}"
           VERSION="${TAG#v}"
           for ext in ipk apk; do
-            for f in $(find bin/packages -type f -path "*/lucimwan3nft/*.${ext}"); do
+            for f in $(find bin/packages -type f -path "*/lucimwan3nft/${PKG_NAME}[_-][0-9]*.${ext}"); do
               dir=$(dirname "$f")
               if [ -n "${{ matrix.suffix }}" ]; then
                 mv -v "$f" "$dir/${PKG_NAME}-${VERSION}_${{ matrix.version }}_${{ matrix.suffix }}.${ext}"
