@@ -102,24 +102,38 @@ function renderInterfacePanel(iface, d) {
 		});
 
 		trackIps.forEach(function(t) {
+			var isDisabled = d.status !== 'online' && d.status !== 'offline' && d.status !== 'notracking';
 			var statusEl;
-			switch (t.status) {
-				case 'up':
-					statusEl = colorText(_('Up'), COLORS.success);
-					break;
-				case 'down':
-					statusEl = colorText(_('Down'), COLORS.danger);
-					break;
-				case 'skipped':
-					statusEl = colorText(_('Ignored'), COLORS.muted);
-					break;
-				default:
-					statusEl = colorText(t.status || _('Unknown'), COLORS.muted);
+			if (isDisabled) {
+				statusEl = colorText(_('Disabled'), COLORS.muted);
+			} else {
+				switch (t.status) {
+					case 'up':
+						statusEl = colorText(_('Up'), COLORS.success);
+						break;
+					case 'down':
+						statusEl = colorText(_('Down'), COLORS.danger);
+						break;
+					case 'skipped':
+						statusEl = colorText(_('Ignored'), COLORS.muted);
+						break;
+					default:
+						statusEl = colorText(t.status || _('Unknown'), COLORS.muted);
+				}
 			}
 			var latencyEl, lossEl;
-			if (!d.check_quality) {
+			if (isDisabled) {
+				latencyEl = E('em', { 'style': 'color:' + COLORS.muted }, '-');
+				lossEl    = E('em', { 'style': 'color:' + COLORS.muted }, '-');
+			} else if (!d.check_quality) {
 				latencyEl = E('em', { 'style': 'color:' + COLORS.muted }, _('Not enabled'));
 				lossEl    = E('em', { 'style': 'color:' + COLORS.muted }, _('Not enabled'));
+			} else if (t.status === 'down') {
+				latencyEl = E('span', { 'style': 'color:' + COLORS.muted + '; display:inline-block; transform:scale(1.4)' }, '\u221e');
+				lossEl    = E('span', {}, t.packetloss + '%');
+			} else if (t.status === 'skipped') {
+				latencyEl = E('em', { 'style': 'color:' + COLORS.muted }, '-');
+				lossEl    = E('em', { 'style': 'color:' + COLORS.muted }, '-');
 			} else {
 				latencyEl = E('span', {}, t.latency + ' ms');
 				lossEl    = E('span', {}, t.packetloss + '%');
