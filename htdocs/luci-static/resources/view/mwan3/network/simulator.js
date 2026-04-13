@@ -193,7 +193,14 @@ function ruleMatches(rule, sim, nftsetCache) {
 		if (!dstPorts.some(function(p) { return portMatches(p, rule.dest_port); })) return false;
 	}
 
-	/* NFT set: requires a dst IP to check membership */
+	/* Source NFT set: requires a src IP to check membership */
+	if (rule.ipset_src) {
+		if (!sim.src_ip) return false;
+		var srcMembers = nftsetCache[rule.ipset_src] || [];
+		if (!ipInSet(sim.src_ip, srcMembers)) return false;
+	}
+
+	/* Destination NFT set: requires a dst IP to check membership */
 	if (rule.ipset) {
 		if (!sim.dst_ip) return false;
 		var members = nftsetCache[rule.ipset] || [];
@@ -208,8 +215,9 @@ function ruleMatches(rule, sim, nftsetCache) {
 function matchSummary(rule) {
 	var parts = [];
 	if (rule.family && rule.family !== '') parts.push(rule.family === 'ipv4' ? 'IPv4' : 'IPv6');
-	if (rule.src_ip)   parts.push(_('src') + ' ' + rule.src_ip);
-	if (rule.dest_ip)  parts.push(_('dst') + ' ' + rule.dest_ip);
+	if (rule.src_ip)    parts.push(_('src') + ' ' + rule.src_ip);
+	if (rule.ipset_src) parts.push(_('src nftset') + ' ' + rule.ipset_src);
+	if (rule.dest_ip)   parts.push(_('dst') + ' ' + rule.dest_ip);
 	if (rule.proto && rule.proto !== 'all') parts.push(_('proto') + ' ' + rule.proto);
 	if (rule.src_port)  parts.push(_('sport') + ' ' + rule.src_port);
 	if (rule.dest_port) parts.push(_('dport') + ' ' + rule.dest_port);
@@ -461,7 +469,8 @@ return view.extend({
 				/* Collect nftset names referenced by the current rule set */
 				var nftsets = [];
 				freshUciRules.forEach(function(r) {
-					if (r.ipset && nftsets.indexOf(r.ipset) < 0) nftsets.push(r.ipset);
+					if (r.ipset     && nftsets.indexOf(r.ipset)     < 0) nftsets.push(r.ipset);
+					if (r.ipset_src && nftsets.indexOf(r.ipset_src) < 0) nftsets.push(r.ipset_src);
 				});
 
 				var setFetches = nftsets.map(function(name) {
