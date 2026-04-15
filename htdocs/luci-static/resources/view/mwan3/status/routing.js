@@ -53,11 +53,21 @@ function ifaceHealth(d) {
 	return 'muted';
 }
 
+/*
+ * expectedPresent: true  = expected present (green/red judgement)
+ *                  false = expected absent  (unexpected warning if present)
+ *                  null  = no expectation   (report presence neutrally, no judgement)
+ */
 function renderStatusBadge(present, expectedPresent) {
-	if (present && expectedPresent)   return colorText(_('Present'), COLORS.success);
-	if (!present && !expectedPresent) return colorText(_('Absent'),  COLORS.muted);
-	if (present && !expectedPresent)  return colorText(_('Present (unexpected)'), COLORS.warning);
-	return colorText(_('Missing'), COLORS.danger);
+	if (expectedPresent === true)
+		return present ? colorText(_('Present'), COLORS.success)
+		               : colorText(_('Missing'), COLORS.danger);
+	if (expectedPresent === false)
+		return present ? colorText(_('Present (unexpected)'), COLORS.warning)
+		               : colorText(_('Absent'), COLORS.muted);
+	/* null: neutral - just report state, card border already signals health */
+	return present ? colorText(_('Present'), COLORS.muted)
+	               : colorText(_('Absent'),  COLORS.muted);
 }
 
 function renderIfaceCard(ifname, d) {
@@ -106,7 +116,7 @@ function renderIfaceCard(ifname, d) {
 						_('priority') + '\u00a0' + d.iif_rule.priority),
 				]),
 				E('td', { 'style': 'text-align:right' },
-					renderStatusBadge(d.iif_rule.present, online)),
+					renderStatusBadge(d.iif_rule.present, online ? true : null)),
 			]),
 			E('tr', {}, [
 				E('td', { 'style': 'padding:0.15em 0' }, [
@@ -115,7 +125,7 @@ function renderIfaceCard(ifname, d) {
 						_('priority') + '\u00a0' + d.fwmark_rule.priority),
 				]),
 				E('td', { 'style': 'text-align:right' },
-					renderStatusBadge(d.fwmark_rule.present, online)),
+					renderStatusBadge(d.fwmark_rule.present, online ? true : null)),
 			]),
 			E('tr', {}, [
 				E('td', { 'style': 'padding:0.15em 0' }, [
@@ -124,7 +134,7 @@ function renderIfaceCard(ifname, d) {
 						_('table') + '\u00a0' + d.table.id + ' \u2014 ' + _('default route')),
 				]),
 				E('td', { 'style': 'text-align:right' },
-					renderStatusBadge(d.table.has_default, online)),
+					renderStatusBadge(d.table.has_default, online ? true : null)),
 			]),
 		]),
 		...routeLines,
