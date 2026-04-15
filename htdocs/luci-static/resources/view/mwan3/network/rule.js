@@ -1,14 +1,39 @@
 'use strict';
 'require form';
-'require fs';
 'require view';
 'require uci';
 'require ui';
+'require rpc';
+
+const callNftsetInfo = rpc.declare({
+	object: 'mwan3',
+	method: 'nftset_info',
+	expect: { sets: {} }
+});
+
+function makeBlurOnly(opt) {
+	opt.render = function(config_name, section_id, in_table) {
+		return Promise.resolve(form.Value.prototype.render.apply(this, arguments)).then(function(node) {
+			/* The validation keyup listener is registered in bubble phase during
+			 * render. We suppress it by adding a capture-phase listener on the
+			 * same input: at the target, capture listeners run before bubble
+			 * listeners, so stopImmediatePropagation() prevents validation from
+			 * firing on every keystroke. Validation still runs on blur. */
+			var input = node && node.querySelector && node.querySelector('input');
+			if (input) {
+				input.addEventListener('keyup', function(ev) {
+					ev.stopImmediatePropagation();
+				}, true);
+			}
+			return node;
+		});
+	};
+}
 
 return view.extend({
 	load: function() {
 		return Promise.all([
-			fs.exec_direct('/usr/libexec/luci-mwan3', ['nftset', 'dump']),
+			callNftsetInfo(),
 			uci.load('mwan3')
 		]);
 	},
@@ -73,18 +98,58 @@ return view.extend({
 		o.value('icmp');
 		o.value('esp');
 
-		o = s.option(form.Value, 'src_ip', _('Source address'),
+		o = s.option(form.Value, 'src_ip', _('Source'),
 			_('Supports CIDR notation (eg "192.168.100.0/24") without quotes'));
 		o.datatype = 'ipaddr';
+		o.textvalue = function(section_id) {
+			const ip = this.cfgvalue(section_id);
+			if (ip && ip.length > 0) return ip;
+			const set = uci.get('mwan3', section_id, 'ipset_src');
+			return (set && set.length > 0) ? set : '-';
+		};
+		o.validate = function(section_id, value) {
+			if (!value || value.length === 0)
+				return true;
+			const family = this.map.lookupOption('family', section_id)[0].formvalue(section_id);
+			if (!family)
+				return true;
+			const is_v6 = value.indexOf(':') !== -1;
+			if (family === 'ipv4' && is_v6)
+				return _('Source address must be IPv4 when family is set to IPv4 only');
+			if (family === 'ipv6' && !is_v6)
+				return _('Source address must be IPv6 when family is set to IPv6 only');
+			return true;
+		};
+		makeBlurOnly(o);
 
 		o = s.option(form.Value, 'src_port', _('Source port'),
 			_('May be entered as a single or multiple port(s) (eg "22" or "80,443") or as a portrange (eg "1024:2048") without quotes'));
 		o.depends('proto', 'tcp');
 		o.depends('proto', 'udp');
 
-		o = s.option(form.Value, 'dest_ip', _('Destination address'),
+		o = s.option(form.Value, 'dest_ip', _('Destination'),
 			_('Supports CIDR notation (eg "192.168.100.0/24") without quotes'));
 		o.datatype = 'ipaddr';
+		o.textvalue = function(section_id) {
+			const ip = this.cfgvalue(section_id);
+			if (ip && ip.length > 0) return ip;
+			const set = uci.get('mwan3', section_id, 'ipset');
+			return (set && set.length > 0) ? set : '-';
+		};
+		o.validate = function(section_id, value) {
+			if (!value || value.length === 0)
+				return true;
+			const family = this.map.lookupOption('family', section_id)[0].formvalue(section_id);
+			if (!family)
+				return true;
+			const is_v6 = value.indexOf(':') !== -1;
+			if (family === 'ipv4' && is_v6)
+				return _('Destination address must be IPv4 when family is set to IPv4 only');
+			if (family === 'ipv6' && !is_v6)
+				return _('Destination address must be IPv6 when family is set to IPv6 only');
+			return true;
+		};
+		makeBlurOnly(o);
 
 		o = s.option(form.Value, 'dest_port', _('Destination port'),
 			_('May be entered as a single or multiple port(s) (eg "22" or "80,443") or as a portrange (eg "1024:2048") without quotes'));
@@ -104,14 +169,55 @@ return view.extend({
 		o.modalonly = true;
 		o.depends('sticky', '1');
 
-		o = s.option(form.Value, 'ipset', _('NFT set'),
-			_('Name of nft set. Requires nftset rule in /etc/dnsmasq.conf (eg "nftset=/youtube.com/4#inet#fw4#youtube")'));
-		o.value('', _('-- Please choose --'));
-		let nftsets = data[0].split(/\n/);
-		for (let s_name of nftsets) {
-			if (s_name.length > 0)
-				o.value(s_name);
+		const nftset_info = data[0];
+		const family_label = { 'ipv4_addr': ' (IPv4)', 'ipv6_addr': ' (IPv6)' };
+
+		function nftset_validate(section_id, value) {
+			if (!value || value.length === 0)
+				return true;
+			const family = this.map.lookupOption('family', section_id)[0].formvalue(section_id);
+			if (!family)
+				return true;
+			const set_type = nftset_info[value]?.type;
+			if (family === 'ipv4' && set_type === 'ipv6_addr')
+				return _('Selected NFT set is IPv6 but family is set to IPv4 only');
+			if (family === 'ipv6' && set_type === 'ipv4_addr')
+				return _('Selected NFT set is IPv4 but family is set to IPv6 only');
+			return true;
 		}
+
+		o = s.option(form.Value, 'ipset_src', _('Source NFT set'),
+			_('Match source addresses against this nft set'));
+		o.value('', _('-- Please choose --'));
+		for (let s_name in nftset_info) {
+			const label = s_name + (family_label[nftset_info[s_name].type] || '');
+			o.value(s_name, label);
+		}
+		o.validate = function(section_id, value) {
+			if (!value || value.length === 0)
+				return true;
+			const src_ip = this.map.lookupOption('src_ip', section_id)[0].formvalue(section_id);
+			if (src_ip && src_ip.length > 0)
+				return _('Source NFT set and source address both match source - use one or the other');
+			return nftset_validate.call(this, section_id, value);
+		};
+		o.modalonly = true;
+
+		o = s.option(form.Value, 'ipset', _('Destination NFT set'),
+			_('Match destination addresses against this nft set (eg populated by dnsmasq nftset=/youtube.com/4#inet#fw4#youtube)'));
+		o.value('', _('-- Please choose --'));
+		for (let s_name in nftset_info) {
+			const label = s_name + (family_label[nftset_info[s_name].type] || '');
+			o.value(s_name, label);
+		}
+		o.validate = function(section_id, value) {
+			if (!value || value.length === 0)
+				return true;
+			const dest_ip = this.map.lookupOption('dest_ip', section_id)[0].formvalue(section_id);
+			if (dest_ip && dest_ip.length > 0)
+				return _('Destination NFT set and destination address both match destination - use one or the other');
+			return nftset_validate.call(this, section_id, value);
+		};
 		o.modalonly = true;
 
 		o = s.option(form.Flag, 'logging', _('Logging'),

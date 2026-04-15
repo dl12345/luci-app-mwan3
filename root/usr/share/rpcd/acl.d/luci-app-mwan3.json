@@ -78,7 +78,8 @@
 			"ubus": {
 				"mwan3": [
 					"status",
-					"nftset_members"
+					"nftset_members",
+					"nftset_info"
 				]
 			},
 			"uci": [
