@@ -172,6 +172,11 @@ return view.extend({
 		const nftset_info = data[0];
 		const family_label = { 'ipv4_addr': ' (IPv4)', 'ipv6_addr': ' (IPv6)' };
 
+		function ip_family(ip) {
+			if (!ip || ip.length === 0) return null;
+			return ip.indexOf(':') !== -1 ? 'ipv6' : 'ipv4';
+		}
+
 		function nftset_validate(section_id, value) {
 			if (!value || value.length === 0)
 				return true;
@@ -199,6 +204,17 @@ return view.extend({
 			const src_ip = this.map.lookupOption('src_ip', section_id)[0].formvalue(section_id);
 			if (src_ip && src_ip.length > 0)
 				return _('Source NFT set and source address both match source - use one or the other');
+			const set_type = nftset_info[value]?.type;
+			const dest_ip = this.map.lookupOption('dest_ip', section_id)[0].formvalue(section_id);
+			const dest_fam = ip_family(dest_ip);
+			if (dest_fam === 'ipv4' && set_type === 'ipv6_addr')
+				return _('Source NFT set is IPv6 but destination address is IPv4');
+			if (dest_fam === 'ipv6' && set_type === 'ipv4_addr')
+				return _('Source NFT set is IPv4 but destination address is IPv6');
+			const ipset = this.map.lookupOption('ipset', section_id)[0].formvalue(section_id);
+			const ipset_type = nftset_info[ipset]?.type;
+			if (set_type && ipset_type && set_type !== ipset_type)
+				return _('Source and destination NFT sets have different address families');
 			return nftset_validate.call(this, section_id, value);
 		};
 		o.modalonly = true;
@@ -216,6 +232,13 @@ return view.extend({
 			const dest_ip = this.map.lookupOption('dest_ip', section_id)[0].formvalue(section_id);
 			if (dest_ip && dest_ip.length > 0)
 				return _('Destination NFT set and destination address both match destination - use one or the other');
+			const set_type = nftset_info[value]?.type;
+			const src_ip = this.map.lookupOption('src_ip', section_id)[0].formvalue(section_id);
+			const src_fam = ip_family(src_ip);
+			if (src_fam === 'ipv4' && set_type === 'ipv6_addr')
+				return _('Destination NFT set is IPv6 but source address is IPv4');
+			if (src_fam === 'ipv6' && set_type === 'ipv4_addr')
+				return _('Destination NFT set is IPv4 but source address is IPv6');
 			return nftset_validate.call(this, section_id, value);
 		};
 		o.modalonly = true;
