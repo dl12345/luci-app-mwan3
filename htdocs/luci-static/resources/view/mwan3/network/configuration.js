@@ -19,9 +19,10 @@ const COLORS = {
 /*
  * CIDR containment for the rule-shadowing check.
  * A is a superset of B if every IP in B's range is also in A's range.
- * For a quick conservative heuristic we only consider IPv4 ranges; all
- * other cases are left as "may shadow" (flagged as a note, not an error).
+ * Supports both IPv4 (uint32) and IPv6 (BigInt).
  */
+
+/* ---- IPv4 ---- */
 function ipv4ToUint(ip) {
 	var parts = ip.split('.');
 	return ((parseInt(parts[0], 10) << 24) |
@@ -30,27 +31,55 @@ function ipv4ToUint(ip) {
 	         parseInt(parts[3], 10)) >>> 0;
 }
 
-function cidrBounds(cidr) {
-	/* Returns [first, last] as unsigned 32-bit ints, or null if not IPv4 CIDR */
-	if (cidr.indexOf(':') >= 0) return null; /* skip IPv6 */
-	var slash = cidr.indexOf('/');
-	if (slash < 0) {
-		var u = ipv4ToUint(cidr);
-		return [u, u];
+function ipv4CidrContains(a, b) {
+	var slashA = a.indexOf('/'), slashB = b.indexOf('/');
+	var prefA  = slashA < 0 ? 32 : parseInt(a.substring(slashA + 1), 10);
+	var prefB  = slashB < 0 ? 32 : parseInt(b.substring(slashB + 1), 10);
+	if (prefA > prefB) return false; /* A is more specific than B */
+	var maskA   = prefA === 0 ? 0 : ((0xFFFFFFFF << (32 - prefA)) >>> 0);
+	var netA    = (ipv4ToUint(slashA < 0 ? a : a.substring(0, slashA)) & maskA) >>> 0;
+	var netB    = (ipv4ToUint(slashB < 0 ? b : b.substring(0, slashB)) & maskA) >>> 0;
+	return netA === netB;
+}
+
+/* ---- IPv6 ---- */
+function expandIPv6(ip) {
+	var halves = ip.split('::');
+	if (halves.length === 2) {
+		var left  = halves[0] ? halves[0].split(':') : [];
+		var right = halves[1] ? halves[1].split(':') : [];
+		var fill  = 8 - left.length - right.length;
+		for (var i = 0; i < fill; i++) left.push('0');
+		return left.concat(right);
 	}
-	var prefix  = parseInt(cidr.substring(slash + 1), 10);
-	var mask    = prefix === 0 ? 0 : ((0xFFFFFFFF << (32 - prefix)) >>> 0);
-	var network = (ipv4ToUint(cidr.substring(0, slash)) & mask) >>> 0;
-	var bcast   = (network | (~mask >>> 0)) >>> 0;
-	return [network, bcast];
+	return ip.split(':');
+}
+
+function ipv6ToBigInt(ip) {
+	var groups = expandIPv6(ip);
+	var result = BigInt(0);
+	for (var i = 0; i < 8; i++)
+		result = (result << BigInt(16)) | BigInt(parseInt(groups[i] || '0', 16));
+	return result;
+}
+
+function ipv6CidrContains(a, b) {
+	var slashA = a.indexOf('/'), slashB = b.indexOf('/');
+	var prefA  = slashA < 0 ? 128 : parseInt(a.substring(slashA + 1), 10);
+	var prefB  = slashB < 0 ? 128 : parseInt(b.substring(slashB + 1), 10);
+	if (prefA > prefB) return false; /* A is more specific than B */
+	var allOnes = (BigInt(1) << BigInt(128)) - BigInt(1);
+	var maskA   = prefA === 0 ? BigInt(0) : allOnes ^ ((BigInt(1) << BigInt(128 - prefA)) - BigInt(1));
+	var netA    = ipv6ToBigInt(slashA < 0 ? a : a.substring(0, slashA)) & maskA;
+	var netB    = ipv6ToBigInt(slashB < 0 ? b : b.substring(0, slashB)) & maskA;
+	return netA === netB;
 }
 
 /* True if CIDR A contains CIDR B (A is a superset of B) */
 function cidrContains(a, b) {
-	var boundsA = cidrBounds(a);
-	var boundsB = cidrBounds(b);
-	if (!boundsA || !boundsB) return false;
-	return boundsA[0] <= boundsB[0] && boundsA[1] >= boundsB[1];
+	if (a.indexOf(':') >= 0 && b.indexOf(':') >= 0) return ipv6CidrContains(a, b);
+	if (a.indexOf(':') < 0  && b.indexOf(':') < 0)  return ipv4CidrContains(a, b);
+	return false; /* mixed families cannot contain each other */
 }
 
 /* Port spec containment: A contains B if every port in B is also in A */
