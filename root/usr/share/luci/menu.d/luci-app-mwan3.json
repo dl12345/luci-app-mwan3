@@ -43,6 +43,14 @@
 			"path": "mwan3/status/troubleshooting"
 		}
 	},
+	"admin/status/mwan3/routing": {
+		"title": "Routing",
+		"order": 25,
+		"action": {
+			"type": "view",
+			"path": "mwan3/status/routing"
+		}
+	},
 	"admin/network/mwan3": {
 		"title": "MultiWAN Manager",
 		"order": "600",
@@ -93,6 +101,22 @@
 		"action": {
 			"type": "view",
 			"path": "mwan3/network/rule"
+		}
+	},
+	"admin/network/mwan3/simulator": {
+		"title": "Simulator",
+		"order": 55,
+		"action": {
+			"type": "view",
+			"path": "mwan3/network/simulator"
+		}
+	},
+	"admin/network/mwan3/configuration": {
+		"title": "Configuration",
+		"order": 58,
+		"action": {
+			"type": "view",
+			"path": "mwan3/network/configuration"
 		}
 	},
 	"admin/network/mwan3/notify": {
