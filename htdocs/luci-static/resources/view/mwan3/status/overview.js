@@ -126,12 +126,13 @@ function renderRules(rules) {
 
 	rules.forEach(function(r) {
 		var match = [];
-		if (r.src_ip)    match.push('src: '   + r.src_ip);
-		if (r.dest_ip)   match.push('dst: '   + r.dest_ip);
+		if (r.src_ip)    match.push('src: '      + r.src_ip);
+		if (r.ipset_src) match.push('src ipset: ' + r.ipset_src);
+		if (r.src_port)  match.push('sport: '    + r.src_port);
+		if (r.dest_ip)   match.push('dst: '      + r.dest_ip);
+		if (r.ipset)     match.push('dst ipset: ' + r.ipset);
+		if (r.dest_port) match.push('dport: '    + r.dest_port);
 		if (r.proto && r.proto !== 'all') match.push('proto: ' + r.proto);
-		if (r.src_port)  match.push('sport: ' + r.src_port);
-		if (r.dest_port) match.push('dport: ' + r.dest_port);
-		if (r.ipset)     match.push('ipset: ' + r.ipset);
 		if (r.sticky === '1') match.push(_('sticky'));
 
 		rows.push(E('tr', { 'class': 'tr' }, [
