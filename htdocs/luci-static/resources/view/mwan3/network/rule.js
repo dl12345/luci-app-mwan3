@@ -220,7 +220,7 @@ return view.extend({
 		o.modalonly = true;
 
 		o = s.option(form.Value, 'ipset', _('Destination NFT set'),
-			_('Match destination addresses against this nft set (eg populated by dnsmasq nftset=/youtube.com/4#inet#fw4#youtube)'));
+			_('Match destination addresses against this nft set (declare sets in /etc/config/mwan3; dnsmasq syntax: nftset=/youtube.com/4#inet#mwan3#youtube)'));
 		o.value('', _('-- Please choose --'));
 		for (let s_name in nftset_info) {
 			const label = s_name + (family_label[nftset_info[s_name].type] || '');

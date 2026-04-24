@@ -35,7 +35,7 @@ usage() {
 	echo ""
 	echo "nftset <command>"
 	echo "command:"
-	echo "  dump:     show all non-mwan3 nft set names in inet fw4"
+	echo "  dump:     show all non-internal nft set names in inet mwan3"
 
 	exit "$status"
 }
@@ -168,7 +168,7 @@ diag_cmd() {
 }
 
 nftset_dump() {
-	nft list sets inet fw4 2>/dev/null | awk '/^\tset / {print $2}' | grep -v '^mwan3_' | sort -u
+	nft list sets inet mwan3 2>/dev/null | awk '/^\tset / {print $2}' | grep -v '^mwan3_' | sort -u
 }
 
 nftset_cmd() {
