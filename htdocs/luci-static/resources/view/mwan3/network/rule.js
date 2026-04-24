@@ -123,7 +123,7 @@ return view.extend({
 		makeBlurOnly(o);
 
 		o = s.option(form.Value, 'src_port', _('Source port'),
-			_('May be entered as a single or multiple port(s) (eg "22" or "80,443") or as a portrange (eg "1024:2048") without quotes'));
+			_('May be entered as a single or multiple port(s) (eg "22" or "80,443") or as a portrange (eg "1024-2048") without quotes'));
 		o.depends('proto', 'tcp');
 		o.depends('proto', 'udp');
 
@@ -152,7 +152,7 @@ return view.extend({
 		makeBlurOnly(o);
 
 		o = s.option(form.Value, 'dest_port', _('Destination port'),
-			_('May be entered as a single or multiple port(s) (eg "22" or "80,443") or as a portrange (eg "1024:2048") without quotes'));
+			_('May be entered as a single or multiple port(s) (eg "22" or "80,443") or as a portrange (eg "1024-2048") without quotes'));
 		o.depends('proto', 'tcp');
 		o.depends('proto', 'udp');
 
