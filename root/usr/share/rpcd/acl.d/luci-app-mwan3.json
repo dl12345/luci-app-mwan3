@@ -13,7 +13,9 @@
 			"ubus": {
 				"mwan3": [
 					"status",
+					"nftset_info",
 					"nftset_members",
+					"nftset_elements",
 					"routing_health"
 				]
 			}
@@ -82,8 +84,9 @@
 				],
 				"mwan3": [
 					"status",
+					"nftset_info",
 					"nftset_members",
-					"nftset_info"
+					"nftset_elements"
 				]
 			},
 			"uci": [

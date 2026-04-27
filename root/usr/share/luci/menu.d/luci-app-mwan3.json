@@ -51,6 +51,14 @@
 			"path": "mwan3/status/routing"
 		}
 	},
+	"admin/status/mwan3/ipsets": {
+		"title": "IP Sets",
+		"order": 27,
+		"action": {
+			"type": "view",
+			"path": "mwan3/status/ipsets"
+		}
+	},
 	"admin/network/mwan3": {
 		"title": "MultiWAN Manager",
 		"order": "600",
