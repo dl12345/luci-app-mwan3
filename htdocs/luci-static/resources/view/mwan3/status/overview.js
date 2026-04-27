@@ -24,6 +24,17 @@ const COLORS = {
 	muted:   '#888888',
 };
 
+function formatDuration(secs) {
+	var d = Math.floor(secs / 86400);
+	var h = Math.floor((secs % 86400) / 3600);
+	var m = Math.floor((secs % 3600) / 60);
+	var parts = [];
+	if (d > 0) parts.push(d + 'd');
+	if (d > 0 || h > 0) parts.push(h + 'h');
+	parts.push(m + 'm');
+	return parts.join(' ');
+}
+
 function renderInterfaces(interfaces) {
 	if (!interfaces)
 		return [ E('em', {}, _('No interfaces found')) ];
@@ -36,19 +47,19 @@ function renderInterfaces(interfaces) {
 			case 'online':
 				status = _('Online');
 				color = COLORS.success;
-				time = '%t'.format(d.online);
+				time = formatDuration(d.online);
 				tname = _('Online');
 				break;
 			case 'offline':
 				status = _('Offline');
 				color = COLORS.danger;
-				time = '%t'.format(d.offline);
+				time = formatDuration(d.offline);
 				tname = _('Offline');
 				break;
 			case 'notracking':
 				status = _('No Tracking');
 				color = d.uptime > 0 ? COLORS.success : COLORS.warning;
-				time = d.uptime > 0 ? '%t'.format(d.uptime) : null;
+				time = d.uptime > 0 ? formatDuration(d.uptime) : null;
 				tname = _('Uptime');
 				break;
 			default:
@@ -59,15 +70,15 @@ function renderInterfaces(interfaces) {
 		}
 
 		var children = [
-			E('div', {}, [ E('strong', {}, _('Interface') + ':\u00a0'), iface ]),
-			E('div', {}, [ E('strong', {}, _('Status') + ':\u00a0'), E('span', { 'style': 'color:' + color }, status) ]),
+			E('div', {}, [ E('strong', {}, _('Interface') + ': '), iface ]),
+			E('div', {}, [ E('strong', {}, _('Status') + ': '), E('span', { 'style': 'color:' + color }, status) ]),
 		];
 
 		if (time)
-			children.push(E('div', {}, [ E('strong', {}, tname + ':\u00a0'), time ]));
+			children.push(E('div', {}, [ E('strong', {}, tname + ': '), time ]));
 
 		return E('div', {
-			'style': 'flex:1 1 auto; border:2px solid ' + color + '; border-radius:4px; padding:0.5em 0.8em',
+			'style': 'border:2px solid ' + color + '; border-radius:4px; padding:0.5em 0.8em',
 		}, children);
 	});
 }
@@ -94,13 +105,13 @@ function renderPolicies(policies) {
 				else
 					color = COLORS.muted;
 
-				return E('div', { 'style': 'padding-left:1em; color:' + color }, [
+				return E('div', { 'style': 'white-space:nowrap; color:' + color }, [
 					m.interface + ' (' + m.percent + '%)',
 				]);
 			});
 
 			cards.push(E('div', {
-				'style': 'flex:1 1 auto; border:2px solid #999; border-radius:4px; padding:0.5em 0.8em',
+				'style': 'border:2px solid #999; border-radius:4px; padding:0.5em 0.8em',
 			}, [
 				E('div', { 'style': 'font-weight:bold; margin-bottom:0.3em' },
 					_('Policy') + ': ' + pname),
@@ -146,15 +157,17 @@ function renderRules(rules) {
 		'style': 'width:100%; table-layout:fixed' }, rows);
 }
 
+const IFACE_GRID_STYLE = 'display:grid; grid-template-columns:repeat(auto-fill, 13em); gap:0.5em';
+
+const POLICY_GRID_STYLE = 'display:grid; grid-template-columns:repeat(auto-fill, 13em); gap:0.5em';
+
 function updateLiveStatus(result) {
 	var ifaceEl  = document.getElementById('mwan3-overview-ifaces');
 	var policyEl = document.getElementById('mwan3-overview-policies');
 
 	if (ifaceEl) {
 		while (ifaceEl.firstChild) ifaceEl.removeChild(ifaceEl.firstChild);
-		renderInterfaces(result.interfaces).forEach(function(el) {
-			ifaceEl.appendChild(el);
-		});
+		renderInterfaces(result.interfaces).forEach(function(el) { ifaceEl.appendChild(el); });
 	}
 
 	if (policyEl) {
@@ -183,15 +196,13 @@ return view.extend({
 			E('h2', {}, _('MultiWAN Manager - Overview')),
 
 			E('div', { 'class': 'cbi-section', 'style': 'margin-top:1em' }, [
-				E('div', { 'id': 'mwan3-overview-ifaces', 'style': 'display:flex; flex-wrap:wrap; gap:0.5em' }, [
-					...renderInterfaces(result.interfaces)
-				]),
+				E('h3', {}, _('Interfaces')),
+				E('div', { 'id': 'mwan3-overview-ifaces', 'style': IFACE_GRID_STYLE }, renderInterfaces(result.interfaces)),
 			]),
 
 			E('div', { 'class': 'cbi-section', 'style': 'margin-top:1em' }, [
-				E('div', { 'id': 'mwan3-overview-policies', 'style': 'display:flex; flex-wrap:wrap; gap:0.5em' }, [
-					...renderPolicies(result.policies),
-				]),
+				E('h3', {}, _('Policies')),
+				E('div', { 'id': 'mwan3-overview-policies', 'style': POLICY_GRID_STYLE }, renderPolicies(result.policies)),
 			]),
 
 			E('div', { 'class': 'cbi-section', 'style': 'margin-top:1em' }, [
