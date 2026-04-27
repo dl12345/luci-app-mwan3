@@ -76,6 +76,10 @@
 				]
 			},
 			"ubus": {
+				"file": [
+					"read",
+					"list"
+				],
 				"mwan3": [
 					"status",
 					"nftset_members",
@@ -91,6 +95,12 @@
 			"file": {
 				"/etc/mwan3.user": [
 					"write"
+				]
+			},
+			"ubus": {
+				"file": [
+					"write",
+					"remove"
 				]
 			},
 			"uci": [

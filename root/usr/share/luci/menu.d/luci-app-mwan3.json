@@ -103,6 +103,14 @@
 			"path": "mwan3/network/rule"
 		}
 	},
+	"admin/network/mwan3/ipset": {
+		"title": "IP Sets",
+		"order": 52,
+		"action": {
+			"type": "view",
+			"path": "mwan3/network/ipset"
+		}
+	},
 	"admin/network/mwan3/simulator": {
 		"title": "Simulator",
 		"order": 55,
