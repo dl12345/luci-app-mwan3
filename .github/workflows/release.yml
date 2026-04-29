@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    name: Build for ${{ matrix.version }} / ${{ matrix.target }}
+    name: Build for ${{ matrix.version }}
     runs-on: ubuntu-latest
     env:
       REPO_APK_KEY: ${{ secrets.REPO_APK_KEY }}
@@ -20,23 +20,6 @@ jobs:
       matrix:
         include:
           - version: openwrt-25.12
-            target: x86_64
-          - version: openwrt-25.12
-            target: aarch64_cortex-a53
-          - version: openwrt-25.12
-            target: aarch64_cortex-a76
-          - version: openwrt-25.12
-            target: aarch64_generic
-          - version: openwrt-25.12
-            target: arm_cortex-a7
-          - version: openwrt-25.12
-            target: arm_cortex-a9
-          - version: openwrt-25.12
-            target: arm_cortex-a15_neon-vfpv4
-          - version: openwrt-25.12
-            target: mips_24kc
-          - version: openwrt-25.12
-            target: mipsel_24kc
 
     steps:
       - name: Checkout repo
@@ -56,18 +39,10 @@ jobs:
           curl -sL "https://raw.githubusercontent.com/openwrt/luci/${{ matrix.version }}/luci.mk" \
             -o feed/luci.mk
 
-      - name: Compute ARCH
-        run: |
-          if [ "${{ matrix.version }}" = "snapshots" ]; then
-            echo "ARCH=${{ matrix.target }}-SNAPSHOT" >> "$GITHUB_ENV"
-          else
-            echo "ARCH=${{ matrix.target }}-${{ matrix.version }}" >> "$GITHUB_ENV"
-          fi
-
       - name: Build with OpenWrt SDK
         uses: openwrt/gh-action-sdk@v8
         env:
-          ARCH: ${{ env.ARCH }}
+          ARCH: x86_64-${{ matrix.version }}
           FEEDNAME: lucimwan3nft
           PACKAGES: ${{ env.PKG_NAME }}
           INDEX: 0
@@ -76,29 +51,25 @@ jobs:
           NO_REFRESH_CHECK: 1
           PRIVATE_KEY: ${{ secrets.REPO_APK_KEY }}
 
-      - name: Rename APK with version and target
+      - name: Extract PKG_VERSION from Makefile
+        run: |
+          PKG_SRC_PREFIX="$(date +%y).999"
+          PKG_SRC_SUFFIX="$(grep '^PKG_SRC_SUFFIX' Makefile | sed 's/PKG_SRC_SUFFIX:=//')"
+          echo "PKG_VERSION=${PKG_SRC_PREFIX}.${PKG_SRC_SUFFIX}" >> "$GITHUB_ENV"
+
+      - name: Rename APK with version
         run: |
           set -euo pipefail
-          TAG="${GITHUB_REF_NAME:-unknown}"
-          VERSION="${TAG#v}"
-          for ext in ipk apk; do
-            for f in $(find bin/packages -type f -path "*/lucimwan3nft/${PKG_NAME}[_-][0-9]*.${ext}"); do
-              dir=$(dirname "$f")
-              if [ -n "${{ matrix.suffix }}" ]; then
-                mv -v "$f" "$dir/${PKG_NAME}-${VERSION}_${{ matrix.version }}_${{ matrix.suffix }}.${ext}"
-              else
-                mv -v "$f" "$dir/${PKG_NAME}-${VERSION}_${{ matrix.version }}_${{ matrix.target }}.${ext}"
-              fi
-            done
+          for f in $(find bin/packages -type f -path "*/lucimwan3nft/${PKG_NAME}[_-][0-9]*.apk"); do
+            dir=$(dirname "$f")
+            mv -v "$f" "$dir/${PKG_NAME}_${PKG_VERSION}.apk"
           done
 
-      - name: Upload artifact for ${{ matrix.target }}
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.PKG_NAME }}-${{ matrix.target }}-${{ matrix.version }}
-          path: |
-            bin/packages/*/lucimwan3nft/${{ env.PKG_NAME }}*.ipk
-            bin/packages/*/lucimwan3nft/${{ env.PKG_NAME }}*.apk
+          name: ${{ env.PKG_NAME }}-${{ matrix.version }}
+          path: bin/packages/*/lucimwan3nft/${{ env.PKG_NAME }}*.apk
           if-no-files-found: ignore
 
   release:
@@ -129,9 +100,7 @@ jobs:
         with:
           tag_name: v${{ steps.version.outputs.version }}
           name: Build v${{ steps.version.outputs.version }}
-          files: |
-            ./release-assets/**/*.ipk
-            ./release-assets/**/*.apk
+          files: ./release-assets/**/*.apk
           draft: false
           prerelease: false
         env:
