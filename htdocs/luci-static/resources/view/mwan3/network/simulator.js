@@ -25,6 +25,13 @@ const callNftsetMembers = rpc.declare({
 	expect: {},
 });
 
+const callResolveHost = rpc.declare({
+	object: 'mwan3',
+	method: 'resolve_host',
+	params: ['host', 'family'],
+	expect: {},
+});
+
 const COLORS = {
 	success: '#5cb85c',
 	danger:  '#d9534f',
@@ -93,6 +100,38 @@ function isIPv6(ip) {
 function ipInCidr(ip, cidr) {
 	if (!ip || !cidr) return false;
 	return isIPv6(ip) ? ipv6InCidr(ip, cidr) : ipv4InCidr(ip, cidr);
+}
+
+/* ---- FQDN helpers ---- */
+
+function looksLikeFqdn(str) {
+	if (!str) return false;
+	if (str.indexOf(':') >= 0) return false;   /* IPv6 */
+	var parts = str.split('.');
+	if (parts.length === 4) {
+		var allOctet = true;
+		for (var i = 0; i < 4; i++) {
+			var n = parseInt(parts[i], 10);
+			if (isNaN(n) || String(n) !== parts[i] || n < 0 || n > 255) { allOctet = false; break; }
+		}
+		if (allOctet) return false;  /* plain IPv4 */
+	}
+	return true;
+}
+
+/* Return the most-appropriate address list from a resolve_host response. */
+function pickFamilyAddrs(res, family) {
+	var v4 = (res && res.v4) || [];
+	var v6 = (res && res.v6) || [];
+	if (family === 'ipv6') return v6;
+	if (family === 'ipv4') return v4;
+	return v4.length ? v4 : v6;  /* prefer v4 when family is unspecified */
+}
+
+function fmtResolutionHint(addrs) {
+	var s = _('Resolved') + ': ' + addrs[0];
+	if (addrs.length > 1) s += ' (+' + (addrs.length - 1) + ' ' + _('more') + ')';
+	return s;
 }
 
 /* ---- NFT set membership ---- */
@@ -417,82 +456,118 @@ return view.extend({
 		});
 
 		var handleSimulate = function() {
-			var srcIp   = (document.getElementById('sim-src-ip').value   || '').trim();
-			var dstIp   = (document.getElementById('sim-dst-ip').value   || '').trim();
+			var srcRaw  = (document.getElementById('sim-src-ip').value  || '').trim();
+			var dstRaw  = (document.getElementById('sim-dst-ip').value  || '').trim();
 			var proto   = document.getElementById('sim-proto').value;
-			var srcPort = (document.getElementById('sim-sport').value    || '').trim();
-			var dstPort = (document.getElementById('sim-dport').value    || '').trim();
+			var srcPort = (document.getElementById('sim-sport').value   || '').trim();
+			var dstPort = (document.getElementById('sim-dport').value   || '').trim();
 			var family  = document.getElementById('sim-family').value;
 
-			var sim = {
-				src_ip:   srcIp,
-				dst_ip:   dstIp,
-				proto:    proto,
-				src_port: srcPort,
-				dst_port: dstPort,
-				family:   family,
-			};
+			var srcHint = document.getElementById('sim-src-ip-hint');
+			var dstHint = document.getElementById('sim-dst-ip-hint');
+			if (srcHint) srcHint.textContent = '';
+			if (dstHint) dstHint.textContent = '';
 
 			dom.content(resultArea, E('em', {}, _('Loading...')));
 
-			/* Reload UCI, live policy state, and connected sets fresh on every simulate press */
-			uci.unload('mwan3');
-			return Promise.all([
-				uci.load('mwan3'),
-				callMwan3Status(),
-				callNftsetMembers('mwan3_connected_v4'),
-				callNftsetMembers('mwan3_connected_v6'),
-			]).then(function(refreshed) {
-				var freshPoliciesData = (refreshed[1] || {}).policies || {};
-				var freshUciPolicies  = uci.sections('mwan3', 'policy');
-				var freshUciRules     = uci.sections('mwan3', 'rule');
-				var connected4        = (refreshed[2] || {}).members || [];
-				var connected6        = (refreshed[3] || {}).members || [];
+			/* Resolve any FQDNs before running the simulation. */
+			var resolveSrc = looksLikeFqdn(srcRaw) ? callResolveHost(srcRaw, family) : Promise.resolve(null);
+			var resolveDst = looksLikeFqdn(dstRaw) ? callResolveHost(dstRaw, family) : Promise.resolve(null);
 
-				/* Check if destination is in a directly connected network.
-				 * mwan3 exempts these before any rule is evaluated. */
-				if (sim.dst_ip) {
-					var connectedSet = isIPv6(sim.dst_ip) ? connected6 : connected4;
-					var matchedCidr  = null;
-					for (var ci = 0; ci < connectedSet.length; ci++) {
-						if (ipInCidr(sim.dst_ip, connectedSet[ci])) {
-							matchedCidr = connectedSet[ci];
-							break;
-						}
-					}
-					if (matchedCidr !== null) {
-						dom.content(resultArea, renderConnectedBypass(sim.dst_ip, matchedCidr));
+			return Promise.all([resolveSrc, resolveDst]).then(function(resolved) {
+				var srcIp = srcRaw;
+				var dstIp = dstRaw;
+
+				if (resolved[0] !== null) {
+					var srcAddrs = pickFamilyAddrs(resolved[0], family);
+					if (!srcAddrs.length) {
+						dom.content(resultArea, E('p', { 'style': 'color:' + COLORS.danger },
+							_('Could not resolve source hostname') + ': ' + srcRaw));
 						return;
 					}
+					srcIp = srcAddrs[0];
+					if (srcHint) srcHint.textContent = fmtResolutionHint(srcAddrs);
 				}
 
-				/* Collect nftset names referenced by the current rule set */
-				var nftsets = [];
-				freshUciRules.forEach(function(r) {
-					if (r.ipset     && nftsets.indexOf(r.ipset)     < 0) nftsets.push(r.ipset);
-					if (r.ipset_src && nftsets.indexOf(r.ipset_src) < 0) nftsets.push(r.ipset_src);
-				});
+				if (resolved[1] !== null) {
+					var dstAddrs = pickFamilyAddrs(resolved[1], family);
+					if (!dstAddrs.length) {
+						dom.content(resultArea, E('p', { 'style': 'color:' + COLORS.danger },
+							_('Could not resolve destination hostname') + ': ' + dstRaw));
+						return;
+					}
+					dstIp = dstAddrs[0];
+					if (dstHint) dstHint.textContent = fmtResolutionHint(dstAddrs);
+				}
 
-				var setFetches = nftsets.map(function(name) {
-					return callNftsetMembers(name).then(function(res) {
-						return [name, (res && res.members) || []];
-					});
-				});
+				var sim = {
+					src_ip:   srcIp,
+					dst_ip:   dstIp,
+					proto:    proto,
+					src_port: srcPort,
+					dst_port: dstPort,
+					family:   family,
+				};
 
-				return Promise.all(setFetches).then(function(results) {
-					var nftsetCache = {};
-					results.forEach(function(pair) { nftsetCache[pair[0]] = pair[1]; });
+				/* Reload UCI, live policy state, and connected sets fresh on every simulate press */
+				uci.unload('mwan3');
+				return Promise.all([
+					uci.load('mwan3'),
+					callMwan3Status(),
+					callNftsetMembers('mwan3_connected_v4'),
+					callNftsetMembers('mwan3_connected_v6'),
+				]).then(function(refreshed) {
+					var freshPoliciesData = (refreshed[1] || {}).policies || {};
+					var freshUciPolicies  = uci.sections('mwan3', 'policy');
+					var freshUciRules     = uci.sections('mwan3', 'rule');
+					var connected4        = (refreshed[2] || {}).members || [];
+					var connected6        = (refreshed[3] || {}).members || [];
 
-					var allMatched = [];
-					for (var i = 0; i < freshUciRules.length; i++) {
-						if (ruleMatches(freshUciRules[i], sim, nftsetCache))
-							allMatched.push(i);
+					/* Check if destination is in a directly connected network.
+					 * mwan3 exempts these before any rule is evaluated. */
+					if (sim.dst_ip) {
+						var connectedSet = isIPv6(sim.dst_ip) ? connected6 : connected4;
+						var matchedCidr  = null;
+						for (var ci = 0; ci < connectedSet.length; ci++) {
+							if (ipInCidr(sim.dst_ip, connectedSet[ci])) {
+								matchedCidr = connectedSet[ci];
+								break;
+							}
+						}
+						if (matchedCidr !== null) {
+							dom.content(resultArea, renderConnectedBypass(sim.dst_ip, matchedCidr));
+							return;
+						}
 					}
 
-					var firstMatch = allMatched.length ? allMatched[0] : -1;
-					dom.content(resultArea,
-						renderSimResult(freshUciRules, firstMatch, allMatched, sim,
-							freshPoliciesData, freshUciPolicies));
+					/* Collect nftset names referenced by the current rule set */
+					var nftsets = [];
+					freshUciRules.forEach(function(r) {
+						if (r.ipset     && nftsets.indexOf(r.ipset)     < 0) nftsets.push(r.ipset);
+						if (r.ipset_src && nftsets.indexOf(r.ipset_src) < 0) nftsets.push(r.ipset_src);
+					});
+
+					var setFetches = nftsets.map(function(name) {
+						return callNftsetMembers(name).then(function(res) {
+							return [name, (res && res.members) || []];
+						});
+					});
+
+					return Promise.all(setFetches).then(function(results) {
+						var nftsetCache = {};
+						results.forEach(function(pair) { nftsetCache[pair[0]] = pair[1]; });
+
+						var allMatched = [];
+						for (var i = 0; i < freshUciRules.length; i++) {
+							if (ruleMatches(freshUciRules[i], sim, nftsetCache))
+								allMatched.push(i);
+						}
+
+						var firstMatch = allMatched.length ? allMatched[0] : -1;
+						dom.content(resultArea,
+							renderSimResult(freshUciRules, firstMatch, allMatched, sim,
+								freshPoliciesData, freshUciPolicies));
+					});
 				});
 			}).catch(function(err) {
 				dom.content(resultArea, E('p', { 'style': 'color:' + COLORS.danger }, String(err)));
@@ -503,22 +578,30 @@ return view.extend({
 			E('h2', {}, _('MultiWAN Manager - Traffic Path Simulator')),
 			E('div', { 'class': 'cbi-section' }, [
 				E('p', { 'style': 'color:' + COLORS.muted },
-					_('Enter traffic parameters to simulate which mwan3 rule matches and which policy would handle the traffic. Rules with a constraint on a field you leave blank will not match.')),
+					_('Enter traffic parameters to simulate which mwan3 rule matches and which policy would handle the traffic. IP fields accept addresses or hostnames - hostnames are resolved via the local DNS server. Rules with a constraint on a field you leave blank will not match.')),
 
 				(function() {
 					var formSection = E('div', { 'class': 'cbi-section-node' }, [
 						E('div', { 'class': 'cbi-value' }, [
-							E('label', { 'class': 'cbi-value-title' }, _('Source IP')),
+							E('label', { 'class': 'cbi-value-title' }, _('Source IP/Name')),
 							E('div', { 'class': 'cbi-value-field' }, [
-								E('input', { 'class': 'cbi-input-text', 'id': 'sim-src-ip', 'type': 'text',
-									'placeholder': _('e.g. 192.168.1.5'), 'style': 'width:16em' }),
+								E('input', {
+									'class': 'cbi-input-text', 'id': 'sim-src-ip', 'type': 'text',
+									'placeholder': _('e.g. 192.168.1.5 or hostname'), 'style': 'width:20em',
+									'input': function() { var h = document.getElementById('sim-src-ip-hint'); if (h) h.textContent = ''; },
+								}),
+								E('span', { 'id': 'sim-src-ip-hint', 'style': 'color:' + COLORS.muted + '; margin-left:0.5em; font-size:0.9em' }),
 							]),
 						]),
 						E('div', { 'class': 'cbi-value' }, [
-							E('label', { 'class': 'cbi-value-title' }, _('Destination IP')),
+							E('label', { 'class': 'cbi-value-title' }, _('Destination IP/Name')),
 							E('div', { 'class': 'cbi-value-field' }, [
-								E('input', { 'class': 'cbi-input-text', 'id': 'sim-dst-ip', 'type': 'text',
-									'placeholder': _('e.g. 8.8.4.4'), 'style': 'width:16em' }),
+								E('input', {
+									'class': 'cbi-input-text', 'id': 'sim-dst-ip', 'type': 'text',
+									'placeholder': _('e.g. 8.8.4.4 or hostname'), 'style': 'width:20em',
+									'input': function() { var h = document.getElementById('sim-dst-ip-hint'); if (h) h.textContent = ''; },
+								}),
+								E('span', { 'id': 'sim-dst-ip-hint', 'style': 'color:' + COLORS.muted + '; margin-left:0.5em; font-size:0.9em' }),
 							]),
 						]),
 						E('div', { 'class': 'cbi-value' }, [

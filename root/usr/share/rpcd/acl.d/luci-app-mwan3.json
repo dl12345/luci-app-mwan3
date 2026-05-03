@@ -16,6 +16,7 @@
 					"nftset_info",
 					"nftset_members",
 					"nftset_elements",
+					"resolve_host",
 					"routing_health"
 				]
 			}
@@ -86,7 +87,8 @@
 					"status",
 					"nftset_info",
 					"nftset_members",
-					"nftset_elements"
+					"nftset_elements",
+					"resolve_host"
 				]
 			},
 			"uci": [
