@@ -44,6 +44,9 @@ return view.extend({
 				if (v.length > 15) return _('Name length shall not exceed 15 characters');
 				return true;
 			}, 'blur', 'keyup');
+			el.appendChild(E('div', {
+				'style': 'width:100%; margin-top:0.5em; padding:0.4em 0.6em; border-left:3px solid #5bc0de;'
+			}, _('The Policy tab creates and manages members automatically. Only edit this section if you need custom metric or weight values.')));
 			return el;
 		};
 
