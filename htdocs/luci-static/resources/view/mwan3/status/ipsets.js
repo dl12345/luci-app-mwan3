@@ -17,6 +17,27 @@ const callNftsetElements = rpc.declare({
 	expect: {},
 });
 
+const callNftsetFlush = rpc.declare({
+	object: 'mwan3',
+	method: 'nftset_flush',
+	params: ['set'],
+	expect: {},
+});
+
+const callNftsetReload = rpc.declare({
+	object: 'mwan3',
+	method: 'nftset_reload',
+	params: ['set'],
+	expect: {},
+});
+
+const callNftsetResolve = rpc.declare({
+	object: 'mwan3',
+	method: 'nftset_resolve',
+	params: ['set'],
+	expect: {},
+});
+
 document.querySelector('head').appendChild(E('link', {
 	'rel': 'stylesheet',
 	'type': 'text/css',
@@ -128,6 +149,33 @@ function renderSetPanel(name, meta, uciMeta) {
 		});
 	}
 
+	function doRefresh() {
+		callNftsetElements(name, 200).then(function(result) {
+			const elems = result ? (result.elements || []) : [];
+			const n = elems.length;
+			countSpan.textContent = (result && result.truncated) ? '(' + n + '+)' : '(' + n + ')';
+			if (expanded)
+				renderMembers(result, countSpan, nftDiv);
+		}).catch(function() {});
+	}
+
+	function makeActionBtn(label, fn) {
+		const btn = E('button', {
+			'class': 'btn btn-default',
+			'type': 'button',
+			'click': function() {
+				btn.disabled = true;
+				fn().then(function() {
+					doRefresh();
+					btn.disabled = false;
+				}).catch(function() {
+					btn.disabled = false;
+				});
+			},
+		}, label);
+		return btn;
+	}
+
 	const toggleBtn = makeBtn(_('Expand'), function() {
 		if (!loaded) {
 			loaded = true;
@@ -159,6 +207,12 @@ function renderSetPanel(name, meta, uciMeta) {
 		}
 	});
 
+	const flushBtn   = makeActionBtn(_('Flush'),   function() { return callNftsetFlush(name); });
+	const reloadBtn  = makeActionBtn(_('Reload'),  function() { return callNftsetReload(name); });
+	const resolveBtn = domainList.length > 0
+		? makeActionBtn(_('Resolve'), function() { return callNftsetResolve(name); })
+		: null;
+
 	const badgeStyle = 'padding:1px 5px; border:1px solid currentColor; border-radius:3px; opacity:0.8';
 
 	const headerChildren = [
@@ -168,7 +222,8 @@ function renderSetPanel(name, meta, uciMeta) {
 	if (hasCounters)
 		headerChildren.push(E('span', { style: badgeStyle }, _('counters')));
 	headerChildren.push(countSpan);
-	headerChildren.push(E('span', { style: 'margin-left:auto' }, toggleBtn));
+	headerChildren.push(E('span', { style: 'display:flex; gap:0.3em; margin-left:auto; align-items:center' },
+		[...(resolveBtn ? [resolveBtn] : []), reloadBtn, flushBtn, toggleBtn]));
 
 	const panelChildren = [
 		E('div', { style: 'display:flex; align-items:baseline; flex-wrap:wrap; gap:0.5em; margin-bottom:0.3em' },
@@ -204,6 +259,11 @@ return view.extend({
 
 		return E('div', {}, [
 			E('h2', {}, _('MultiWAN Manager - IP Sets')),
+			E('div', { 'class': 'cbi-map-descr' }, [
+				_('Flush: flush the nft set of all elements.'), E('br'),
+				_('Reload: reload the set with static entries defined in the config and from the loadfile.'), E('br'),
+				_('Resolve: flush dnsmasq\'s cache and explicitly resolve every defined domain using dnsmasq to populate the set.'),
+			]),
 			...panels,
 		]);
 	},

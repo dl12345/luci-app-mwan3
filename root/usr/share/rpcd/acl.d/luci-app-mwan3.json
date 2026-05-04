@@ -51,6 +51,11 @@
 			"ubus": {
 				"file": [
 					"exec"
+				],
+				"mwan3": [
+					"nftset_flush",
+					"nftset_reload",
+					"nftset_resolve"
 				]
 			}
 		}
@@ -106,6 +111,11 @@
 				"file": [
 					"write",
 					"remove"
+				],
+				"mwan3": [
+					"nftset_flush",
+					"nftset_reload",
+					"nftset_resolve"
 				]
 			},
 			"uci": [
