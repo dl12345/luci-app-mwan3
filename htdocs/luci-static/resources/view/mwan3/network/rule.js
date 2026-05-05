@@ -103,9 +103,13 @@ return view.extend({
 		o.datatype = 'ipaddr';
 		o.textvalue = function(section_id) {
 			const ip = this.cfgvalue(section_id);
-			if (ip && ip.length > 0) return ip;
 			const set = uci.get('mwan3', section_id, 'ipset_src');
-			return (set && set.length > 0) ? set : '-';
+			const port = uci.get('mwan3', section_id, 'src_port');
+			const addr = (ip && ip.length > 0) ? ip : (set && set.length > 0) ? set : null;
+			if (addr && port && port.length > 0) return addr + ':' + port;
+			if (addr) return addr;
+			if (port && port.length > 0) return '*:' + port;
+			return '-';
 		};
 		o.validate = function(section_id, value) {
 			if (!value || value.length === 0)
@@ -126,15 +130,20 @@ return view.extend({
 			_('May be entered as a single or multiple port(s) (eg "22" or "80,443") or as a portrange (eg "1024-2048") without quotes'));
 		o.depends('proto', 'tcp');
 		o.depends('proto', 'udp');
+		o.modalonly = true;
 
 		o = s.option(form.Value, 'dest_ip', _('Destination'),
 			_('Supports CIDR notation (eg "192.168.100.0/24") without quotes'));
 		o.datatype = 'ipaddr';
 		o.textvalue = function(section_id) {
 			const ip = this.cfgvalue(section_id);
-			if (ip && ip.length > 0) return ip;
 			const set = uci.get('mwan3', section_id, 'ipset');
-			return (set && set.length > 0) ? set : '-';
+			const port = uci.get('mwan3', section_id, 'dest_port');
+			const addr = (ip && ip.length > 0) ? ip : (set && set.length > 0) ? set : null;
+			if (addr && port && port.length > 0) return addr + ':' + port;
+			if (addr) return addr;
+			if (port && port.length > 0) return '*:' + port;
+			return '-';
 		};
 		o.validate = function(section_id, value) {
 			if (!value || value.length === 0)
@@ -155,6 +164,7 @@ return view.extend({
 			_('May be entered as a single or multiple port(s) (eg "22" or "80,443") or as a portrange (eg "1024-2048") without quotes'));
 		o.depends('proto', 'tcp');
 		o.depends('proto', 'udp');
+		o.modalonly = true;
 
 		o = s.option(form.ListValue, 'sticky', _('Sticky'),
 			_('Traffic from the same source IP address that previously matched this rule within the sticky timeout period will use the same WAN interface'));
@@ -247,7 +257,7 @@ return view.extend({
 			_('Enables firewall rule logging (global mwan3 logging must also be enabled)'));
 		o.modalonly = true;
 
-		o = s.option(form.ListValue, 'use_policy', _('Policy assigned'));
+		o = s.option(form.ListValue, 'use_policy', _('Policy'));
 		let options = uci.sections('mwan3', 'policy')
 		for (let opt of options) {
 			o.value(opt['.name']);
@@ -255,6 +265,10 @@ return view.extend({
 		o.value('unreachable', _('unreachable (reject)'));
 		o.value('blackhole', _('blackhole (drop)'));
 		o.value('default', _('default (use main routing table)'));
+
+		o = s.option(form.Flag, 'enabled', _('Enable'));
+		o.default = o.enabled;
+		o.editable = true;
 
 		return m.render();
 	}
