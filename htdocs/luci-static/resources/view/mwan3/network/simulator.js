@@ -543,6 +543,7 @@ return view.extend({
 					/* Collect nftset names referenced by the current rule set */
 					var nftsets = [];
 					freshUciRules.forEach(function(r) {
+						if (r.enabled === '0') return;
 						if (r.ipset     && nftsets.indexOf(r.ipset)     < 0) nftsets.push(r.ipset);
 						if (r.ipset_src && nftsets.indexOf(r.ipset_src) < 0) nftsets.push(r.ipset_src);
 					});
@@ -559,6 +560,7 @@ return view.extend({
 
 						var allMatched = [];
 						for (var i = 0; i < freshUciRules.length; i++) {
+							if (freshUciRules[i].enabled === '0') continue;
 							if (ruleMatches(freshUciRules[i], sim, nftsetCache))
 								allMatched.push(i);
 						}
