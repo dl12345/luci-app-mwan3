@@ -123,6 +123,15 @@ function renderPolicies(policies) {
 	return cards.length ? cards : [ E('em', {}, _('No policies configured')) ];
 }
 
+function fmtAddr(addr, port) {
+	var a = (addr && addr.length > 0) ? addr : null;
+	var p = (port && port.length > 0) ? port : null;
+	if (a && p) return a + ':' + p;
+	if (a) return a;
+	if (p) return '*:' + p;
+	return null;
+}
+
 function renderRules(rules) {
 	if (!rules || !rules.length)
 		return E('em', {}, _('No rules configured'));
@@ -137,13 +146,11 @@ function renderRules(rules) {
 
 	rules.forEach(function(r) {
 		var match = [];
-		if (r.src_ip)    match.push('src: '      + r.src_ip);
-		if (r.ipset_src) match.push('src ipset: ' + r.ipset_src);
-		if (r.src_port)  match.push('sport: '    + r.src_port);
-		if (r.dest_ip)   match.push('dst: '      + r.dest_ip);
-		if (r.ipset)     match.push('dst ipset: ' + r.ipset);
-		if (r.dest_port) match.push('dport: '    + r.dest_port);
+		var src = fmtAddr(r.src_ip || r.ipset_src, r.src_port);
+		var dst = fmtAddr(r.dest_ip || r.ipset, r.dest_port);
 		if (r.proto && r.proto !== 'all') match.push('proto: ' + r.proto);
+		if (src) match.push('src: ' + src);
+		if (dst) match.push('dst: ' + dst);
 		if (r.sticky === '1') match.push(_('sticky'));
 
 		rows.push(E('tr', { 'class': 'tr' }, [
