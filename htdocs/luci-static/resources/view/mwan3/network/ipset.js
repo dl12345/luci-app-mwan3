@@ -59,7 +59,8 @@ return view.extend({
 		m = new form.Map('mwan3', _('MultiWAN Manager - IP Sets'),
 			_('IP sets are nftables address sets referenced by mwan3 rules.') + '<br />' +
 			_('Sets can be populated with static entries, loaded from a file, or populated at runtime by dnsmasq name resolution.') + '<br />' +
-			_('Set names must not begin with "mwan3_" (reserved for internal use).'));
+			_('Set names must not begin with "mwan3_" (reserved for internal use).') + '<br />' +
+			_('The Enable checkbox is greyed if the set is referenced by an enabled rule.'));
 
 		s = m.section(form.GridSection, 'ipset', _('IP Sets'));
 		s.addremove = true;
@@ -191,9 +192,28 @@ return view.extend({
 		o.modalonly = true;
 		o.rmempty = true;
 
-		o = s.option(form.Flag, 'enabled', _('Enabled'));
-		o.default = '1';
+		o = s.option(form.Flag, 'enabled', _('Enable'));
+		o.default = o.enabled;
 		o.editable = true;
+		o.renderWidget = function(section_id, option_index, cfgvalue) {
+			const name = uci.get('mwan3', section_id, 'name');
+			let isReferenced = false;
+			if (name) {
+				isReferenced = uci.sections('mwan3', 'rule')
+					.some(r => r.enabled !== '0' && (r.ipset === name || r.ipset_src === name));
+			}
+			const storedEnabled = uci.get('mwan3', section_id, 'enabled');
+			const currentlyEnabled = storedEnabled !== '0';
+
+			if (isReferenced && currentlyEnabled) {
+				const prevReadonly = this.readonly;
+				this.readonly = true;
+				const widget = form.Flag.prototype.renderWidget.apply(this, [section_id, option_index, cfgvalue]);
+				this.readonly = prevReadonly;
+				return widget;
+			}
+			return form.Flag.prototype.renderWidget.apply(this, [section_id, option_index, cfgvalue]);
+		};
 
 		return m.render();
 	}

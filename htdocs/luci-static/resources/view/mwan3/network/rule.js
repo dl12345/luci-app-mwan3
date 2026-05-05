@@ -50,7 +50,8 @@ return view.extend({
 			_('Traffic destined for known (other than default) networks is handled by the main routing table.') + '<br />' +
 			_('Traffic matching a rule, but all WAN interfaces for that policy are down will be blackholed.') + '<br />' +
 			_('Names may contain characters A-Z, a-z, 0-9, _ and no spaces.') + '<br />' +
-			_('Rules may not share the same name as configured interfaces, members or policies.'));
+			_('Rules may not share the same name as configured interfaces, members or policies.') + '<br />' +
+			_('The Enable checkbox is greyed if the rule references a currently disabled IP set.'));
 
 		s = m.section(form.GridSection, 'rule');
 		s.addremove = true;
@@ -201,10 +202,16 @@ return view.extend({
 			return true;
 		}
 
+		function isConfigDisabled(name) {
+			const match = uci.sections('mwan3', 'ipset').find(s => s.name === name);
+			return match ? match.enabled === '0' : false;
+		}
+
 		o = s.option(form.Value, 'ipset_src', _('Source NFT set'),
 			_('Match source addresses against this nft set'));
 		o.value('', _('-- Please choose --'));
 		for (let s_name in nftset_info) {
+			if (isConfigDisabled(s_name)) continue;
 			const label = s_name + (family_label[nftset_info[s_name].type] || '');
 			o.value(s_name, label);
 		}
@@ -233,6 +240,7 @@ return view.extend({
 			_('Match destination addresses against this nft set (declare sets in /etc/config/mwan3; dnsmasq syntax: nftset=/youtube.com/4#inet#mwan3#youtube)'));
 		o.value('', _('-- Please choose --'));
 		for (let s_name in nftset_info) {
+			if (isConfigDisabled(s_name)) continue;
 			const label = s_name + (family_label[nftset_info[s_name].type] || '');
 			o.value(s_name, label);
 		}
@@ -269,6 +277,29 @@ return view.extend({
 		o = s.option(form.Flag, 'enabled', _('Enable'));
 		o.default = o.enabled;
 		o.editable = true;
+		o.renderWidget = function(section_id, option_index, cfgvalue) {
+			const ipsetName    = uci.get('mwan3', section_id, 'ipset');
+			const ipsetSrcName = uci.get('mwan3', section_id, 'ipset_src');
+
+			function isIpsetDisabled(name) {
+				if (!name) return false;
+				const match = uci.sections('mwan3', 'ipset').find(s => s.name === name);
+				return match ? match.enabled === '0' : false;
+			}
+
+			const hasDisabledIpset = isIpsetDisabled(ipsetName) || isIpsetDisabled(ipsetSrcName);
+			const storedEnabled    = uci.get('mwan3', section_id, 'enabled');
+			const currentlyEnabled = storedEnabled !== '0';
+
+			if (hasDisabledIpset && !currentlyEnabled) {
+				const prevReadonly = this.readonly;
+				this.readonly = true;
+				const widget = form.Flag.prototype.renderWidget.apply(this, [section_id, option_index, cfgvalue]);
+				this.readonly = prevReadonly;
+				return widget;
+			}
+			return form.Flag.prototype.renderWidget.apply(this, [section_id, option_index, cfgvalue]);
+		};
 
 		return m.render();
 	}
