@@ -145,6 +145,7 @@ function renderRules(rules) {
 	];
 
 	rules.forEach(function(r) {
+		if (r.enabled === '0') return;
 		var match = [];
 		var src = fmtAddr(r.src_ip || r.ipset_src, r.src_port);
 		var dst = fmtAddr(r.dest_ip || r.ipset, r.dest_port);
