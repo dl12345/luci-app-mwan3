@@ -246,6 +246,14 @@ function ruleMatches(rule, sim, nftsetCache) {
 		if (!ipInSet(sim.dst_ip, members)) return false;
 	}
 
+	/* Fwmark: empty sim.mark is treated as 0 (unmarked packet) */
+	if (rule.fwmark && rule.fwmask) {
+		var simMark = parseInt(sim.mark || '0', 16) | 0;
+		var rMark   = parseInt(rule.fwmark, 16) | 0;
+		var rMask   = parseInt(rule.fwmask, 16) | 0;
+		if ((simMark & rMask) !== rMark) return false;
+	}
+
 	return true;
 }
 
@@ -253,7 +261,8 @@ function ruleMatches(rule, sim, nftsetCache) {
 
 function matchSummary(rule) {
 	var parts = [];
-	if (rule.family && rule.family !== '') parts.push(rule.family === 'ipv4' ? 'IPv4' : 'IPv6');
+	if (rule.family === 'ipv4') parts.push('IPv4');
+	else if (rule.family === 'ipv6') parts.push('IPv6');
 	if (rule.src_ip)    parts.push(_('src') + ' ' + rule.src_ip);
 	if (rule.ipset_src) parts.push(_('src nftset') + ' ' + rule.ipset_src);
 	if (rule.dest_ip)   parts.push(_('dst') + ' ' + rule.dest_ip);
@@ -261,6 +270,7 @@ function matchSummary(rule) {
 	if (rule.src_port)  parts.push(_('sport') + ' ' + rule.src_port);
 	if (rule.dest_port) parts.push(_('dport') + ' ' + rule.dest_port);
 	if (rule.ipset)     parts.push(_('nftset') + ' ' + rule.ipset);
+	if (rule.fwmark && rule.fwmask) parts.push(_('mark') + ' ' + rule.fwmark + '/' + rule.fwmask);
 	if (rule.sticky === '1') parts.push(_('sticky'));
 	return parts.length ? parts.join(' | ') : _('all traffic');
 }
@@ -462,6 +472,7 @@ return view.extend({
 			var srcPort = (document.getElementById('sim-sport').value   || '').trim();
 			var dstPort = (document.getElementById('sim-dport').value   || '').trim();
 			var family  = document.getElementById('sim-family').value;
+			var mark    = (document.getElementById('sim-mark').value    || '').trim();
 
 			var srcHint = document.getElementById('sim-src-ip-hint');
 			var dstHint = document.getElementById('sim-dst-ip-hint');
@@ -507,6 +518,7 @@ return view.extend({
 					src_port: srcPort,
 					dst_port: dstPort,
 					family:   family,
+					mark:     mark,
 				};
 
 				/* Reload UCI, live policy state, and connected sets fresh on every simulate press */
@@ -604,6 +616,13 @@ return view.extend({
 									'input': function() { var h = document.getElementById('sim-dst-ip-hint'); if (h) h.textContent = ''; },
 								}),
 								E('span', { 'id': 'sim-dst-ip-hint', 'style': 'color:' + COLORS.muted + '; margin-left:0.5em; font-size:0.9em' }),
+							]),
+						]),
+						E('div', { 'class': 'cbi-value' }, [
+							E('label', { 'class': 'cbi-value-title' }, _('Fwmark')),
+							E('div', { 'class': 'cbi-value-field' }, [
+								E('input', { 'class': 'cbi-input-text', 'id': 'sim-mark', 'type': 'text',
+									'placeholder': '0x80000', 'style': 'width:12em' }),
 							]),
 						]),
 						E('div', { 'class': 'cbi-value' }, [

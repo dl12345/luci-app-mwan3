@@ -1,6 +1,16 @@
 'use strict';
 'require form';
 'require view';
+'require uci';
+'require rpc';
+'require ui';
+
+var callRcInit = rpc.declare({
+	object: 'rc',
+	method: 'init',
+	params: ['name', 'action'],
+	expect: { result: false }
+});
 
 /* Suppress keyup validation for a DynamicList option, keeping blur-only
  * validation. Uses capture-phase event delegation on the container so that
@@ -17,6 +27,27 @@ function makeBlurOnly(opt) {
 	};
 }
 
+function countBits(n) {
+	var bits = 0;
+	while (n) { bits += n & 1; n >>>= 1; }
+	return bits;
+}
+
+function interfaceMax(map, section_id) {
+	var entry = map.lookupOption('mmx_mask', section_id);
+	var str   = entry ? entry[0].formvalue(section_id) : null;
+	var mask  = parseInt(str || '0x3F00', 16);
+	if (isNaN(mask) || mask === 0) mask = 0x3F00;
+	return (1 << countBits(mask)) - 4;
+}
+
+function liveInt(map, name, section_id, fallback) {
+	var entry = map.lookupOption(name, section_id);
+	if (!entry) return fallback;
+	var n = parseInt(entry[0].formvalue(section_id), 10);
+	return isNaN(n) ? fallback : n;
+}
+
 return view.extend({
 
 	render: function () {
@@ -30,6 +61,62 @@ return view.extend({
 			_('Enter value in hex, starting with <code>0x</code>'));
 		o.datatype = 'hex(4)';
 		o.default = '0x3F00';
+
+		o = s.option(form.Value, 'iif_rule_base', _('IIF rule base'),
+			_('Base priority for per-interface incoming interface ip rules. Default preserves historical behaviour.'));
+		o.datatype = 'range(1, 32766)';
+		o.default = '1000';
+		o.placeholder = '1000';
+		o.validate = function(section_id, value) {
+			if (!value || value.length === 0) return true;
+			var iif    = parseInt(value, 10);
+			var max    = interfaceMax(this.map, section_id);
+			var fwmark = liveInt(this.map, 'fwmark_rule_base', section_id, 2000);
+			if (iif + max >= fwmark)
+				return _('IIF rule base (%d) + %d max interfaces = %d, must be less than Fwmark rule base (%d)').format(iif, max, iif + max, fwmark);
+			return true;
+		};
+
+		o = s.option(form.Value, 'fwmark_rule_base', _('Fwmark rule base'));
+		o.datatype = 'range(1, 32766)';
+		o.default = '2000';
+		o.placeholder = '2000';
+		o.render = function(config_name, section_id, in_table) {
+			var ifmax = interfaceMax(this.map, section_id);
+			this.description = _('Base priority for per-interface fwmark lookup ip rules. Must be at least %d above IIF rule base.').format(ifmax + 1);
+			return form.Value.prototype.render.apply(this, arguments);
+		};
+		o.validate = function(section_id, value) {
+			if (!value || value.length === 0) return true;
+			var fwmark  = parseInt(value, 10);
+			var max     = interfaceMax(this.map, section_id);
+			var iif     = liveInt(this.map, 'iif_rule_base', section_id, 1000);
+			var unreach = liveInt(this.map, 'unreachable_rule_base', section_id, 3000);
+			if (iif + max >= fwmark)
+				return _('Fwmark rule base (%d) must exceed IIF rule base (%d) + %d max interfaces = %d').format(fwmark, iif, max, iif + max);
+			if (fwmark + max + 1 >= unreach)
+				return _('Fwmark rule base (%d) + %d max interfaces + 1 = %d, must be less than Unreachable rule base (%d)').format(fwmark, max, fwmark + max + 1, unreach);
+			return true;
+		};
+
+		o = s.option(form.Value, 'unreachable_rule_base', _('Unreachable rule base'));
+		o.datatype = 'range(1, 32766)';
+		o.default = '3000';
+		o.placeholder = '3000';
+		o.render = function(config_name, section_id, in_table) {
+			var ifmax = interfaceMax(this.map, section_id);
+			this.description = _('Base priority for per-interface fwmark unreachable ip rules. Must be at least %d above Fwmark rule base.').format(ifmax + 2);
+			return form.Value.prototype.render.apply(this, arguments);
+		};
+		o.validate = function(section_id, value) {
+			if (!value || value.length === 0) return true;
+			var unreach = parseInt(value, 10);
+			var max     = interfaceMax(this.map, section_id);
+			var fwmark  = liveInt(this.map, 'fwmark_rule_base', section_id, 2000);
+			if (fwmark + max + 1 >= unreach)
+				return _('Unreachable rule base (%d) must exceed Fwmark rule base (%d) + %d max interfaces + 1 = %d').format(unreach, fwmark, max, fwmark + max + 1);
+			return true;
+		};
 
 		o = s.option(form.Flag, 'logging', _('Logging'),
 			_('Enables global firewall logging'));
@@ -59,5 +146,27 @@ return view.extend({
 		makeBlurOnly(o);
 
 		return m.render();
-	}
+	},
+
+	handleSaveApply: function(ev, mode) {
+		var oldIif    = uci.get('mwan3', 'globals', 'iif_rule_base');
+		var oldFwmark = uci.get('mwan3', 'globals', 'fwmark_rule_base');
+		var oldUnreach = uci.get('mwan3', 'globals', 'unreachable_rule_base');
+
+		return this.handleSave(ev).then(L.bind(function() {
+			var newIif    = uci.get('mwan3', 'globals', 'iif_rule_base');
+			var newFwmark = uci.get('mwan3', 'globals', 'fwmark_rule_base');
+			var newUnreach = uci.get('mwan3', 'globals', 'unreachable_rule_base');
+
+			if (newIif !== oldIif || newFwmark !== oldFwmark || newUnreach !== oldUnreach) {
+				var Fn = function() {
+					callRcInit('mwan3', 'restart');
+					document.removeEventListener('uci-applied', Fn);
+				};
+				document.addEventListener('uci-applied', Fn);
+			}
+
+			return ui.changes.apply(mode);
+		}, this));
+	},
 })

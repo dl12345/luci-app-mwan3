@@ -194,7 +194,9 @@ function renderStaleRules(staleRules) {
 	]);
 }
 
-function renderFieldGuide() {
+function renderFieldGuide(bases) {
+	var iif_base    = (bases && bases.iif)    || 1000;
+	var fwmark_base = (bases && bases.fwmark) || 2000;
 	var s = 'color:' + COLORS.muted + '; font-size:0.92em';
 	var hs = 'font-weight:bold; margin-bottom:0.1em';
 	function field(title, body) {
@@ -209,9 +211,9 @@ function renderFieldGuide() {
 		E('div', { 'style': 'font-weight:bold; margin-bottom:0.6em' }, _('Field reference')),
 		field(_('Index (N)'),
 			_('The 1-based position of the interface in UCI section order. This single number drives everything else: it is the routing table number, determines both ip rule priorities, and is encoded in the fwmark value. If you reorder interfaces in UCI their indices change and mwan3 must rebuild all rules and tables.')),
-		field(_('IP rule (iif) \u2014 priority 1000+N'),
+		field(_('IP rule (iif)') + ' \u2014 ' + _('priority') + ' ' + iif_base + '+N',
 			_('iif stands for input interface. This rule says: any packet that arrived on this WAN device, look it up in routing table N. Its purpose is return-path routing - when a reply comes back from the internet on this WAN, it must go back to the LAN client via the same WAN, not whatever the main routing table would choose. Without this rule, asymmetric routing breaks TCP sessions. mwan3 removes it when the interface goes offline; if it appears present for an offline interface, something cleaned up incorrectly.')),
-		field(_('IP rule (fwmark) \u2014 priority 2000+N'),
+		field(_('IP rule (fwmark)') + ' \u2014 ' + _('priority') + ' ' + fwmark_base + '+N',
 			_('This rule says: any packet carrying fwmark value N, stamped by mwan3\'s prerouting chain, look it up in routing table N. This is the forward-path rule. mwan3\'s nftables prerouting chain marks outbound packets according to your policy rules, and this ip rule translates that mark into a routing table lookup, sending the packet out through the correct WAN. Without this rule, policy routing decisions made in nftables have no effect on actual packet routing.')),
 		E('div', { 'style': s },
 			_('Both rules must be present when an interface is online. The iif rule handles traffic coming back in from the WAN (return path). The fwmark rule handles traffic going out to the WAN (forward path). A missing iif rule means return traffic may route incorrectly or be dropped. A missing fwmark rule means policy routing is completely non-functional for that interface - packets marked for it fall through to the main routing table.')),
@@ -236,7 +238,7 @@ function renderHealth(data) {
 	} else {
 		els.push(E('em', {}, _('No mwan3 interfaces configured')));
 	}
-	els.push(renderFieldGuide());
+	els.push(renderFieldGuide(data.rule_bases));
 	if (staleSection) els.push(staleSection);
 	return els;
 }

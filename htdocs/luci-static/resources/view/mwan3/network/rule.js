@@ -140,11 +140,15 @@ return view.extend({
 			const ip = this.cfgvalue(section_id);
 			const set = uci.get('mwan3', section_id, 'ipset');
 			const port = uci.get('mwan3', section_id, 'dest_port');
+			const fwmark = uci.get('mwan3', section_id, 'fwmark');
+			const fwmask = uci.get('mwan3', section_id, 'fwmask');
 			const addr = (ip && ip.length > 0) ? ip : (set && set.length > 0) ? set : null;
-			if (addr && port && port.length > 0) return addr + ':' + port;
-			if (addr) return addr;
-			if (port && port.length > 0) return '*:' + port;
-			return '-';
+			const parts = [];
+			if (addr && port && port.length > 0) parts.push(addr + ':' + port);
+			else if (addr) parts.push(addr);
+			else if (port && port.length > 0) parts.push('*:' + port);
+			if (fwmark && fwmask) parts.push('mark:' + fwmark + '/' + fwmask);
+			return parts.length > 0 ? parts.join(' ') : '-';
 		};
 		o.validate = function(section_id, value) {
 			if (!value || value.length === 0)
@@ -157,6 +161,44 @@ return view.extend({
 				return _('Destination address must be IPv4 when family is set to IPv4 only');
 			if (family === 'ipv6' && !is_v6)
 				return _('Destination address must be IPv6 when family is set to IPv6 only');
+			return true;
+		};
+		makeBlurOnly(o);
+
+		o = s.option(form.Value, 'fwmark', _('Fwmark'),
+			_('Match packet mark; enter value/mask in hex. Mask must not overlap mwan3 internal mark bits.'));
+		o.modalonly = true;
+		o.placeholder = '0x80000/0xff0000';
+		o.cfgvalue = function(section_id) {
+			const mark = uci.get('mwan3', section_id, 'fwmark');
+			const mask = uci.get('mwan3', section_id, 'fwmask');
+			if (mark && mask) return mark + '/' + mask;
+			if (mark) return mark;
+			return null;
+		};
+		o.write = function(section_id, value) {
+			if (!value || value.length === 0) {
+				uci.unset('mwan3', section_id, 'fwmark');
+				uci.unset('mwan3', section_id, 'fwmask');
+				return;
+			}
+			const parts = value.split('/');
+			uci.set('mwan3', section_id, 'fwmark', parts[0]);
+			uci.set('mwan3', section_id, 'fwmask', parts[1]);
+		};
+		o.remove = function(section_id) {
+			uci.unset('mwan3', section_id, 'fwmark');
+			uci.unset('mwan3', section_id, 'fwmask');
+		};
+		o.validate = function(section_id, value) {
+			if (!value || value.length === 0) return true;
+			const hexre = /^0x[0-9a-fA-F]+$/;
+			const parts = value.split('/');
+			if (parts.length !== 2 || !hexre.test(parts[0]) || !hexre.test(parts[1]))
+				return _('Format must be value/mask in hex notation (e.g. 0x80000/0xff0000)');
+			const mmx_mask = parseInt(uci.get('mwan3', 'globals', 'mmx_mask') || '0x3f00', 16);
+			if ((parseInt(parts[1], 16) & mmx_mask) !== 0)
+				return _('Mask overlaps mwan3 internal mark bits (0x' + mmx_mask.toString(16) + ')');
 			return true;
 		};
 		makeBlurOnly(o);

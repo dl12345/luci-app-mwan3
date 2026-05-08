@@ -122,6 +122,12 @@ function ruleAContainsB(a, b) {
 	if (!portSpecContains(a.src_port,  b.src_port))  return false;
 	if (!portSpecContains(a.dest_port, b.dest_port)) return false;
 
+	/* Fwmark */
+	if (a.fwmark) {
+		if (!b.fwmark)             return false;
+		if (a.fwmark !== b.fwmark || (a.fwmask || '') !== (b.fwmask || '')) return false;
+	}
+
 	/* NFT set: if A uses a set, we cannot easily determine containment */
 	if (a.ipset) return false;
 
@@ -315,7 +321,9 @@ return view.extend({
 			};
 		});
 
-		var rules = uci.sections('mwan3', 'rule'); /* already ordered */
+		var rules = uci.sections('mwan3', 'rule').filter(function(s) {
+			return s.enabled !== '0';
+		});
 
 		var issues = collectIssues({ interfaces: interfaces, members: members, policies: policies, rules: rules });
 

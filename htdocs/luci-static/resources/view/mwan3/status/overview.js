@@ -151,6 +151,7 @@ function renderRules(rules) {
 		if (r.proto && r.proto !== 'all') match.push('proto: ' + r.proto);
 		if (src) match.push('src: ' + src);
 		if (dst) match.push('dst: ' + dst);
+		if (r.fwmark && r.fwmask) match.push('mark: ' + r.fwmark + '/' + r.fwmask);
 		if (r.sticky === '1') match.push(_('sticky'));
 
 		rows.push(E('tr', { 'class': 'tr' }, [
