@@ -39,15 +39,15 @@ function colorText(text, color) {
 function ifaceHealth(d) {
 	var online = d.status === 'online';
 	var offline = d.status === 'offline';
+	var unreach = d.unreach_rule || {};
 
 	if (online) {
-		var ok = d.iif_rule.present && d.fwmark_rule.present && d.table.has_default;
-		var partial = (d.iif_rule.present || d.fwmark_rule.present) && !ok;
+		var ok = d.iif_rule.present && d.fwmark_rule.present && unreach.present && d.table.has_default;
+		var partial = (d.iif_rule.present || d.fwmark_rule.present || unreach.present) && !ok;
 		return ok ? 'success' : partial ? 'warning' : 'danger';
 	}
 	if (offline) {
-		/* Rules present for an offline interface is unusual but not critical */
-		return (d.iif_rule.present || d.fwmark_rule.present) ? 'warning' : 'muted';
+		return (d.iif_rule.present || d.fwmark_rule.present || unreach.present) ? 'warning' : 'muted';
 	}
 	/* unknown / disabled */
 	return 'muted';
@@ -97,6 +97,8 @@ function renderIfaceCard(ifname, d) {
 			online ? colorText(_('No default route'), COLORS.danger) : E('em', {}, _('(none - interface offline)')))];
 	}
 
+	var unreach = d.unreach_rule || {};
+
 	return E('div', {
 		'style': 'border:2px solid ' + border + '; border-radius:4px; padding:0.6em 1em; margin-bottom:0.75em',
 	}, [
@@ -126,6 +128,15 @@ function renderIfaceCard(ifname, d) {
 				]),
 				E('td', { 'style': 'text-align:right' },
 					renderStatusBadge(d.fwmark_rule.present, online ? true : null)),
+			]),
+			E('tr', {}, [
+				E('td', { 'style': 'padding:0.15em 0' }, [
+					E('strong', {}, _('IP rule (unreachable)') + '\u00a0'),
+					E('span', { 'style': 'color:' + COLORS.muted + '; font-size:0.9em' },
+						_('priority') + '\u00a0' + unreach.priority),
+				]),
+				E('td', { 'style': 'text-align:right' },
+					renderStatusBadge(unreach.present, online ? true : null)),
 			]),
 			E('tr', {}, [
 				E('td', { 'style': 'padding:0.15em 0' }, [
@@ -195,8 +206,9 @@ function renderStaleRules(staleRules) {
 }
 
 function renderFieldGuide(bases) {
-	var iif_base    = (bases && bases.iif)    || 1000;
-	var fwmark_base = (bases && bases.fwmark) || 2000;
+	var iif_base     = (bases && bases.iif)     || 1000;
+	var fwmark_base  = (bases && bases.fwmark)  || 2000;
+	var unreach_base = (bases && bases.unreach) || 3000;
 	var s = 'color:' + COLORS.muted + '; font-size:0.92em';
 	var hs = 'font-weight:bold; margin-bottom:0.1em';
 	function field(title, body) {
@@ -210,13 +222,15 @@ function renderFieldGuide(bases) {
 	}, [
 		E('div', { 'style': 'font-weight:bold; margin-bottom:0.6em' }, _('Field reference')),
 		field(_('Index (N)'),
-			_('The 1-based position of the interface in UCI section order. This single number drives everything else: it is the routing table number, determines both ip rule priorities, and is encoded in the fwmark value. If you reorder interfaces in UCI their indices change and mwan3 must rebuild all rules and tables.')),
+			_('The 1-based position of the interface in UCI section order. This single number drives everything else: it is the routing table number, determines all three ip rule priorities, and is encoded in the fwmark value. If you reorder interfaces in UCI their indices change and mwan3 must rebuild all rules and tables.')),
 		field(_('IP rule (iif)') + ' \u2014 ' + _('priority') + ' ' + iif_base + '+N',
 			_('iif stands for input interface. This rule says: any packet that arrived on this WAN device, look it up in routing table N. Its purpose is return-path routing - when a reply comes back from the internet on this WAN, it must go back to the LAN client via the same WAN, not whatever the main routing table would choose. Without this rule, asymmetric routing breaks TCP sessions. mwan3 removes it when the interface goes offline; if it appears present for an offline interface, something cleaned up incorrectly.')),
 		field(_('IP rule (fwmark)') + ' \u2014 ' + _('priority') + ' ' + fwmark_base + '+N',
 			_('This rule says: any packet carrying fwmark value N, stamped by mwan3\'s prerouting chain, look it up in routing table N. This is the forward-path rule. mwan3\'s nftables prerouting chain marks outbound packets according to your policy rules, and this ip rule translates that mark into a routing table lookup, sending the packet out through the correct WAN. Without this rule, policy routing decisions made in nftables have no effect on actual packet routing.')),
+		field(_('IP rule (unreachable)') + ' \u2014 ' + _('priority') + ' ' + unreach_base + '+N',
+			_('This rule matches the same fwmark as the fwmark lookup rule but returns ICMP unreachable instead of performing a table lookup. Because it runs at a lower priority than the fwmark lookup rule, it only fires when the lookup rule has been removed (interface down) or when the routing table has no matching route. It prevents packets marked for a down interface from falling through to the main routing table and being silently misrouted out a different WAN.')),
 		E('div', { 'style': s },
-			_('Both rules must be present when an interface is online. The iif rule handles traffic coming back in from the WAN (return path). The fwmark rule handles traffic going out to the WAN (forward path). A missing iif rule means return traffic may route incorrectly or be dropped. A missing fwmark rule means policy routing is completely non-functional for that interface - packets marked for it fall through to the main routing table.')),
+			_('All three rules must be present when an interface is online. The iif rule handles traffic coming back in from the WAN (return path). The fwmark rule handles traffic going out to the WAN (forward path). The unreachable rule is a safety net that catches packets marked for this interface when the fwmark lookup cannot route them. A missing iif rule means return traffic may route incorrectly or be dropped. A missing fwmark rule means policy routing is completely non-functional for that interface. A missing unreachable rule means packets for a down interface may be silently misrouted.')),
 	]);
 }
 
