@@ -10,8 +10,6 @@
 . /lib/functions/network.sh
 . /usr/share/libubox/jshn.sh
 
-IIF=1000
-FWMARK=2000
 ID=0
 
 usage() {
@@ -85,11 +83,12 @@ diag_rules() {
 	local iface="$1"
 
 	local number=0
-	local iif=0
-	local fwmark=0
-
+	local iif_base fwmark_base unreachable_base
+	local iif_prio fwmark_prio unreachable_prio
 	local iif_rule iif_result
 	local fwmark_rule fwmark_result
+	local unreachable_rule unreachable_result
+	local found=0 missing=0
 
 	config_load mwan3
 	config_foreach iface_number 'interface' "$iface"
@@ -99,27 +98,58 @@ diag_rules() {
 		exit 2
 	}
 
-	let "iif=$IIF+$ID"
-	let "fwmark=$FWMARK+$ID"
+	config_get iif_base globals iif_rule_base 1000
+	config_get fwmark_base globals fwmark_rule_base 2000
+	config_get unreachable_base globals unreachable_rule_base 3000
 
-	iif_rule="$(ip rule | grep ${iif})"
+	iif_prio=$((iif_base + ID))
+	fwmark_prio=$((fwmark_base + ID))
+	unreachable_prio=$((unreachable_base + ID))
+
+	iif_rule="$(ip rule | grep "^${iif_prio}:")"
 	iif_result="$?"
 
-	fwmark_rule="$(ip rule | grep ${fwmark})"
+	fwmark_rule="$(ip rule | grep "^${fwmark_prio}:")"
 	fwmark_result="$?"
 
-	if [ "$fwmark_result" = 0 ] && [ "$iif_result" = 0 ]; then
-		echo "All required IP rules for interface \"$iface\" found"
-		echo "$fwmark_rule"
-		echo "$iif_rule"
-	elif [ "$fwmark_result" = 1 ] && [ "$iif_result" = 0 ]; then
-		echo "Only iif IP rule for interface \"$iface\" found"
-		echo "$iif_rule"
-	elif [ "$fwmark_result" = 0 ] && [ "$iif_result" = 1 ]; then
-		echo "Only fwmark IP rule for interface \"$iface\" found"
-		echo "$fwmark_rule"
+	unreachable_rule="$(ip rule | grep "^${unreachable_prio}:")"
+	unreachable_result="$?"
+
+	echo "IP rules for interface \"$iface\" (index $ID):"
+	echo ""
+
+	if [ "$iif_result" = 0 ]; then
+		echo "  iif rule (priority $iif_prio): found"
+		echo "    $iif_rule"
+		found=$((found + 1))
 	else
-		echo "Missing fwmark and iif IP rule for interface \"$iface\""
+		echo "  iif rule (priority $iif_prio): missing"
+		missing=$((missing + 1))
+	fi
+
+	if [ "$fwmark_result" = 0 ]; then
+		echo "  fwmark rule (priority $fwmark_prio): found"
+		echo "    $fwmark_rule"
+		found=$((found + 1))
+	else
+		echo "  fwmark rule (priority $fwmark_prio): missing"
+		missing=$((missing + 1))
+	fi
+
+	if [ "$unreachable_result" = 0 ]; then
+		echo "  unreachable rule (priority $unreachable_prio): found"
+		echo "    $unreachable_rule"
+		found=$((found + 1))
+	else
+		echo "  unreachable rule (priority $unreachable_prio): missing"
+		missing=$((missing + 1))
+	fi
+
+	echo ""
+	if [ "$missing" = 0 ]; then
+		echo "All 3 IP rules for interface \"$iface\" found."
+	else
+		echo "$found of 3 IP rules for interface \"$iface\" found, $missing missing."
 	fi
 }
 
