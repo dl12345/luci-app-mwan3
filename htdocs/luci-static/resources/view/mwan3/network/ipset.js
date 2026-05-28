@@ -3,6 +3,7 @@
 'require view';
 'require uci';
 'require ui';
+'require validation';
 
 function makeBlurOnly(opt) {
 	opt.render = function(config_name, section_id, in_table) {
@@ -47,6 +48,21 @@ function makeBlurOnlyList(opt) {
 		});
 	};
 }
+
+/* Workaround: LuCI's datatype validator corrupts this.value before passing
+ * it to custom validate functions (see markdown/luci-custom-validate-ipv6.md).
+ * Use stubValidator for format checks instead of o.datatype. */
+var stubValidator = {
+	factory: validation,
+	apply: function(type, value, args) {
+		if (value != null)
+			this.value = value;
+		return validation.types[type].apply(this, args);
+	},
+	assert: function(condition) {
+		return !!condition;
+	}
+};
 
 return view.extend({
 	load: function() {
@@ -145,12 +161,13 @@ return view.extend({
 
 		o = s.option(form.DynamicList, 'entry', _('IPs / Networks'),
 			_('Static entries: IP addresses or CIDR subnets (eg "192.168.1.1" or "10.0.0.0/8")'));
-		o.datatype = 'ipaddr';
 		o.validate = function(section_id, value) {
 			if (!value || value.length === 0)
 				return true;
-			const family = this.map.lookupOption('family', section_id)[0].formvalue(section_id);
-			const is_v6 = value.indexOf(':') !== -1;
+			if (!stubValidator.apply('ipaddr', value))
+				return _('Invalid IP address or prefix');
+			var family = this.map.lookupOption('family', section_id)[0].formvalue(section_id);
+			var is_v6 = !!validation.parseIPv6(value.split('/')[0]);
 			if (family === 'ipv4' && is_v6)
 				return _('Entry must be an IPv4 address when family is set to IPv4');
 			if (family === 'ipv6' && !is_v6)

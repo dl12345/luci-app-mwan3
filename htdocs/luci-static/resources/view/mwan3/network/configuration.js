@@ -1,6 +1,7 @@
 'use strict';
 'require uci';
 'require view';
+'require validation';
 
 document.querySelector('head').appendChild(E('link', {
 	'rel': 'stylesheet',
@@ -77,9 +78,12 @@ function ipv6CidrContains(a, b) {
 
 /* True if CIDR A contains CIDR B (A is a superset of B) */
 function cidrContains(a, b) {
-	if (a.indexOf(':') >= 0 && b.indexOf(':') >= 0) return ipv6CidrContains(a, b);
-	if (a.indexOf(':') < 0  && b.indexOf(':') < 0)  return ipv4CidrContains(a, b);
-	return false; /* mixed families cannot contain each other */
+	if (a.indexOf(',') >= 0 || b.indexOf(',') >= 0) return false;
+	var a_v6 = !!validation.parseIPv6(a.split('/')[0]);
+	var b_v6 = !!validation.parseIPv6(b.split('/')[0]);
+	if (a_v6 && b_v6) return ipv6CidrContains(a, b);
+	if (!a_v6 && !b_v6) return ipv4CidrContains(a, b);
+	return false;
 }
 
 /* Port spec containment: A contains B if every port in B is also in A */
@@ -128,8 +132,13 @@ function ruleAContainsB(a, b) {
 		if (a.fwmark !== b.fwmark || (a.fwmask || '') !== (b.fwmask || '')) return false;
 	}
 
-	/* NFT set: if A uses a set, we cannot easily determine containment */
-	if (a.ipset) return false;
+	/* NFT sets: if A restricts by set, B must use the same set */
+	if (a.ipset) {
+		if (a.ipset !== b.ipset) return false;
+	}
+	if (a.ipset_src) {
+		if (a.ipset_src !== b.ipset_src) return false;
+	}
 
 	return true;
 }

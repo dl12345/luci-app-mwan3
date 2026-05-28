@@ -4,6 +4,7 @@
 'require view';
 'require dom';
 'require ui';
+'require validation';
 
 document.querySelector('head').appendChild(E('link', {
 	'rel': 'stylesheet',
@@ -94,7 +95,7 @@ function ipv6InCidr(ip, cidr) {
 }
 
 function isIPv6(ip) {
-	return ip.indexOf(':') >= 0;
+	return !!validation.parseIPv6(ip.split('/')[0]);
 }
 
 function ipInCidr(ip, cidr) {
@@ -109,12 +110,11 @@ function looksLikeFqdn(str) {
 	if (str.indexOf(':') >= 0) return false;   /* IPv6 */
 	var parts = str.split('.');
 	if (parts.length === 4) {
-		var allOctet = true;
-		for (var i = 0; i < 4; i++) {
-			var n = parseInt(parts[i], 10);
-			if (isNaN(n) || String(n) !== parts[i] || n < 0 || n > 255) { allOctet = false; break; }
+		var firstThreeDigits = true;
+		for (var i = 0; i < 3; i++) {
+			if (!/^\d+$/.test(parts[i])) { firstThreeDigits = false; break; }
 		}
-		if (allOctet) return false;  /* plain IPv4 */
+		if (firstThreeDigits) return false;  /* IPv4 or malformed IPv4 attempt */
 	}
 	return true;
 }
@@ -207,13 +207,15 @@ function ruleMatches(rule, sim, nftsetCache) {
 	/* Source IP: if rule constrains it but user left it blank -> no match */
 	if (rule.src_ip) {
 		if (!sim.src_ip) return false;
-		if (!ipInCidr(sim.src_ip, rule.src_ip)) return false;
+		var srcAddrs = rule.src_ip.split(',').map(function(s) { return s.trim(); });
+		if (!srcAddrs.some(function(a) { return ipInCidr(sim.src_ip, a); })) return false;
 	}
 
 	/* Destination IP: same */
 	if (rule.dest_ip) {
 		if (!sim.dst_ip) return false;
-		if (!ipInCidr(sim.dst_ip, rule.dest_ip)) return false;
+		var dstAddrs = rule.dest_ip.split(',').map(function(s) { return s.trim(); });
+		if (!dstAddrs.some(function(a) { return ipInCidr(sim.dst_ip, a); })) return false;
 	}
 
 	/* Source port: blank means rule must have no src_port constraint.
@@ -478,6 +480,20 @@ return view.extend({
 			var dstHint = document.getElementById('sim-dst-ip-hint');
 			if (srcHint) srcHint.textContent = '';
 			if (dstHint) dstHint.textContent = '';
+
+			if (srcRaw && !looksLikeFqdn(srcRaw) &&
+			    !validation.parseIPv4(srcRaw) && !validation.parseIPv6(srcRaw)) {
+				dom.content(resultArea, E('p', { 'style': 'color:' + COLORS.danger },
+					_('Invalid source IP address') + ': ' + srcRaw));
+				return;
+			}
+
+			if (dstRaw && !looksLikeFqdn(dstRaw) &&
+			    !validation.parseIPv4(dstRaw) && !validation.parseIPv6(dstRaw)) {
+				dom.content(resultArea, E('p', { 'style': 'color:' + COLORS.danger },
+					_('Invalid destination IP address') + ': ' + dstRaw));
+				return;
+			}
 
 			dom.content(resultArea, E('em', {}, _('Loading...')));
 

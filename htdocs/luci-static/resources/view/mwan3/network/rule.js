@@ -3,6 +3,7 @@
 'require view';
 'require uci';
 'require ui';
+'require validation';
 'require rpc';
 
 const callNftsetInfo = rpc.declare({
@@ -29,6 +30,18 @@ function makeBlurOnly(opt) {
 		});
 	};
 }
+
+const stubValidator = {
+	factory: validation,
+	apply(type, value, args) {
+		if (value != null)
+			this.value = value;
+		return validation.types[type].apply(this, args);
+	},
+	assert(condition) {
+		return !!condition;
+	}
+};
 
 return view.extend({
 	load: function() {
@@ -100,8 +113,7 @@ return view.extend({
 		o.value('esp');
 
 		o = s.option(form.Value, 'src_ip', _('Source'),
-			_('Supports CIDR notation (eg "192.168.100.0/24") without quotes'));
-		o.datatype = 'ipaddr';
+			_('Supports CIDR notation (eg "192.168.100.0/24") and comma-separated addresses (eg "8.8.8.8,8.8.4.4") without quotes'));
 		o.textvalue = function(section_id) {
 			const ip = this.cfgvalue(section_id);
 			const set = uci.get('mwan3', section_id, 'ipset_src');
@@ -116,13 +128,18 @@ return view.extend({
 			if (!value || value.length === 0)
 				return true;
 			const family = this.map.lookupOption('family', section_id)[0].formvalue(section_id);
-			if (!family)
-				return true;
-			const is_v6 = value.indexOf(':') !== -1;
-			if (family === 'ipv4' && is_v6)
-				return _('Source address must be IPv4 when family is set to IPv4 only');
-			if (family === 'ipv6' && !is_v6)
-				return _('Source address must be IPv6 when family is set to IPv6 only');
+			const addrs = value.split(',').map(function(s) { return s.trim(); });
+			for (var i = 0; i < addrs.length; i++) {
+				if (!addrs[i].length)
+					return _('Empty address in comma-separated list');
+				if (!stubValidator.apply('ipaddr', addrs[i]))
+					return _('Invalid IP address or prefix: ') + addrs[i];
+				var is_v6 = !!validation.parseIPv6(addrs[i].split('/')[0]);
+				if (family === 'ipv4' && is_v6)
+					return _('Source address must be IPv4 when family is set to IPv4 only');
+				if (family === 'ipv6' && !is_v6)
+					return _('Source address must be IPv6 when family is set to IPv6 only');
+			}
 			return true;
 		};
 		makeBlurOnly(o);
@@ -134,8 +151,7 @@ return view.extend({
 		o.modalonly = true;
 
 		o = s.option(form.Value, 'dest_ip', _('Destination'),
-			_('Supports CIDR notation (eg "192.168.100.0/24") without quotes'));
-		o.datatype = 'ipaddr';
+			_('Supports CIDR notation (eg "192.168.100.0/24") and comma-separated addresses (eg "8.8.8.8,8.8.4.4") without quotes'));
 		o.textvalue = function(section_id) {
 			const ip = this.cfgvalue(section_id);
 			const set = uci.get('mwan3', section_id, 'ipset');
@@ -154,13 +170,18 @@ return view.extend({
 			if (!value || value.length === 0)
 				return true;
 			const family = this.map.lookupOption('family', section_id)[0].formvalue(section_id);
-			if (!family)
-				return true;
-			const is_v6 = value.indexOf(':') !== -1;
-			if (family === 'ipv4' && is_v6)
-				return _('Destination address must be IPv4 when family is set to IPv4 only');
-			if (family === 'ipv6' && !is_v6)
-				return _('Destination address must be IPv6 when family is set to IPv6 only');
+			const addrs = value.split(',').map(function(s) { return s.trim(); });
+			for (var i = 0; i < addrs.length; i++) {
+				if (!addrs[i].length)
+					return _('Empty address in comma-separated list');
+				if (!stubValidator.apply('ipaddr', addrs[i]))
+					return _('Invalid IP address or prefix: ') + addrs[i];
+				var is_v6 = !!validation.parseIPv6(addrs[i].split('/')[0]);
+				if (family === 'ipv4' && is_v6)
+					return _('Destination address must be IPv4 when family is set to IPv4 only');
+				if (family === 'ipv6' && !is_v6)
+					return _('Destination address must be IPv6 when family is set to IPv6 only');
+			}
 			return true;
 		};
 		makeBlurOnly(o);
@@ -227,7 +248,8 @@ return view.extend({
 
 		function ip_family(ip) {
 			if (!ip || ip.length === 0) return null;
-			return ip.indexOf(':') !== -1 ? 'ipv6' : 'ipv4';
+			var first = ip.split(',')[0].trim().split('/')[0];
+			return validation.parseIPv6(first) ? 'ipv6' : 'ipv4';
 		}
 
 		function nftset_validate(section_id, value) {
