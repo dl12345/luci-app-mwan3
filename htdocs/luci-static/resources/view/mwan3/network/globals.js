@@ -121,6 +121,9 @@ return view.extend({
 		o = s.option(form.Flag, 'logging', _('Logging'),
 			_('Enables global firewall logging'));
 
+		o = s.option(form.Flag, 'verbose_logging', _('Verbose logging'),
+			_('Enables debug level logging for mwan3'));
+
 		o = s.option(form.ListValue, 'loglevel', _('Loglevel'),
 			_('Firewall loglevel'));
 		o.default = 'notice';
