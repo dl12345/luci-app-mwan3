@@ -83,18 +83,18 @@ function renderMembers(result, countSpan, container) {
 
 	const tbl = E('table', { 'class': 'table' });
 	tbl.appendChild(E('thead', {}, E('tr', { 'class': 'tr table-titles' }, [
-		E('th', { 'class': 'th' }, _('Address')),
-		E('th', { 'class': 'th', style: 'text-align:right' }, _('Packets')),
-		E('th', { 'class': 'th', style: 'text-align:right' }, _('Bytes')),
+		E('th', { 'class': 'th', style: 'width:50%' }, _('Address')),
+		E('th', { 'class': 'th', style: 'width:25%; text-align:right' }, _('Packets')),
+		E('th', { 'class': 'th', style: 'width:25%; text-align:right' }, _('Bytes')),
 	])));
 	const tbody = E('tbody', {});
 	for (let i = 0; i < elems.length; i++) {
 		const e = elems[i];
 		tbody.appendChild(E('tr', { 'class': 'tr' }, [
-			E('td', { 'class': 'td', style: 'font-family:monospace' }, e.value),
-			E('td', { 'class': 'td', style: 'text-align:right; font-family:monospace' },
+			E('td', { 'class': 'td', style: 'width:50%; font-family:monospace' }, e.value),
+			E('td', { 'class': 'td', style: 'width:25%; text-align:right; font-family:monospace' },
 				e.packets != null ? String(e.packets) : ''),
-			E('td', { 'class': 'td', style: 'text-align:right; font-family:monospace' },
+			E('td', { 'class': 'td', style: 'width:25%; text-align:right; font-family:monospace' },
 				e.packets != null ? fmtBytes(e.bytes) : ''),
 		]));
 	}
