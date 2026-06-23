@@ -32,13 +32,20 @@ function colorText(text, color) {
  *
  * Rules about expected state:
  *   online  -> ip rules MUST be present; table MUST have a default route.
- *   offline -> ip rules may or may not be present (mwan3 removes them on
- *              ifdown); table default route should be absent.
- *   unknown -> report what is present without pass/fail judgement.
+ *   offline / disconnecting -> a soft tracker failure does NOT remove the
+ *              interface's ip rules. mwan3 keeps iif/fwmark/unreachable in
+ *              place and steers traffic away in the nft policy, so the rules
+ *              - and, while the link is up, the default route - are expected
+ *              to stay present. 'disconnecting' is the transient on the way
+ *              to 'offline'; both are anomalies on an interface whose rules
+ *              are still in place, so both warrant a warning. Only a hard
+ *              ifdown tears the rules down, after which the tracker reports
+ *              the interface as 'disabled' (the branch below).
+ *   disabled/unknown -> report what is present without pass/fail judgement.
  */
 function ifaceHealth(d) {
 	var online = d.status === 'online';
-	var offline = d.status === 'offline';
+	var down = d.status === 'offline' || d.status === 'disconnecting';
 	var unreach = d.unreach_rule || {};
 
 	if (online) {
@@ -46,8 +53,12 @@ function ifaceHealth(d) {
 		var partial = (d.iif_rule.present || d.fwmark_rule.present || unreach.present) && !ok;
 		return ok ? 'success' : partial ? 'warning' : 'danger';
 	}
-	if (offline) {
-		return (d.iif_rule.present || d.fwmark_rule.present || unreach.present) ? 'warning' : 'muted';
+	if (down) {
+		// Soft failure, or the disconnecting transition into it: mwan3 retains
+		// the interface's rules (see above), so their presence is expected,
+		// not a fault. Flag the interface as down without judging the
+		// retained rules.
+		return 'warning';
 	}
 	/* unknown / disabled */
 	return 'muted';
@@ -224,13 +235,13 @@ function renderFieldGuide(bases) {
 		field(_('Index (N)'),
 			_('The 1-based position of the interface in UCI section order. This single number drives everything else: it is the routing table number, determines all three ip rule priorities, and is encoded in the fwmark value. If you reorder interfaces in UCI their indices change and mwan3 must rebuild all rules and tables.')),
 		field(_('IP rule (iif)') + ' \u2014 ' + _('priority') + ' ' + iif_base + '+N',
-			_('iif stands for input interface. This rule says: any packet that arrived on this WAN device, look it up in routing table N. Its purpose is return-path routing - when a reply comes back from the internet on this WAN, it must go back to the LAN client via the same WAN, not whatever the main routing table would choose. Without this rule, asymmetric routing breaks TCP sessions. mwan3 removes it when the interface goes offline; if it appears present for an offline interface, something cleaned up incorrectly.')),
+			_('iif stands for input interface. This rule says: any packet that arrived on this WAN device, look it up in routing table N. Its purpose is return-path routing - when a reply comes back from the internet on this WAN, it must go back to the LAN client via the same WAN, not whatever the main routing table would choose. Without this rule, asymmetric routing breaks TCP sessions. mwan3 removes it only on a hard ifdown; a soft tracker failure leaves it in place, so seeing it present for an interface shown offline is the normal, expected state.')),
 		field(_('IP rule (fwmark)') + ' \u2014 ' + _('priority') + ' ' + fwmark_base + '+N',
 			_('This rule says: any packet carrying fwmark value N, stamped by mwan3\'s prerouting chain, look it up in routing table N. This is the forward-path rule. mwan3\'s nftables prerouting chain marks outbound packets according to your policy rules, and this ip rule translates that mark into a routing table lookup, sending the packet out through the correct WAN. Without this rule, policy routing decisions made in nftables have no effect on actual packet routing.')),
 		field(_('IP rule (unreachable)') + ' \u2014 ' + _('priority') + ' ' + unreach_base + '+N',
-			_('This rule matches the same fwmark as the fwmark lookup rule but returns ICMP unreachable instead of performing a table lookup. Because it runs at a lower priority than the fwmark lookup rule, it only fires when the lookup rule has been removed (interface down) or when the routing table has no matching route. It prevents packets marked for a down interface from falling through to the main routing table and being silently misrouted out a different WAN.')),
+			_('This rule matches the same fwmark as the fwmark lookup rule but returns ICMP unreachable instead of performing a table lookup. Because it runs at a lower priority than the fwmark lookup rule, it only fires when the lookup rule has been removed (interface down) or when the routing table has no matching route. It prevents packets marked for a down interface from falling through to the main routing table and being silently misrouted out a different WAN. Unlike the iif and fwmark rules, it is installed for every configured interface at service start and removed only at service stop, so it stays present whether the interface is currently online, offline, or disabled.')),
 		E('div', { 'style': s },
-			_('All three rules must be present when an interface is online. The iif rule handles traffic coming back in from the WAN (return path). The fwmark rule handles traffic going out to the WAN (forward path). The unreachable rule is a safety net that catches packets marked for this interface when the fwmark lookup cannot route them. A missing iif rule means return traffic may route incorrectly or be dropped. A missing fwmark rule means policy routing is completely non-functional for that interface. A missing unreachable rule means packets for a down interface may be silently misrouted.')),
+			_('All three rules must be present when an interface is online. The iif rule handles traffic coming back in from the WAN (return path). The fwmark rule handles traffic going out to the WAN (forward path). The unreachable rule is a safety net that catches packets marked for this interface when the fwmark lookup cannot route them. A missing iif rule means return traffic may route incorrectly or be dropped. A missing fwmark rule means policy routing is completely non-functional for that interface. A missing unreachable rule means packets for a down interface may be silently misrouted. An interface shown offline after a soft tracker failure keeps all of these rules; mwan3 steers traffic away from it in the firewall policy. A hard ifdown then removes the iif and fwmark rules and flushes its routing table, but the unreachable rule is a service-lifetime backstop and stays until mwan3 is stopped.')),
 	]);
 }
 
