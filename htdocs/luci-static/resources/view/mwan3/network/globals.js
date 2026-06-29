@@ -4,6 +4,7 @@
 'require uci';
 'require rpc';
 'require ui';
+'require mwan3.constants as constants';
 
 var callRcInit = rpc.declare({
 	object: 'rc',
@@ -11,21 +12,6 @@ var callRcInit = rpc.declare({
 	params: ['name', 'action'],
 	expect: { result: false }
 });
-
-/* Suppress keyup validation for a DynamicList option, keeping blur-only
- * validation. Uses capture-phase event delegation on the container so that
- * dynamically added item inputs are covered without needing a MutationObserver. */
-function makeBlurOnly(opt) {
-	opt.render = function(config_name, section_id, in_table) {
-		return Promise.resolve(form.DynamicList.prototype.render.apply(this, arguments)).then(function(node) {
-			node.addEventListener('keyup', function(ev) {
-				if (ev.target.tagName === 'INPUT')
-					ev.stopImmediatePropagation();
-			}, true);
-			return node;
-		});
-	};
-}
 
 function countBits(n) {
 	var bits = 0;
@@ -36,8 +22,8 @@ function countBits(n) {
 function interfaceMax(map, section_id) {
 	var entry = map.lookupOption('mmx_mask', section_id);
 	var str   = entry ? entry[0].formvalue(section_id) : null;
-	var mask  = parseInt(str || '0x3F00', 16);
-	if (isNaN(mask) || mask === 0) mask = 0x3F00;
+	var mask  = parseInt(str || constants.MMX_MASK_DEFAULT, 16);
+	if (isNaN(mask) || mask === 0) mask = parseInt(constants.MMX_MASK_DEFAULT, 16);
 	return (1 << countBits(mask)) - 4;
 }
 
@@ -60,18 +46,18 @@ return view.extend({
 		o = s.option(form.Value, 'mmx_mask', _('Firewall mask'),
 			_('Enter value in hex, starting with <code>0x</code>'));
 		o.datatype = 'hex(4)';
-		o.default = '0x3F00';
+		o.default = constants.MMX_MASK_DEFAULT;
 
 		o = s.option(form.Value, 'iif_rule_base', _('IIF rule base'),
 			_('Base priority for per-interface incoming interface ip rules. Default preserves historical behaviour.'));
 		o.datatype = 'range(1, 32766)';
-		o.default = '1000';
-		o.placeholder = '1000';
+		o.default = String(constants.RULE_BASE_DEFAULTS.iif);
+		o.placeholder = String(constants.RULE_BASE_DEFAULTS.iif);
 		o.validate = function(section_id, value) {
 			if (!value || value.length === 0) return true;
 			var iif    = parseInt(value, 10);
 			var max    = interfaceMax(this.map, section_id);
-			var fwmark = liveInt(this.map, 'fwmark_rule_base', section_id, 2000);
+			var fwmark = liveInt(this.map, 'fwmark_rule_base', section_id, constants.RULE_BASE_DEFAULTS.fwmark);
 			if (iif + max >= fwmark)
 				return _('IIF rule base (%d) + %d max interfaces = %d, must be less than Fwmark rule base (%d)').format(iif, max, iif + max, fwmark);
 			return true;
@@ -79,8 +65,8 @@ return view.extend({
 
 		o = s.option(form.Value, 'fwmark_rule_base', _('Fwmark rule base'));
 		o.datatype = 'range(1, 32766)';
-		o.default = '2000';
-		o.placeholder = '2000';
+		o.default = String(constants.RULE_BASE_DEFAULTS.fwmark);
+		o.placeholder = String(constants.RULE_BASE_DEFAULTS.fwmark);
 		o.render = function(config_name, section_id, in_table) {
 			var ifmax = interfaceMax(this.map, section_id);
 			this.description = _('Base priority for per-interface fwmark lookup ip rules. Must be at least %d above IIF rule base.').format(ifmax + 1);
@@ -90,8 +76,8 @@ return view.extend({
 			if (!value || value.length === 0) return true;
 			var fwmark  = parseInt(value, 10);
 			var max     = interfaceMax(this.map, section_id);
-			var iif     = liveInt(this.map, 'iif_rule_base', section_id, 1000);
-			var unreach = liveInt(this.map, 'unreachable_rule_base', section_id, 3000);
+			var iif     = liveInt(this.map, 'iif_rule_base', section_id, constants.RULE_BASE_DEFAULTS.iif);
+			var unreach = liveInt(this.map, 'unreachable_rule_base', section_id, constants.RULE_BASE_DEFAULTS.unreachable);
 			if (iif + max >= fwmark)
 				return _('Fwmark rule base (%d) must exceed IIF rule base (%d) + %d max interfaces = %d').format(fwmark, iif, max, iif + max);
 			if (fwmark + max + 1 >= unreach)
@@ -101,8 +87,8 @@ return view.extend({
 
 		o = s.option(form.Value, 'unreachable_rule_base', _('Unreachable rule base'));
 		o.datatype = 'range(1, 32766)';
-		o.default = '3000';
-		o.placeholder = '3000';
+		o.default = String(constants.RULE_BASE_DEFAULTS.unreachable);
+		o.placeholder = String(constants.RULE_BASE_DEFAULTS.unreachable);
 		o.render = function(config_name, section_id, in_table) {
 			var ifmax = interfaceMax(this.map, section_id);
 			this.description = _('Base priority for per-interface fwmark unreachable ip rules. Must be at least %d above Fwmark rule base.').format(ifmax + 2);
@@ -112,7 +98,7 @@ return view.extend({
 			if (!value || value.length === 0) return true;
 			var unreach = parseInt(value, 10);
 			var max     = interfaceMax(this.map, section_id);
-			var fwmark  = liveInt(this.map, 'fwmark_rule_base', section_id, 2000);
+			var fwmark  = liveInt(this.map, 'fwmark_rule_base', section_id, constants.RULE_BASE_DEFAULTS.fwmark);
 			if (fwmark + max + 1 >= unreach)
 				return _('Unreachable rule base (%d) must exceed Fwmark rule base (%d) + %d max interfaces + 1 = %d').format(unreach, fwmark, max, fwmark + max + 1);
 			return true;
@@ -146,7 +132,6 @@ return view.extend({
 			_('Bypass networks'),
 			_('Traffic to these networks bypasses mwan3 policy routing and uses the default route. Enter IPv4 or IPv6 CIDR.'));
 		o.datatype = 'cidr';
-		makeBlurOnly(o);
 
 		return m.render();
 	},

@@ -2,6 +2,10 @@
 'require rpc';
 'require view';
 'require uci';
+'require dom';
+'require ui';
+'require mwan3.components as components';
+'require mwan3.format as format';
 
 const callNftsetInfo = rpc.declare({
 	object: 'mwan3',
@@ -38,78 +42,34 @@ const callNftsetResolve = rpc.declare({
 	expect: {},
 });
 
-document.querySelector('head').appendChild(E('link', {
-	'rel': 'stylesheet',
-	'type': 'text/css',
-	'href': L.resource('view/mwan3/mwan3.css')
-}));
+/* A button whose click runs an async unit of work with the standard spinner
+   and disabled-while-working state. */
 
-function fmtBytes(n) {
-	if (n == null || n < 0) return '-';
-	if (n < 1024)        return n + ' B';
-	if (n < 1048576)     return (n / 1024).toFixed(1) + ' KiB';
-	if (n < 1073741824)  return (n / 1048576).toFixed(1) + ' MiB';
-	return (n / 1073741824).toFixed(2) + ' GiB';
-}
-
-function makeBtn(label, clickFn) {
+function actionBtn(label, workFn) {
 	return E('button', {
 		'class': 'btn btn-default',
 		'type': 'button',
-		'click': clickFn,
+		'click': ui.createHandlerFn(null, workFn),
 	}, label);
 }
 
-function renderMembers(result, countSpan, container) {
-	while (container.firstChild)
-		container.removeChild(container.firstChild);
+/* One row per set element. The address cell carries a data-value so the column
+   sorts as an address; the packet and byte cells pair a numeric raw value with
+   an E() display so they sort numerically. */
 
-	if (!result || result.error) {
-		container.appendChild(E('em', {},
-			_('Failed to load members') + (result && result.error ? ': ' + result.error : '')));
-		return;
-	}
-
-	const elems = result.elements || [];
-
-	if (elems.length === 0) {
-		countSpan.textContent = '(0)';
-		container.appendChild(E('em', {}, _('Set is empty')));
-		return;
-	}
-
-	const n = elems.length;
-	countSpan.textContent = result.truncated ? '(' + n + '+)' : '(' + n + ')';
-
-	const tbl = E('table', { 'class': 'table' });
-	tbl.appendChild(E('thead', {}, E('tr', { 'class': 'tr table-titles' }, [
-		E('th', { 'class': 'th', style: 'width:50%' }, _('Address')),
-		E('th', { 'class': 'th', style: 'width:25%; text-align:right' }, _('Packets')),
-		E('th', { 'class': 'th', style: 'width:25%; text-align:right' }, _('Bytes')),
-	])));
-	const tbody = E('tbody', {});
-	for (let i = 0; i < elems.length; i++) {
-		const e = elems[i];
-		tbody.appendChild(E('tr', { 'class': 'tr' }, [
-			E('td', { 'class': 'td', style: 'width:50%; font-family:monospace' }, e.value),
-			E('td', { 'class': 'td', style: 'width:25%; text-align:right; font-family:monospace' },
-				e.packets != null ? String(e.packets) : ''),
-			E('td', { 'class': 'td', style: 'width:25%; text-align:right; font-family:monospace' },
-				e.packets != null ? fmtBytes(e.bytes) : ''),
-		]));
-	}
-	tbl.appendChild(tbody);
-	container.appendChild(tbl);
-
-	if (result.truncated) {
-		container.appendChild(E('p', { style: 'opacity:0.7; margin:6px 0 0' },
-			_('Showing first %d entries. The set may contain more elements.').format(n)));
-	}
+function buildMemberRows(elems) {
+	return elems.map(function(e) {
+		var hasCount = (e.packets != null);
+		return [
+			E('span', { 'class': 'mwan3-mono', 'data-value': e.value }, e.value),
+			hasCount ? [ Number(e.packets) || 0, components.mono(String(e.packets)) ] : '',
+			hasCount ? [ Number(e.bytes) || 0, components.mono(format.fmtBytes(e.bytes)) ] : '',
+		];
+	});
 }
 
 function renderSetPanel(name, meta, uciMeta) {
 	const hasCounters = meta.counters === true;
-	const family = (meta.type === 'ipv6_addr') ? 'IPv6' : 'IPv4';
 
 	const entries = Array.isArray(uciMeta.entry) ? uciMeta.entry.length
 	              : (uciMeta.entry ? 1 : 0);
@@ -126,117 +86,127 @@ function renderSetPanel(name, meta, uciMeta) {
 	if (maxelem)              metaParts.push('max: ' + maxelem);
 	if (timeout)              metaParts.push('timeout: ' + timeout + 's');
 
-	const countSpan  = E('span', { style: 'opacity:0.6; margin-left:0.3em' },
+	const countSpan = E('span', { 'class': 'mwan3-ipset-count' },
 		meta.count != null ? '(' + meta.count + ')' : '');
-	const membersArea = E('div', { style: 'margin-top:0.6em; display:none' });
-	const nftDiv     = E('div', {});
+
+	const membersTable = new ui.Table(
+		[ _('Address'), _('Packets'), _('Bytes') ],
+		{
+			id: 'mwan3-ipset-' + name,
+			sortable: true,
+			classes: 'mwan3-ipset-table',
+			captionClasses: [ 'mwan3-col-addr', 'mwan3-col-count', 'mwan3-col-count' ],
+		},
+		components.emptyHint(_('Set is empty'))
+	);
+
+	const membersBody = E('div', {});
+	const moreDiv = E('div', {});
 	let loaded = false;
 	let expanded = false;
 
+	/* Repaint the member table and truncation note from a result. The table's
+	   own placeholder covers the empty and error cases. */
+
+	function showMembers(result) {
+		if (!result || result.error) {
+			membersTable.update([], components.emptyHint(
+				_('Failed to load members') + (result && result.error ? ': ' + result.error : '')));
+			dom.content(moreDiv, []);
+			return;
+		}
+
+		const elems = result.elements || [];
+		countSpan.textContent = result.truncated ? '(' + elems.length + '+)' : '(' + elems.length + ')';
+		membersTable.update(buildMemberRows(elems));
+
+		if (result.truncated)
+			dom.content(moreDiv, E('p', { 'class': 'mwan3-ipset-trunc' },
+				_('Showing first %d entries. The set may contain more elements.').format(elems.length)));
+		else
+			dom.content(moreDiv, []);
+	}
+
+	/* Fetch a slice of the set and show it, offering the load-more buttons when
+	   the slice is truncated. */
+
 	function doLoad(maxEntries) {
-		while (nftDiv.firstChild) nftDiv.removeChild(nftDiv.firstChild);
-		nftDiv.appendChild(E('span', { style: 'opacity:0.6' }, _('Loading...')));
-		callNftsetElements(name, maxEntries || 200).then(function(result) {
-			renderMembers(result, countSpan, nftDiv);
-			if (!result || !result.truncated) return;
-			nftDiv.appendChild(E('div', { style: 'margin-top:6px' }, [
-				makeBtn(_('Load more (1000)'), function() { doLoad(1000); }),
-				' ',
-				makeBtn(_('Load all (5000)'), function() { doLoad(5000); }),
-			]));
+		dom.content(membersBody, E('span', { 'class': 'mwan3-ipset-loading' }, _('Loading...')));
+		return callNftsetElements(name, maxEntries || 200).then(function(result) {
+			showMembers(result);
+			if (result && result.truncated)
+				dom.append(moreDiv, E('div', { 'class': 'mwan3-ipset-more' }, [
+					actionBtn(_('Load more (1000)'), function() { return doLoad(1000); }),
+					' ',
+					actionBtn(_('Load all (5000)'), function() { return doLoad(5000); }),
+				]));
+			dom.content(membersBody, [ membersTable.render(), moreDiv ]);
 		}).catch(function() {
-			renderMembers(null, countSpan, nftDiv);
+			showMembers(null);
+			dom.content(membersBody, [ membersTable.render(), moreDiv ]);
 		});
 	}
 
+	/* Refresh the count after an action, repainting the members if the panel is
+	   currently expanded. */
+
 	function doRefresh() {
-		callNftsetElements(name, 200).then(function(result) {
+		return callNftsetElements(name, 200).then(function(result) {
 			const elems = result ? (result.elements || []) : [];
-			const n = elems.length;
-			countSpan.textContent = (result && result.truncated) ? '(' + n + '+)' : '(' + n + ')';
+			countSpan.textContent = (result && result.truncated) ? '(' + elems.length + '+)' : '(' + elems.length + ')';
 			if (expanded)
-				renderMembers(result, countSpan, nftDiv);
+				showMembers(result);
 		}).catch(function() {});
 	}
 
-	function makeActionBtn(label, fn) {
-		const btn = E('button', {
-			'class': 'btn btn-default',
-			'type': 'button',
-			'click': function() {
-				btn.disabled = true;
-				fn().then(function() {
-					doRefresh();
-					btn.disabled = false;
-				}).catch(function() {
-					btn.disabled = false;
-				});
-			},
-		}, label);
-		return btn;
-	}
-
-	const toggleBtn = makeBtn(_('Expand'), function() {
+	const toggleBtn = actionBtn(_('Expand'), function() {
 		if (!loaded) {
 			loaded = true;
 			expanded = true;
-
-			if (domainList.length > 0) {
-				membersArea.appendChild(
-					E('div', { style: 'font-weight:bold; opacity:0.7; margin-bottom:0.2em' },
-						_('Domains')));
-				const dl = E('div', { style: 'font-family:monospace; margin-bottom:0.6em' });
-				for (let i = 0; i < domainList.length; i++)
-					dl.appendChild(E('div', {}, domainList[i]));
-				membersArea.appendChild(dl);
-			}
-
-			if (domainList.length > 0)
-				membersArea.appendChild(
-					E('div', { style: 'font-weight:bold; opacity:0.7; margin-bottom:0.2em' },
-						_('Members')));
-			membersArea.appendChild(nftDiv);
-
-			membersArea.style.display = '';
+			membersArea.classList.remove('mwan3-hidden');
 			toggleBtn.textContent = _('Collapse');
-			doLoad(200);
-		} else {
-			expanded = !expanded;
-			membersArea.style.display = expanded ? '' : 'none';
-			toggleBtn.textContent = expanded ? _('Collapse') : _('Expand');
+			return doLoad(200);
 		}
+		expanded = !expanded;
+		membersArea.classList.toggle('mwan3-hidden', !expanded);
+		toggleBtn.textContent = expanded ? _('Collapse') : _('Expand');
 	});
 
-	const flushBtn   = makeActionBtn(_('Flush'),   function() { return callNftsetFlush(name); });
-	const reloadBtn  = makeActionBtn(_('Reload'),  function() { return callNftsetReload(name); });
+	const flushBtn   = actionBtn(_('Flush'),  function() { return callNftsetFlush(name).then(doRefresh); });
+	const reloadBtn  = actionBtn(_('Reload'), function() { return callNftsetReload(name).then(doRefresh); });
 	const resolveBtn = domainList.length > 0
-		? makeActionBtn(_('Resolve'), function() { return callNftsetResolve(name); })
+		? actionBtn(_('Resolve'), function() { return callNftsetResolve(name).then(doRefresh); })
 		: null;
 
-	const badgeStyle = 'padding:1px 5px; border:1px solid currentColor; border-radius:3px; opacity:0.8';
-
 	const headerChildren = [
-		E('strong', { style: 'font-size:1.05em' }, name),
-		E('span', { style: badgeStyle }, family),
+		E('strong', { 'class': 'mwan3-ipset-name' }, name),
+		components.familyBadge(meta.type),
 	];
 	if (hasCounters)
-		headerChildren.push(E('span', { style: badgeStyle }, _('counters')));
+		headerChildren.push(components.badge(_('counters')));
 	headerChildren.push(countSpan);
-	headerChildren.push(E('span', { style: 'display:flex; gap:0.3em; margin-left:auto; align-items:center' },
+	headerChildren.push(E('span', { 'class': 'mwan3-ipset-actions' },
 		[...(resolveBtn ? [resolveBtn] : []), reloadBtn, flushBtn, toggleBtn]));
 
+	const membersChildren = [];
+	if (domainList.length > 0) {
+		membersChildren.push(E('div', { 'class': 'mwan3-ipset-grouptitle' }, _('Domains')));
+		membersChildren.push(E('div', { 'class': 'mwan3-ipset-domains' },
+			domainList.map(function(d) { return E('div', {}, d); })));
+		membersChildren.push(E('div', { 'class': 'mwan3-ipset-grouptitle' }, _('Members')));
+	}
+	membersChildren.push(membersBody);
+
+	const membersArea = E('div', { 'class': 'mwan3-ipset-members mwan3-hidden' }, membersChildren);
+
 	const panelChildren = [
-		E('div', { style: 'display:flex; align-items:baseline; flex-wrap:wrap; gap:0.5em; margin-bottom:0.3em' },
-			headerChildren),
+		E('div', { 'class': 'mwan3-ipset-header' }, headerChildren),
 	];
 	if (metaParts.length > 0)
-		panelChildren.push(E('div', { style: 'opacity:0.6; margin-bottom:0.2em' },
-			metaParts.join(' | ')));
+		panelChildren.push(E('div', { 'class': 'mwan3-ipset-meta' }, metaParts.join(' | ')));
 	panelChildren.push(membersArea);
 
-	return E('div', {
-		style: 'margin-bottom:1em; padding:0.6em 1em; border:1px solid rgba(128,128,128,0.4); border-radius:4px',
-	}, panelChildren);
+	return E('div', { 'class': 'mwan3-ipset-panel' }, panelChildren);
 }
 
 return view.extend({
@@ -245,6 +215,8 @@ return view.extend({
 	},
 
 	render: function(data) {
+		components.loadStyle();
+
 		const info  = data[0] || {};
 		const names = Object.keys(info).sort();
 

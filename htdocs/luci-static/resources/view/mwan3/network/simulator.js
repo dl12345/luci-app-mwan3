@@ -4,13 +4,10 @@
 'require view';
 'require dom';
 'require ui';
+'require form';
 'require validation';
-
-document.querySelector('head').appendChild(E('link', {
-	'rel': 'stylesheet',
-	'type': 'text/css',
-	'href': L.resource('view/mwan3/mwan3.css')
-}));
+'require mwan3.components as components';
+'require mwan3.ipmath as ipmath';
 
 const callMwan3Status = rpc.declare({
 	object: 'mwan3',
@@ -32,76 +29,6 @@ const callResolveHost = rpc.declare({
 	params: ['host', 'family'],
 	expect: {},
 });
-
-const COLORS = {
-	success: '#5cb85c',
-	danger:  '#d9534f',
-	warning: '#f0ad4e',
-	muted:   '#888888',
-	info:    '#5bc0de',
-};
-
-/* ---- IPv4 CIDR helpers ---- */
-
-function ipv4ToUint(ip) {
-	var parts = ip.split('.');
-	return ((parseInt(parts[0], 10) << 24) |
-	        (parseInt(parts[1], 10) << 16) |
-	        (parseInt(parts[2], 10) << 8)  |
-	         parseInt(parts[3], 10)) >>> 0;
-}
-
-function ipv4InCidr(ip, cidr) {
-	var slash = cidr.indexOf('/');
-	if (slash < 0) return ip === cidr;
-	var prefix  = parseInt(cidr.substring(slash + 1), 10);
-	var mask    = prefix === 0 ? 0 : ((0xFFFFFFFF << (32 - prefix)) >>> 0);
-	var network = ipv4ToUint(cidr.substring(0, slash)) & mask;
-	return (ipv4ToUint(ip) & mask) === network;
-}
-
-/* ---- IPv6 CIDR helpers ---- */
-
-function expandIPv6(ip) {
-	var halves = ip.split('::');
-	if (halves.length === 2) {
-		var left  = halves[0] ? halves[0].split(':') : [];
-		var right = halves[1] ? halves[1].split(':') : [];
-		var fill  = 8 - left.length - right.length;
-		for (var i = 0; i < fill; i++) left.push('0');
-		return left.concat(right);
-	}
-	return ip.split(':');
-}
-
-function ipv6ToBigInt(ip) {
-	var groups = expandIPv6(ip);
-	var result = BigInt(0);
-	for (var i = 0; i < 8; i++)
-		result = (result << BigInt(16)) | BigInt(parseInt(groups[i] || '0', 16));
-	return result;
-}
-
-function ipv6InCidr(ip, cidr) {
-	var slash = cidr.indexOf('/');
-	if (slash < 0) return ip.toLowerCase() === cidr.toLowerCase();
-	var prefix  = parseInt(cidr.substring(slash + 1), 10);
-	var allOnes = (BigInt(1) << BigInt(128)) - BigInt(1);
-	var mask    = prefix === 0 ? BigInt(0)
-	            : allOnes ^ ((BigInt(1) << BigInt(128 - prefix)) - BigInt(1));
-	var ipInt   = ipv6ToBigInt(ip);
-	var netInt  = ipv6ToBigInt(cidr.substring(0, slash));
-	return (ipInt & mask) === (netInt & mask);
-}
-
-function isIPv6(ip) {
-	return !!validation.parseIPv6(ip.split('/')[0]);
-}
-
-function ipInCidr(ip, cidr) {
-	if (!ip || !cidr) return false;
-	return isIPv6(ip) ? ipv6InCidr(ip, cidr) : ipv4InCidr(ip, cidr);
-}
 
 /* ---- FQDN helpers ---- */
 
@@ -130,50 +57,8 @@ function pickFamilyAddrs(res, family) {
 
 function fmtResolutionHint(addrs) {
 	var s = _('Resolved') + ': ' + addrs[0];
-	if (addrs.length > 1) s += ' (+' + (addrs.length - 1) + ' ' + _('more') + ')';
+	if (addrs.length > 1) s += ' (+' + (addrs.length - 1) + ' ' + _('more') + ')';
 	return s;
-}
-
-/* ---- NFT set membership ---- */
-
-function ipInSet(ip, members) {
-	for (var i = 0; i < members.length; i++) {
-		var m = members[i];
-		if (m.indexOf('-') > 0 && !isIPv6(m)) {
-			/* IPv4 range: a.b.c.d-a.b.c.e */
-			var ends  = m.split('-');
-			var start = ipv4ToUint(ends[0]);
-			var end   = ipv4ToUint(ends[1]);
-			var addr  = ipv4ToUint(ip);
-			if (addr >= start && addr <= end) return true;
-		} else if (m.indexOf('/') >= 0) {
-			if (ipInCidr(ip, m)) return true;
-		} else if (m === ip) {
-			return true;
-		}
-	}
-	return false;
-}
-
-/* ---- Port matching ---- */
-
-function portMatches(port, spec) {
-	/* port: user input string or ''; spec: UCI rule value or undefined */
-	if (!spec) return true;   /* rule has no port constraint */
-	if (!port) return true;   /* no port entered -- treat as wildcard */
-	var p = parseInt(port, 10);
-	if (isNaN(p)) return false;
-	var parts = spec.split(',');
-	for (var i = 0; i < parts.length; i++) {
-		var part = parts[i].trim();
-		if (part.indexOf(':') >= 0) {
-			var range = part.split(':');
-			if (p >= parseInt(range[0], 10) && p <= parseInt(range[1], 10)) return true;
-		} else if (parseInt(part, 10) === p) {
-			return true;
-		}
-	}
-	return false;
 }
 
 /* ---- Rule matching ---- */
@@ -208,14 +93,14 @@ function ruleMatches(rule, sim, nftsetCache) {
 	if (rule.src_ip) {
 		if (!sim.src_ip) return false;
 		var srcAddrs = rule.src_ip.split(',').map(function(s) { return s.trim(); });
-		if (!srcAddrs.some(function(a) { return ipInCidr(sim.src_ip, a); })) return false;
+		if (!srcAddrs.some(function(a) { return ipmath.ipInCidr(sim.src_ip, a); })) return false;
 	}
 
 	/* Destination IP: same */
 	if (rule.dest_ip) {
 		if (!sim.dst_ip) return false;
 		var dstAddrs = rule.dest_ip.split(',').map(function(s) { return s.trim(); });
-		if (!dstAddrs.some(function(a) { return ipInCidr(sim.dst_ip, a); })) return false;
+		if (!dstAddrs.some(function(a) { return ipmath.ipInCidr(sim.dst_ip, a); })) return false;
 	}
 
 	/* Source port: blank means rule must have no src_port constraint.
@@ -224,28 +109,28 @@ function ruleMatches(rule, sim, nftsetCache) {
 	if (rule.src_port) {
 		if (!sim.src_port) return false;
 		var srcPorts = sim.src_port.split(/[\s,]+/).filter(Boolean);
-		if (!srcPorts.some(function(p) { return portMatches(p, rule.src_port); })) return false;
+		if (!srcPorts.some(function(p) { return ipmath.portMatches(p, rule.src_port); })) return false;
 	}
 
 	/* Destination port: same */
 	if (rule.dest_port) {
 		if (!sim.dst_port) return false;
 		var dstPorts = sim.dst_port.split(/[\s,]+/).filter(Boolean);
-		if (!dstPorts.some(function(p) { return portMatches(p, rule.dest_port); })) return false;
+		if (!dstPorts.some(function(p) { return ipmath.portMatches(p, rule.dest_port); })) return false;
 	}
 
 	/* Source NFT set: requires a src IP to check membership */
 	if (rule.ipset_src) {
 		if (!sim.src_ip) return false;
 		var srcMembers = nftsetCache[rule.ipset_src] || [];
-		if (!ipInSet(sim.src_ip, srcMembers)) return false;
+		if (!ipmath.ipInSet(sim.src_ip, srcMembers)) return false;
 	}
 
 	/* Destination NFT set: requires a dst IP to check membership */
 	if (rule.ipset) {
 		if (!sim.dst_ip) return false;
 		var members = nftsetCache[rule.ipset] || [];
-		if (!ipInSet(sim.dst_ip, members)) return false;
+		if (!ipmath.ipInSet(sim.dst_ip, members)) return false;
 	}
 
 	/* Fwmark: empty sim.mark is treated as 0 (unmarked packet) */
@@ -285,7 +170,7 @@ function renderPolicyDetail(policyName, policiesData, uciPolicies) {
 		'default':     _('use main routing table'),
 	};
 	if (builtins[policyName]) {
-		return E('div', { 'style': 'margin-top:0.4em; color:' + COLORS.muted },
+		return E('div', { 'class': 'mwan3-sim-detail ' + components.textClass('muted') },
 			_('Terminal policy') + ': ' + builtins[policyName]);
 	}
 
@@ -302,19 +187,19 @@ function renderPolicyDetail(policyName, policiesData, uciPolicies) {
 			if (uciPolicies[i]['.name'] === policyName) { uciPol = uciPolicies[i]; break; }
 		}
 		if (!uciPol)
-			return E('div', { 'style': 'color:' + COLORS.danger }, _('Policy not found in configuration'));
-		return E('div', { 'style': 'color:' + COLORS.muted + '; margin-top:0.4em' },
+			return E('div', { 'class': components.textClass('danger') }, _('Policy not found in configuration'));
+		return E('div', { 'class': 'mwan3-sim-detail ' + components.textClass('muted') },
 			_('mwan3 not running - cannot show live member state'));
 	}
 
 	var memberEls = liveMembers.map(function(m) {
-		var color = m.percent > 0 ? COLORS.success
-		          : m.status === 'online' ? COLORS.warning
-		          : COLORS.muted;
+		var sev = m.percent > 0 ? 'success'
+		        : m.status === 'online' ? 'warning'
+		        : 'muted';
 		var label = m.interface
 			+ ' (' + _('metric') + '\u00a0' + m.metric + ', ' + _('weight') + '\u00a0' + m.weight + ')'
 			+ ' \u2014 ' + (m.percent > 0 ? m.percent + '%' : m.status);
-		return E('div', { 'style': 'padding-left:1em; color:' + color }, label);
+		return E('div', { 'class': 'mwan3-sim-member ' + components.textClass(sev) }, label);
 	});
 
 	/* Determine overall policy outcome */
@@ -328,17 +213,17 @@ function renderPolicyDetail(policyName, policiesData, uciPolicies) {
 	if (anyActive) {
 		var active = liveMembers.filter(function(m) { return m.percent > 0; });
 		outcome = active.length === 1
-			? E('div', { 'style': 'margin-top:0.3em; color:' + COLORS.success },
+			? E('div', { 'class': 'mwan3-sim-detail-sm ' + components.textClass('success') },
 				_('Traffic will use') + ': ' + active[0].interface)
-			: E('div', { 'style': 'margin-top:0.3em; color:' + COLORS.success },
+			: E('div', { 'class': 'mwan3-sim-detail-sm ' + components.textClass('success') },
 				_('Traffic will be load-balanced across ') + active.length + _(' members'));
 	} else {
-		outcome = E('div', { 'style': 'margin-top:0.3em; color:' + COLORS.danger },
+		outcome = E('div', { 'class': 'mwan3-sim-detail-sm ' + components.textClass('danger') },
 			_('All members offline - last resort') + ': ' + lastResort);
 	}
 
 	return E('div', {}, [
-		E('div', { 'style': 'margin-top:0.4em; font-style:italic; color:' + COLORS.muted },
+		E('div', { 'class': 'mwan3-sim-livehdr ' + components.textClass('muted') },
 			_('Live member state') + ':'),
 		...memberEls,
 		outcome,
@@ -346,30 +231,26 @@ function renderPolicyDetail(policyName, policiesData, uciPolicies) {
 }
 
 function renderConnectedBypass(dstIp, matchedCidr) {
-	return E('div', {
-		'style': 'border:2px solid ' + COLORS.info + '; border-radius:4px; padding:0.7em 1em; margin-top:1em',
-	}, [
-		E('div', { 'style': 'font-weight:bold; color:' + COLORS.info },
+	return components.card('info', [
+		E('div', { 'class': components.textClass('info') + ' mwan3-strong' },
 			_('mwan3 rules bypassed - directly connected network')),
-		E('div', { 'style': 'margin-top:0.4em' },
+		E('div', { 'class': 'mwan3-sim-detail' },
 			_('Destination') + ' ' + dstIp + ' ' + _('is in the connected set') +
 			(matchedCidr ? ' (' + matchedCidr + ')' : '') + '.'),
-		E('div', { 'style': 'margin-top:0.3em; color:' + COLORS.muted },
+		E('div', { 'class': 'mwan3-sim-detail-sm ' + components.textClass('muted') },
 			_('mwan3 exempts directly connected networks from policy routing before any rule is evaluated. ' +
 			  'Traffic is forwarded via the main routing table regardless of configured rules. ' +
 			  'Use firewall rules, not mwan3 policies, to control access to these networks.')),
-	]);
+	], 'mwan3-sim-card');
 }
 
 function renderSimResult(rules, matchedIdx, allMatched, sim, policiesData, uciPolicies) {
 	if (matchedIdx < 0) {
-		return E('div', {
-			'style': 'border:2px solid ' + COLORS.muted + '; border-radius:4px; padding:0.7em 1em; margin-top:1em',
-		}, [
-			E('div', { 'style': 'font-weight:bold; color:' + COLORS.muted }, _('No rule matched')),
-			E('div', { 'style': 'margin-top:0.3em' },
+		return components.card('muted', [
+			E('div', { 'class': 'mwan3-strong ' + components.textClass('muted') }, _('No rule matched')),
+			E('div', { 'class': 'mwan3-sim-detail-sm' },
 				_('Traffic will be routed using the main routing table.')),
-		]);
+		], 'mwan3-sim-card');
 	}
 
 	var matched = rules[matchedIdx];
@@ -379,22 +260,20 @@ function renderSimResult(rules, matchedIdx, allMatched, sim, policiesData, uciPo
 		(policiesData.ipv6 && policiesData.ipv6[pName])
 	)) || [];
 	var anyActive = liveMembers.some(function(m) { return m.percent > 0; });
-	var borderColor = pName === 'blackhole' || pName === 'unreachable' ? COLORS.warning
-	                : anyActive ? COLORS.success
-	                : COLORS.danger;
+	var severity = pName === 'blackhole' || pName === 'unreachable' ? 'warning'
+	             : anyActive ? 'success'
+	             : 'danger';
 
 	var cards = [];
 
 	/* Primary match card */
-	cards.push(E('div', {
-		'style': 'border:2px solid ' + borderColor + '; border-radius:4px; padding:0.7em 1em; margin-top:1em',
-	}, [
-		E('div', { 'style': 'font-weight:bold; font-size:1.05em; margin-bottom:0.3em' },
+	cards.push(components.card(severity, [
+		E('div', { 'class': 'mwan3-sim-title' },
 			_('First matching rule') + ': ' + matched['.name']),
 		E('div', {}, [ E('strong', {}, _('Match') + ':\u00a0'), matchSummary(matched) ]),
 		E('div', {}, [ E('strong', {}, _('Policy') + ':\u00a0'), pName ]),
 		renderPolicyDetail(pName, policiesData, uciPolicies),
-	]));
+	], 'mwan3-sim-card'));
 
 	/* Shadowed rules */
 	var shadowed = [];
@@ -403,25 +282,27 @@ function renderSimResult(rules, matchedIdx, allMatched, sim, policiesData, uciPo
 	}
 
 	if (shadowed.length) {
-		var rows = [
-			E('tr', { 'class': 'tr cbi-section-table-titles' }, [
-				E('th', { 'class': 'th' }, _('Shadowed rule')),
-				E('th', { 'class': 'th' }, _('Match')),
-				E('th', { 'class': 'th', 'style': 'text-align:right' }, _('Policy')),
-			])
-		];
-		shadowed.forEach(function(r) {
-			rows.push(E('tr', { 'class': 'tr' }, [
-				E('td', { 'class': 'td' }, r['.name']),
-				E('td', { 'class': 'td' }, matchSummary(r)),
-				E('td', { 'class': 'td', 'style': 'text-align:right; color:' + COLORS.muted },
-					r.use_policy || '-'),
-			]));
-		});
-		cards.push(E('div', { 'style': 'margin-top:1em' }, [
-			E('h4', { 'style': 'margin-bottom:0.4em; color:' + COLORS.muted },
+		var table = new ui.Table(
+			[ _('Shadowed rule'), _('Match'), _('Policy') ],
+			{
+				id: 'mwan3-sim-shadowed',
+				sortable: false,
+				classes: 'mwan3-sim-shadow-table',
+				captionClasses: [ null, null, 'mwan3-sim-col-policy' ],
+			},
+			components.emptyHint(_('None'))
+		);
+		table.update(shadowed.map(function(r) {
+			return [
+				r['.name'],
+				matchSummary(r),
+				components.statusText(r.use_policy || '-', 'muted'),
+			];
+		}));
+		cards.push(E('div', { 'class': 'mwan3-sim-shadow' }, [
+			E('h4', { 'class': 'mwan3-sim-shadow-h4 ' + components.textClass('muted') },
 				_('Also matched (shadowed by first rule)')),
-			E('table', { 'class': 'table cbi-section-table', 'style': 'width:100%' }, rows),
+			table.render(),
 		]));
 	}
 
@@ -434,68 +315,77 @@ return view.extend({
 	},
 
 	render: function() {
-		/* Build protocol dropdown */
-		var protoOpts = ['all', 'tcp', 'udp', 'icmp', 'esp'].map(function(p) {
-			return E('option', { 'value': p }, p);
-		});
+		components.loadStyle();
 
-		/* Build family dropdown */
-		var famOpts = [
-			E('option', { 'value': '' },     _('IPv4 and IPv6')),
-			E('option', { 'value': 'ipv4' }, _('IPv4 only')),
-			E('option', { 'value': 'ipv6' }, _('IPv6 only')),
-		];
+		var self = this;
 
-		var resultArea = E('div', { 'id': 'sim-result' });
+		var simData = { sim: {} };
+		var m = new form.JSONMap(simData,
+			_('MultiWAN Manager - Traffic Path Simulator'),
+			_('Enter traffic parameters to simulate which mwan3 rule matches and which policy would handle the traffic. IP fields accept addresses or hostnames - hostnames are resolved via the local DNS server. Rules with a constraint on a field you leave blank will not match.'));
 
-		var portRow = function(id, label) {
-			return E('div', { 'class': 'cbi-value', 'id': id + '-row', 'style': 'display:none' }, [
-				E('label', { 'class': 'cbi-value-title' }, label),
-				E('div', { 'class': 'cbi-value-field' }, [
-					E('input', { 'class': 'cbi-input-text', 'id': id, 'type': 'text',
-						'placeholder': _('e.g. 80 or 443 1024:2048 or 80,443'), 'style': 'width:16em' }),
-				]),
-			]);
-		};
+		var s = m.section(form.NamedSection, 'sim', 'sim');
 
-		var protoSel = E('select', { 'class': 'cbi-input-select', 'id': 'sim-proto' }, protoOpts);
+		var oSrc = s.option(form.Value, 'src_ip', _('Source IP/Name'));
+		oSrc.placeholder = _('e.g. 192.168.1.5 or hostname');
 
-		/* Show/hide port fields when proto changes */
-		protoSel.addEventListener('change', function() {
-			var show = (protoSel.value === 'tcp' || protoSel.value === 'udp');
-			document.getElementById('sim-sport-row').style.display = show ? '' : 'none';
-			document.getElementById('sim-dport-row').style.display = show ? '' : 'none';
-		});
+		var oDst = s.option(form.Value, 'dst_ip', _('Destination IP/Name'));
+		oDst.placeholder = _('e.g. 8.8.4.4 or hostname');
+
+		var oMark = s.option(form.Value, 'mark', _('Fwmark'));
+		oMark.placeholder = '0x80000';
+
+		var oProto = s.option(form.ListValue, 'proto', _('Protocol'));
+		['all', 'tcp', 'udp', 'icmp', 'esp'].forEach(function(p) { oProto.value(p, p); });
+		oProto.default = 'all';
+
+		var oSport = s.option(form.Value, 'src_port', _('Source port'));
+		oSport.placeholder = _('e.g. 80 or 443 1024:2048 or 80,443');
+		oSport.depends('proto', 'tcp');
+		oSport.depends('proto', 'udp');
+
+		var oDport = s.option(form.Value, 'dst_port', _('Destination port'));
+		oDport.placeholder = _('e.g. 80 or 443 1024:2048 or 80,443');
+		oDport.depends('proto', 'tcp');
+		oDport.depends('proto', 'udp');
+
+		var oFam = s.option(form.ListValue, 'family', _('Address family'));
+		oFam.value('',     _('IPv4 and IPv6'));
+		oFam.value('ipv4', _('IPv4 only'));
+		oFam.value('ipv6', _('IPv6 only'));
+		oFam.default = '';
+
+		var resultArea = E('div', {});
+		var srcHint = E('span', { 'class': 'mwan3-sim-hint ' + components.textClass('muted') });
+		var dstHint = E('span', { 'class': 'mwan3-sim-hint ' + components.textClass('muted') });
 
 		var handleSimulate = function() {
-			var srcRaw  = (document.getElementById('sim-src-ip').value  || '').trim();
-			var dstRaw  = (document.getElementById('sim-dst-ip').value  || '').trim();
-			var proto   = document.getElementById('sim-proto').value;
-			var srcPort = (document.getElementById('sim-sport').value   || '').trim();
-			var dstPort = (document.getElementById('sim-dport').value   || '').trim();
-			var family  = document.getElementById('sim-family').value;
-			var mark    = (document.getElementById('sim-mark').value    || '').trim();
+			var srcRaw  = (oSrc.formvalue('sim')  || '').trim();
+			var dstRaw  = (oDst.formvalue('sim')  || '').trim();
+			var proto   = oProto.formvalue('sim') || 'all';
+			var srcPort = (oSport.formvalue('sim') || '').trim();
+			var dstPort = (oDport.formvalue('sim') || '').trim();
+			var family  = oFam.formvalue('sim')   || '';
+			var mark    = (oMark.formvalue('sim')  || '').trim();
 
-			var srcHint = document.getElementById('sim-src-ip-hint');
-			var dstHint = document.getElementById('sim-dst-ip-hint');
-			if (srcHint) srcHint.textContent = '';
-			if (dstHint) dstHint.textContent = '';
+			srcHint.textContent = '';
+			dstHint.textContent = '';
 
 			if (srcRaw && !looksLikeFqdn(srcRaw) &&
 			    !validation.parseIPv4(srcRaw) && !validation.parseIPv6(srcRaw)) {
-				dom.content(resultArea, E('p', { 'style': 'color:' + COLORS.danger },
+				dom.content(resultArea, E('p', { 'class': components.textClass('danger') },
 					_('Invalid source IP address') + ': ' + srcRaw));
 				return;
 			}
 
 			if (dstRaw && !looksLikeFqdn(dstRaw) &&
 			    !validation.parseIPv4(dstRaw) && !validation.parseIPv6(dstRaw)) {
-				dom.content(resultArea, E('p', { 'style': 'color:' + COLORS.danger },
+				dom.content(resultArea, E('p', { 'class': components.textClass('danger') },
 					_('Invalid destination IP address') + ': ' + dstRaw));
 				return;
 			}
 
-			dom.content(resultArea, E('em', {}, _('Loading...')));
+			dom.content(resultArea, components.emptyHint(_('Loading...')));
 
 			/* Resolve any FQDNs before running the simulation. */
 			var resolveSrc = looksLikeFqdn(srcRaw) ? callResolveHost(srcRaw, family) : Promise.resolve(null);
@@ -508,23 +398,23 @@ return view.extend({
 				if (resolved[0] !== null) {
 					var srcAddrs = pickFamilyAddrs(resolved[0], family);
 					if (!srcAddrs.length) {
-						dom.content(resultArea, E('p', { 'style': 'color:' + COLORS.danger },
+						dom.content(resultArea, E('p', { 'class': components.textClass('danger') },
 							_('Could not resolve source hostname') + ': ' + srcRaw));
 						return;
 					}
 					srcIp = srcAddrs[0];
-					if (srcHint) srcHint.textContent = fmtResolutionHint(srcAddrs);
+					srcHint.textContent = fmtResolutionHint(srcAddrs);
 				}
 
 				if (resolved[1] !== null) {
 					var dstAddrs = pickFamilyAddrs(resolved[1], family);
 					if (!dstAddrs.length) {
-						dom.content(resultArea, E('p', { 'style': 'color:' + COLORS.danger },
+						dom.content(resultArea, E('p', { 'class': components.textClass('danger') },
 							_('Could not resolve destination hostname') + ': ' + dstRaw));
 						return;
 					}
 					dstIp = dstAddrs[0];
-					if (dstHint) dstHint.textContent = fmtResolutionHint(dstAddrs);
+					dstHint.textContent = fmtResolutionHint(dstAddrs);
 				}
 
 				var sim = {
@@ -554,10 +444,10 @@ return view.extend({
 					/* Check if destination is in a directly connected network.
 					 * mwan3 exempts these before any rule is evaluated. */
 					if (sim.dst_ip) {
-						var connectedSet = isIPv6(sim.dst_ip) ? connected6 : connected4;
+						var connectedSet = ipmath.isIPv6(sim.dst_ip) ? connected6 : connected4;
 						var matchedCidr  = null;
 						for (var ci = 0; ci < connectedSet.length; ci++) {
-							if (ipInCidr(sim.dst_ip, connectedSet[ci])) {
+							if (ipmath.ipInCidr(sim.dst_ip, connectedSet[ci])) {
 								matchedCidr = connectedSet[ci];
 								break;
 							}
@@ -600,75 +490,45 @@ return view.extend({
 					});
 				});
 			}).catch(function(err) {
-				dom.content(resultArea, E('p', { 'style': 'color:' + COLORS.danger }, String(err)));
+				dom.content(resultArea, E('p', { 'class': components.textClass('danger') }, String(err)));
 			});
 		};
 
-		return E('div', { 'class': 'cbi-map' }, [
-			E('h2', {}, _('MultiWAN Manager - Traffic Path Simulator')),
-			E('div', { 'class': 'cbi-section' }, [
-				E('p', { 'style': 'color:' + COLORS.muted },
-					_('Enter traffic parameters to simulate which mwan3 rule matches and which policy would handle the traffic. IP fields accept addresses or hostnames - hostnames are resolved via the local DNS server. Rules with a constraint on a field you leave blank will not match.')),
+		return m.render().then(function(mapNode) {
+			/* Give every input and select a uniform width so the fields align. */
+			[ oSrc, oDst, oMark, oProto, oSport, oDport, oFam ].forEach(function(o) {
+				var w = o.getUIElement('sim');
+				var c = (w && w.node) ? w.node.querySelector('input, select') : null;
+				if (c) c.classList.add('mwan3-sim-field');
+			});
 
-				(function() {
-					var formSection = E('div', { 'class': 'cbi-section-node' }, [
-						E('div', { 'class': 'cbi-value' }, [
-							E('label', { 'class': 'cbi-value-title' }, _('Source IP/Name')),
-							E('div', { 'class': 'cbi-value-field' }, [
-								E('input', {
-									'class': 'cbi-input-text', 'id': 'sim-src-ip', 'type': 'text',
-									'placeholder': _('e.g. 192.168.1.5 or hostname'), 'style': 'width:20em',
-									'input': function() { var h = document.getElementById('sim-src-ip-hint'); if (h) h.textContent = ''; },
-								}),
-								E('span', { 'id': 'sim-src-ip-hint', 'style': 'color:' + COLORS.muted + '; margin-left:0.5em; font-size:0.9em' }),
-							]),
-						]),
-						E('div', { 'class': 'cbi-value' }, [
-							E('label', { 'class': 'cbi-value-title' }, _('Destination IP/Name')),
-							E('div', { 'class': 'cbi-value-field' }, [
-								E('input', {
-									'class': 'cbi-input-text', 'id': 'sim-dst-ip', 'type': 'text',
-									'placeholder': _('e.g. 8.8.4.4 or hostname'), 'style': 'width:20em',
-									'input': function() { var h = document.getElementById('sim-dst-ip-hint'); if (h) h.textContent = ''; },
-								}),
-								E('span', { 'id': 'sim-dst-ip-hint', 'style': 'color:' + COLORS.muted + '; margin-left:0.5em; font-size:0.9em' }),
-							]),
-						]),
-						E('div', { 'class': 'cbi-value' }, [
-							E('label', { 'class': 'cbi-value-title' }, _('Fwmark')),
-							E('div', { 'class': 'cbi-value-field' }, [
-								E('input', { 'class': 'cbi-input-text', 'id': 'sim-mark', 'type': 'text',
-									'placeholder': '0x80000', 'style': 'width:12em' }),
-							]),
-						]),
-						E('div', { 'class': 'cbi-value' }, [
-							E('label', { 'class': 'cbi-value-title' }, _('Protocol')),
-							E('div', { 'class': 'cbi-value-field' }, [ protoSel ]),
-						]),
-						portRow('sim-sport', _('Source port')),
-						portRow('sim-dport', _('Destination port')),
-						E('div', { 'class': 'cbi-value' }, [
-							E('label', { 'class': 'cbi-value-title' }, _('Address family')),
-							E('div', { 'class': 'cbi-value-field' }, [
-								E('select', { 'class': 'cbi-input-select', 'id': 'sim-family' }, famOpts),
-							]),
-						]),
-					]);
-					formSection.addEventListener('keydown', function(ev) {
-						if (ev.key === 'Enter' && ev.target.tagName === 'INPUT')
-							handleSimulate();
-					});
-					return formSection;
-				})(),
-				E('div', { 'class': 'right', 'style': 'margin-top:0.5em' }, [
-					E('button', {
-						'class': 'cbi-button cbi-button-apply',
-						'click': ui.createHandlerFn(this, handleSimulate),
-					}, _('Simulate')),
-				]),
-			]),
-			resultArea,
-		]);
+			/* Attach the resolution hint beside each IP field and clear it when
+			   the field is edited. The hint sits inside the widget node so it
+			   stays inline with the input. */
+			[ [oSrc, srcHint], [oDst, dstHint] ].forEach(function(pair) {
+				var widget = pair[0].getUIElement('sim');
+				if (!widget || !widget.node) return;
+				var input = widget.node.querySelector('input');
+				if (input)
+					input.addEventListener('input', function() { pair[1].textContent = ''; });
+				widget.node.appendChild(pair[1]);
+			});
+
+			/* Enter in any input runs the simulation. */
+			mapNode.addEventListener('keydown', function(ev) {
+				if (ev.key === 'Enter' && ev.target.tagName === 'INPUT')
+					handleSimulate();
+			});
+
+			var actions = E('div', { 'class': 'right mwan3-sim-actions' }, [
+				E('button', {
+					'class': 'cbi-button cbi-button-apply',
+					'click': ui.createHandlerFn(self, handleSimulate),
+				}, _('Simulate')),
+			]);
+
+			return E('div', {}, [ mapNode, actions, resultArea ]);
+		});
 	},
 
 	handleSaveApply: null,

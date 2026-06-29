@@ -7,47 +7,40 @@
 
 return view.extend({
 	handleCommand: function(exec, args) {
-		var buttons = document.querySelectorAll('.cbi-button');
-
-		for (var i = 0; i < buttons.length; i++)
-			buttons[i].setAttribute('disabled', 'true');
+		var self = this;
 
 		return fs.exec(exec, args).then(function(res) {
-			var out = document.querySelector('.command-output');
-			out.style.display = '';
+			self.outputEl.style.display = '';
 
-			dom.content(out, [ res.stdout || '', res.stderr || '' ]);
+			dom.content(self.outputEl, [ res.stdout || '', res.stderr || '' ]);
 		}).catch(function(err) {
-			ui.addNotification(null, E('p', [ err ]))
-		}).finally(function() {
-			for (var i = 0; i < buttons.length; i++)
-				buttons[i].removeAttribute('disabled');
+			ui.addNotification(null, E('p', [ err ]));
 		});
 	},
 
 	handleAction: function(ev) {
-		var iface = document.getElementById('iface');
-		var task = document.getElementById('task');
+		var iface = this.ifaceSel.getValue();
+		var task = this.taskSel.getValue();
 
-		switch (task.value) {
+		switch (task) {
 			case 'gateway':
 				return this.handleCommand('/usr/libexec/luci-mwan3',
-					[ 'diag', 'gateway', iface.value ]);
+					[ 'diag', 'gateway', iface ]);
 			case 'tracking':
 				return this.handleCommand('/usr/libexec/luci-mwan3',
-					[ 'diag', 'tracking', iface.value ]);
+					[ 'diag', 'tracking', iface ]);
 			case 'rules':
 				return this.handleCommand('/usr/libexec/luci-mwan3',
-					[ 'diag', 'rules', iface.value ]);
+					[ 'diag', 'rules', iface ]);
 			case 'routes':
 				return this.handleCommand('/usr/libexec/luci-mwan3',
-					[ 'diag', 'routes', iface.value ]);
+					[ 'diag', 'routes', iface ]);
 			case 'ifup':
 				return this.handleCommand('/usr/sbin/mwan3',
-					[ 'ifup', iface.value]);
+					[ 'ifup', iface ]);
 			case 'ifdown':
 				return this.handleCommand('/usr/sbin/mwan3',
-					[ 'ifdown', iface.value]);
+					[ 'ifdown', iface ]);
 		}
 	},
 
@@ -58,22 +51,22 @@ return view.extend({
 	},
 
 	render: function () {
+		var ifaceChoices = { '': _('-- Interface Selection --') };
+		uci.sections('mwan3', 'interface').forEach(function(s) {
+			ifaceChoices[s['.name']] = s['.name'];
+		});
+		this.ifaceSel = new ui.Select('', ifaceChoices, { widget: 'select' });
 
-		var taskSel = [
-			E('option', { 'value': 'gateway' }, [ _('Ping default gateway') ]),
-			E('option', { 'value': 'tracking' }, [ _('Ping tracking IP') ]),
-			E('option', { 'value': 'rules' }, [ _('Check IP rules') ]),
-			E('option', { 'value': 'routes' }, [ _('Check routing table') ]),
-			E('option', { 'value': 'ifup' }, [ _('Hotplug ifup') ]),
-			E('option', { 'value': 'ifdown' }, [ _('Hotplug ifdown') ])
-		];
+		this.taskSel = new ui.Select('gateway', {
+			gateway:  _('Ping default gateway'),
+			tracking: _('Ping tracking IP'),
+			rules:    _('Check IP rules'),
+			routes:   _('Check routing table'),
+			ifup:     _('Hotplug ifup'),
+			ifdown:   _('Hotplug ifdown')
+		}, { widget: 'select' });
 
-		var ifaceSel = [E('option', { value: '' }, [_('-- Interface Selection --')])];
-
-		var options = uci.sections('mwan3', 'interface')
-		for (var i = 0; i < options.length; i++) {
-			ifaceSel.push(E('option', { 'value': options[i]['.name'] }, options[i]['.name']));
-		}
+		this.outputEl = E('pre', { 'class': 'command-output', 'style': 'display:none' });
 
 		return E('div', { 'class': 'cbi-map', 'id': 'map' }, [
 				E('h2', {}, [ _('MultiWAN Manager - Diagnostics') ]),
@@ -81,24 +74,16 @@ return view.extend({
 					E('div', { 'class': 'cbi-section-node' }, [
 						E('div', { 'class': 'cbi-value' }, [
 							E('label', { 'class': 'cbi-value-title' }, [ _('Interface') ]),
-							E('div', { 'class': 'cbi-value-field' }, [
-								E('select', {'class': 'cbi-input-select', 'id': 'iface'},
-									ifaceSel
-								)
-							])
+							E('div', { 'class': 'cbi-value-field' }, [ this.ifaceSel.render() ])
 						]),
 						E('div', { 'class': 'cbi-value' }, [
 							E('label', { 'class': 'cbi-value-title' }, [ _('Task') ]),
-							E('div', { 'class': 'cbi-value-field' }, [
-								E('select', { 'class': 'cbi-input-select', 'id': 'task' },
-									taskSel
-								)
-							])
+							E('div', { 'class': 'cbi-value-field' }, [ this.taskSel.render() ])
 						])
 					])
 				]),
 				'\xa0',
-				E('pre', { 'class': 'command-output', 'style': 'display:none' }),
+				this.outputEl,
 				'\xa0',
 				E('div', { 'class': 'right' }, [
 					E('button', {

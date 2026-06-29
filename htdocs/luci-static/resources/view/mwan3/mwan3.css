@@ -1,3 +1,5 @@
+/* Service-status panel layout. */
+
 #mwan3-service-status > .alert-message {
 	display: inline-block;
 	margin: 1rem;
@@ -6,3 +8,201 @@
 	height: 6rem;
 	vertical-align: middle;
 }
+
+/* ---- Status colour vocabulary ---- */
+
+.mwan3-ok    { color: #5cb85c; }
+.mwan3-bad   { color: #d9534f; }
+.mwan3-warn  { color: #f0ad4e; }
+.mwan3-muted { color: #888888; }
+.mwan3-info  { color: #5bc0de; }
+
+.mwan3-strong { font-weight: bold; }
+
+/* ---- Status cards ---- */
+
+.mwan3-card        { border: 2px solid; border-radius: 4px; padding: 0.6em 1em; }
+.mwan3-card--ok    { border-color: #5cb85c; }
+.mwan3-card--bad   { border-color: #d9534f; }
+.mwan3-card--warn  { border-color: #f0ad4e; }
+.mwan3-card--muted { border-color: #888888; }
+.mwan3-card--info  { border-color: #5bc0de; }
+.mwan3-card--sm     { padding: 0.5em 0.8em; }
+.mwan3-card--grow   { flex: 1 1 auto; }
+.mwan3-card--policy { border-color: #999999; }
+
+/* ---- Summary bar ---- */
+
+.mwan3-summary {
+	border: 2px solid;
+	border-radius: 4px;
+	padding: 0.6em 1em;
+	margin-bottom: 1em;
+	font-weight: bold;
+}
+
+/* ---- Configuration issue list ---- */
+
+.mwan3-issues       { display: flex; flex-direction: column; gap: 0.5em; }
+.mwan3-issue-head   { display: flex; align-items: baseline; gap: 0.6em; margin-bottom: 0.2em; }
+.mwan3-issue-label  { font-size: 0.78em; font-weight: bold; text-transform: uppercase; }
+.mwan3-issue-detail { font-size: 0.92em; }
+
+/* ---- Layout helpers ---- */
+
+.mwan3-grid     { display: grid; grid-template-columns: repeat(auto-fill, 13em); gap: 0.5em; }
+.mwan3-flexwrap { display: flex; flex-wrap: wrap; gap: 0.5em; }
+.mwan3-mono     { font-family: monospace; }
+.mwan3-badge    { padding: 1px 5px; border: 1px solid currentColor; border-radius: 3px; opacity: 0.8; }
+.mwan3-banner   { width: 100%; margin-top: 0.5em; padding: 0.4em 0.6em; border-left: 3px solid #5bc0de; }
+
+/* ---- Key/value block ---- */
+
+.mwan3-kv       { width: 100%; border-collapse: collapse; }
+.mwan3-kv-label { width: 55%; padding: 0.15em 0; }
+.mwan3-kv-value { text-align: right; }
+
+/* ---- Troubleshooting disclosure panels ---- */
+
+.mwan3-title { margin-bottom: 1em; }
+.mwan3-ts    { margin-bottom: 0.75em; }
+details.mwan3-ts > summary::before       { content: "\25B6\00A0\00A0"; }
+details.mwan3-ts[open] > summary::before { content: "\25BC\00A0\00A0"; }
+
+.mwan3-ts-summary {
+	cursor: pointer;
+	font-weight: bold;
+	padding: 0.4em 0.6em;
+	background: rgba(128, 128, 128, 0.12);
+	border-radius: 4px;
+	user-select: none;
+	list-style: none;
+}
+
+.mwan3-ts-pre {
+	margin: 0;
+	padding: 0.5em 0.75em;
+	max-height: 250px;
+	overflow: auto;
+	font-size: 0.85em;
+	border-left: 2px solid #999;
+	background: rgba(128, 128, 128, 0.05);
+}
+
+/* ---- Overview ---- */
+
+.mwan3-section-gap  { margin-top: 1em; }
+.mwan3-policy-title { font-weight: bold; margin-bottom: 0.3em; }
+.mwan3-nowrap       { white-space: nowrap; }
+
+.mwan3-rules-table                   { width: 100%; table-layout: fixed; }
+.mwan3-rules-table .mwan3-col-rule   { width: 20%; text-align: left; }
+.mwan3-rules-table .mwan3-col-match  { width: 55%; text-align: center; }
+.mwan3-rules-table .mwan3-col-policy { width: 25%; text-align: right; }
+
+/* ---- Status detail ---- */
+
+.mwan3-detail-header { display: flex; align-items: center; gap: 0.8em; margin-bottom: 0.5em; padding: 0.4em 0.7em; font-size: 1.1em; }
+.mwan3-detail-label  { font-size: 1.05em; }
+.mwan3-infinity      { color: #888888; display: inline-block; transform: scale(1.4); }
+
+.mwan3-detail-table                   { width: 100%; table-layout: fixed; }
+.mwan3-detail-table .mwan3-col-target { width: 40%; text-align: left; }
+.mwan3-detail-table .mwan3-col-num    { width: 20%; text-align: right; }
+
+/* ---- Routing health ---- */
+
+.mwan3-iface-card   { margin-bottom: 0.75em; }
+.mwan3-iface-header { display: flex; align-items: center; gap: 0.8em; margin-bottom: 0.5em; }
+.mwan3-kv-note      { color: #888888; font-size: 0.9em; }
+.mwan3-route        { padding-left: 1em; font-family: monospace; font-size: 0.9em; }
+.mwan3-route-none   { padding-left: 1em; color: #888888; }
+.mwan3-summary-gap  { margin-bottom: 1em; }
+
+.mwan3-stale       { margin-top: 1.5em; }
+.mwan3-stale-title { margin-bottom: 0.5em; }
+.mwan3-stale-note  { color: #888888; margin-bottom: 0.5em; }
+.mwan3-stale-table { width: 100%; }
+
+.mwan3-guide             { border: 1px solid #888888; border-radius: 4px; padding: 0.8em 1em; margin-top: 0.5em; margin-bottom: 0.75em; }
+.mwan3-guide-title       { font-weight: bold; margin-bottom: 0.6em; }
+.mwan3-guide-field       { margin-bottom: 0.7em; }
+.mwan3-guide-field-title { font-weight: bold; margin-bottom: 0.1em; }
+.mwan3-guide-body        { color: #888888; font-size: 0.92em; }
+
+/* ---- IP sets ---- */
+
+.mwan3-hidden { display: none !important; }
+
+.mwan3-ipset-panel      { margin-bottom: 1em; padding: 0.6em 1em; border: 1px solid rgba(128, 128, 128, 0.4); border-radius: 4px; }
+.mwan3-ipset-header     { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.5em; margin-bottom: 0.3em; }
+.mwan3-ipset-name       { font-size: 1.05em; }
+.mwan3-ipset-count      { opacity: 0.6; margin-left: 0.3em; }
+.mwan3-ipset-actions    { display: flex; gap: 0.3em; margin-left: auto; align-items: center; }
+.mwan3-ipset-meta       { opacity: 0.6; margin-bottom: 0.2em; }
+.mwan3-ipset-members    { margin-top: 0.6em; }
+.mwan3-ipset-grouptitle { font-weight: bold; opacity: 0.7; margin-bottom: 0.2em; }
+.mwan3-ipset-domains    { font-family: monospace; margin-bottom: 0.6em; }
+.mwan3-ipset-loading    { opacity: 0.6; }
+.mwan3-ipset-more       { margin-top: 6px; }
+.mwan3-ipset-trunc      { opacity: 0.7; margin: 6px 0 0; }
+
+.mwan3-ipset-table                  { width: 100%; table-layout: fixed; }
+.mwan3-ipset-table .mwan3-col-addr  { width: 50%; text-align: left; }
+.mwan3-ipset-table .mwan3-col-count { width: 25%; text-align: right; }
+
+/* ---- Simulator ---- */
+
+.mwan3-sim-hint      { margin-left: 0.5em; font-size: 0.9em; }
+.mwan3-sim-field     { width: 16em; }
+.mwan3-sim-card      { margin-top: 1em; padding: 0.7em 1em; }
+.mwan3-sim-title     { font-weight: bold; font-size: 1.05em; margin-bottom: 0.3em; }
+.mwan3-sim-detail    { margin-top: 0.4em; }
+.mwan3-sim-detail-sm { margin-top: 0.3em; }
+.mwan3-sim-member    { padding-left: 1em; }
+.mwan3-sim-livehdr   { margin-top: 0.4em; font-style: italic; }
+.mwan3-sim-shadow    { margin-top: 1em; }
+.mwan3-sim-shadow-h4 { margin-bottom: 0.4em; }
+.mwan3-sim-actions   { margin-top: 0.5em; }
+
+.mwan3-sim-shadow-table                      { width: 100%; }
+.mwan3-sim-shadow-table .mwan3-sim-col-policy { text-align: right; }
+
+/* ---- Policy builder ---- */
+
+.mwan3-pb-row        { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.mwan3-pb-label      { min-width: 7em; text-align: right; }
+.mwan3-pb-hr         { margin: 6px 0 10px; }
+
+.mwan3-pb-policy     { width: 13em; }
+.mwan3-pb-name       { width: 10em; }
+.mwan3-pb-lastresort { width: 13em; }
+.mwan3-pb-policy select, .mwan3-pb-lastresort select { width: 100%; }
+.mwan3-pb-name input { width: 100%; }
+
+.mwan3-pb-tier       { border: 1px solid #cccccc; border-radius: 4px; padding: 8px 10px; margin-bottom: 8px; }
+.mwan3-pb-tier-head  { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+
+.mwan3-pb-entry      { display: flex; gap: 6px; align-items: center; margin: 3px 0; }
+.mwan3-pb-fam        { width: 5.5em; }
+.mwan3-pb-iface      { width: 7em; }
+.mwan3-pb-pct        { width: 3.5em; }
+.mwan3-pb-fam select, .mwan3-pb-iface select { width: 100%; }
+.mwan3-pb-pct input  { width: 100%; }
+.mwan3-pb-pct--locked { opacity: 0.6; }
+.mwan3-pb-entry-rm   { padding: 1px 6px; }
+
+.mwan3-pb-add-entry  { margin-top: 5px; padding: 1px 8px; font-size: 0.9em; }
+.mwan3-pb-rm-tier    { padding: 1px 8px; font-size: 0.9em; }
+.mwan3-pb-add-tier   { margin: 4px 0; padding: 2px 8px; }
+
+.mwan3-pb-errors     { margin-top: 6px; min-height: 1em; }
+.mwan3-pb-error      { font-size: 0.9em; margin: 2px 0; }
+
+.mwan3-pb-actions    { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; padding-top: 10px; border-top: 1px solid #cccccc; }
+
+.mwan3-pb-orphan-list { margin: 8px 0 12px; padding: 8px; border: 1px solid #cccccc; border-radius: 4px; }
+.mwan3-pb-orphan-row  { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
+
+.mwan3-pb-toolbar    { display: flex; justify-content: flex-end; align-items: center; margin-bottom: 1em; }
+.mwan3-pb-pref       { display: flex; align-items: center; gap: 0.5em; cursor: pointer; }

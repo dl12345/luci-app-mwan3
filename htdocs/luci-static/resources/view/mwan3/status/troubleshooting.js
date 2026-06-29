@@ -1,12 +1,7 @@
 'use strict';
 'require fs';
 'require view';
-
-var style = document.createElement('style');
-style.textContent =
-	'details.mwan3-ts > summary::before { content: "\\25B6\\00A0\\00A0"; }' +
-	'details.mwan3-ts[open] > summary::before { content: "\\25BC\\00A0\\00A0"; }';
-document.head.appendChild(style);
+'require mwan3.components as components';
 
 function parseSections(text) {
 	var sections = [];
@@ -68,10 +63,12 @@ return view.extend({
 	},
 
 	render: function(data) {
+		components.loadStyle();
+
 		var v4sections = parseSections(data[0]);
 		var v6sections = parseSections(data[1]);
 
-		// IPv6 output duplicates Software-Version and the nftables section — drop them
+		// IPv6 output duplicates Software-Version and the nftables section - drop them
 		v6sections = v6sections.filter(function(s) {
 			return s.title !== 'Software-Version' && s.title.indexOf('nft') < 0;
 		});
@@ -83,22 +80,14 @@ return view.extend({
 			if (s.title.indexOf('nft') >= 0)
 				content = filterVmapChains(content);
 
-			return E('details', { 'class': 'mwan3-ts', 'style': 'margin-bottom:0.75em' }, [
-				E('summary', {
-					'style': 'cursor:pointer; font-weight:bold; padding:0.4em 0.6em; ' +
-					         'background:rgba(128,128,128,0.12); border-radius:4px; ' +
-					         'user-select:none; list-style:none'
-				}, s.title),
-				E('pre', {
-					'style': 'margin:0; padding:0.5em 0.75em; max-height:250px; ' +
-					         'overflow:auto; font-size:0.85em; ' +
-					         'border-left:2px solid #999; background:rgba(128,128,128,0.05)'
-				}, content),
+			return E('details', { 'class': 'mwan3-ts' }, [
+				E('summary', { 'class': 'mwan3-ts-summary' }, s.title),
+				E('pre', { 'class': 'mwan3-ts-pre' }, content),
 			]);
 		});
 
 		return E('div', { 'class': 'cbi-map' }, [
-			E('h2', { 'style': 'margin-bottom:1em' }, _('MultiWAN Manager - Troubleshooting')),
+			E('h2', { 'class': 'mwan3-title' }, _('MultiWAN Manager - Troubleshooting')),
 			E('div', { 'class': 'cbi-section' }, panels),
 		]);
 	},

@@ -2,6 +2,9 @@
 'require view';
 'require rpc';
 'require poll';
+'require dom';
+'require ui';
+'require mwan3.components as components';
 
 const callMwan3Status = rpc.declare({
 	object: 'mwan3',
@@ -10,171 +13,109 @@ const callMwan3Status = rpc.declare({
 	expect: {},
 });
 
-document.querySelector('head').appendChild(E('link', {
-	'rel': 'stylesheet',
-	'type': 'text/css',
-	'href': L.resource('view/mwan3/mwan3.css')
-}));
+function trackingInfo(d) {
+	switch (d.tracking) {
+		case 'active':   return { label: _('Active'),   severity: 'success' };
+		case 'paused':   return { label: _('Paused'),   severity: 'muted' };
+		case 'down':     return { label: _('Down'),     severity: 'danger' };
+		case 'disabled': return { label: _('Disabled'), severity: 'muted' };
+		default:         return { label: d.tracking || _('Unknown'), severity: 'muted' };
+	}
+}
 
-const COLORS = {
-	success: '#5cb85c',
-	danger:  '#d9534f',
-	warning: '#f0ad4e',
-	muted:   '#888888',
-};
+function buildTrackRows(d, trackIps) {
+	var statusOrder = { 'up': 0, 'down': 1, 'skipped': 2 };
+	var sorted = trackIps.slice().sort(function(a, b) {
+		var oa = statusOrder[a.status] !== undefined ? statusOrder[a.status] : 3;
+		var ob = statusOrder[b.status] !== undefined ? statusOrder[b.status] : 3;
+		return oa - ob;
+	});
 
-function colorText(text, color) {
-	return E('span', { 'style': 'color:' + color + '; font-weight:bold' }, text);
+	var isDisabled = d.status !== 'online' && d.status !== 'offline' && d.status !== 'notracking';
+
+	return sorted.map(function(t) {
+		var statusRaw, statusEl;
+		if (isDisabled) {
+			statusRaw = 3;
+			statusEl = components.statusText(_('Disabled'), 'muted', true);
+		} else if (t.status === 'up') {
+			statusRaw = 0;
+			statusEl = components.statusText(_('Up'), 'success', true);
+		} else if (t.status === 'down') {
+			statusRaw = 1;
+			statusEl = components.statusText(_('Down'), 'danger', true);
+		} else if (t.status === 'skipped') {
+			statusRaw = 2;
+			statusEl = components.statusText(_('Ignored'), 'muted', true);
+		} else {
+			statusRaw = 3;
+			statusEl = components.statusText(t.status || _('Unknown'), 'muted', true);
+		}
+
+		var latency, loss;
+		if (isDisabled) {
+			latency = [ -1, E('em', { 'class': 'mwan3-muted' }, '-') ];
+			loss    = [ -1, E('em', { 'class': 'mwan3-muted' }, '-') ];
+		} else if (!d.check_quality) {
+			latency = [ -1, E('em', { 'class': 'mwan3-muted' }, _('Not enabled')) ];
+			loss    = [ -1, E('em', { 'class': 'mwan3-muted' }, _('Not enabled')) ];
+		} else if (t.status === 'down') {
+			latency = [ 1e15, E('span', { 'class': 'mwan3-infinity' }, '\u221e') ];
+			loss    = [ Math.round(Number(t.packetloss) || 0), E('span', {}, t.packetloss + '%') ];
+		} else if (t.status === 'skipped') {
+			latency = [ -1, E('em', { 'class': 'mwan3-muted' }, '-') ];
+			loss    = [ -1, E('em', { 'class': 'mwan3-muted' }, '-') ];
+		} else {
+			latency = [ Math.round(Number(t.latency) || 0), E('span', {}, t.latency + ' ms') ];
+			loss    = [ Math.round(Number(t.packetloss) || 0), E('span', {}, t.packetloss + '%') ];
+		}
+
+		return [ t.ip, [ statusRaw, statusEl ], latency, loss ];
+	});
 }
 
 function renderInterfacePanel(iface, d) {
-	var statusText, statusColor;
-	switch (d.status) {
-		case 'online':
-			statusText  = _('Online');
-			statusColor = COLORS.success;
-			break;
-		case 'offline':
-			statusText  = _('Offline');
-			statusColor = COLORS.danger;
-			break;
-		case 'notracking':
-			statusText  = _('No Tracking');
-			statusColor = d.uptime > 0 ? COLORS.success : COLORS.warning;
-			break;
-		default:
-			statusText  = _('Disabled');
-			statusColor = COLORS.muted;
-	}
+	var si = components.statusInfo(d);
+	var ti = trackingInfo(d);
 
-	var trackText, trackColor;
-	switch (d.tracking) {
-		case 'active':
-			trackText  = _('Active');
-			trackColor = COLORS.success;
-			break;
-		case 'paused':
-			trackText  = _('Paused');
-			trackColor = COLORS.muted;
-			break;
-		case 'down':
-			trackText  = _('Down');
-			trackColor = COLORS.danger;
-			break;
-		case 'disabled':
-			trackText  = _('Disabled');
-			trackColor = COLORS.muted;
-			break;
-		default:
-			trackText  = d.tracking || _('Unknown');
-			trackColor = COLORS.muted;
-	}
-
-	var header = E('div', { 'style': 'display:flex; align-items:center; gap:0.8em; margin-bottom:0.5em; border:2px solid ' + statusColor + '; border-radius:4px; padding:0.4em 0.7em; font-size:1.1em' }, [
-		E('strong', { 'style': 'font-size:1.05em' }, iface),
-		colorText(statusText, statusColor),
-		E('strong', { 'style': 'font-size:1.05em' }, _('Tracking') + ':'),
-		colorText(trackText, trackColor),
-		E('strong', { 'style': 'font-size:1.05em' }, _('Score') + ':'),
-		E('strong', { 'style': 'font-size:1.05em' }, String(d.score || 0)),
-	]);
+	var header = components.card(si.severity, [
+		E('strong', { 'class': 'mwan3-detail-label' }, iface),
+		components.statusText(si.label, si.severity, true),
+		E('strong', { 'class': 'mwan3-detail-label' }, _('Tracking') + ':'),
+		components.statusText(ti.label, ti.severity, true),
+		E('strong', { 'class': 'mwan3-detail-label' }, _('Score') + ':'),
+		E('strong', { 'class': 'mwan3-detail-label' }, String(d.score || 0)),
+	], 'mwan3-detail-header');
 
 	var trackIps = d.track_ip;
 	var body;
 
 	if (!trackIps || !trackIps.length) {
-		body = E('em', {}, _('No tracking IPs configured'));
+		body = components.emptyHint(_('No tracking IPs configured'));
 	} else {
-		var rows = [
-			E('tr', { 'class': 'tr cbi-section-table-titles' }, [
-				E('th', { 'class': 'th' }, _('Target IP')),
-				E('th', { 'class': 'th', 'style': 'text-align:right' }, _('Status')),
-				E('th', { 'class': 'th', 'style': 'text-align:right' }, _('Latency')),
-				E('th', { 'class': 'th', 'style': 'text-align:right' }, _('Packet Loss')),
-			]),
-		];
-
-		var statusOrder = { 'up': 0, 'down': 1, 'skipped': 2 };
-		trackIps = trackIps.slice().sort(function(a, b) {
-			var oa = statusOrder[a.status] !== undefined ? statusOrder[a.status] : 3;
-			var ob = statusOrder[b.status] !== undefined ? statusOrder[b.status] : 3;
-			return oa - ob;
-		});
-
-		trackIps.forEach(function(t) {
-			var isDisabled = d.status !== 'online' && d.status !== 'offline' && d.status !== 'notracking';
-			var statusEl;
-			if (isDisabled) {
-				statusEl = colorText(_('Disabled'), COLORS.muted);
-			} else {
-				switch (t.status) {
-					case 'up':
-						statusEl = colorText(_('Up'), COLORS.success);
-						break;
-					case 'down':
-						statusEl = colorText(_('Down'), COLORS.danger);
-						break;
-					case 'skipped':
-						statusEl = colorText(_('Ignored'), COLORS.muted);
-						break;
-					default:
-						statusEl = colorText(t.status || _('Unknown'), COLORS.muted);
-				}
-			}
-			var latencyEl, lossEl;
-			if (isDisabled) {
-				latencyEl = E('em', { 'style': 'color:' + COLORS.muted }, '-');
-				lossEl    = E('em', { 'style': 'color:' + COLORS.muted }, '-');
-			} else if (!d.check_quality) {
-				latencyEl = E('em', { 'style': 'color:' + COLORS.muted }, _('Not enabled'));
-				lossEl    = E('em', { 'style': 'color:' + COLORS.muted }, _('Not enabled'));
-			} else if (t.status === 'down') {
-				latencyEl = E('span', { 'style': 'color:' + COLORS.muted + '; display:inline-block; transform:scale(1.4)' }, '\u221e');
-				lossEl    = E('span', {}, t.packetloss + '%');
-			} else if (t.status === 'skipped') {
-				latencyEl = E('em', { 'style': 'color:' + COLORS.muted }, '-');
-				lossEl    = E('em', { 'style': 'color:' + COLORS.muted }, '-');
-			} else {
-				latencyEl = E('span', {}, t.latency + ' ms');
-				lossEl    = E('span', {}, t.packetloss + '%');
-			}
-			rows.push(E('tr', { 'class': 'tr' }, [
-				E('td', { 'class': 'td' }, t.ip),
-				E('td', { 'class': 'td', 'style': 'text-align:right' }, statusEl),
-				E('td', { 'class': 'td', 'style': 'text-align:right' }, latencyEl),
-				E('td', { 'class': 'td', 'style': 'text-align:right' }, lossEl),
-			]));
-		});
-
-		body = E('table', { 'class': 'table cbi-section-table', 'style': 'width:100%; table-layout:fixed' }, [
-			E('colgroup', {}, [
-				E('col', { 'style': 'width:40%' }),
-				E('col', { 'style': 'width:20%' }),
-				E('col', { 'style': 'width:20%' }),
-				E('col', { 'style': 'width:20%' }),
-			]),
-			...rows,
-		]);
+		var table = new ui.Table(
+			[ _('Target IP'), _('Status'), _('Latency'), _('Packet Loss') ],
+			{
+				id: 'mwan3-detail-' + iface,
+				sortable: true,
+				classes: 'mwan3-detail-table',
+				captionClasses: [ 'mwan3-col-target', 'mwan3-col-num', 'mwan3-col-num', 'mwan3-col-num' ],
+			},
+			components.emptyHint(_('No tracking IPs configured'))
+		);
+		table.update(buildTrackRows(d, trackIps));
+		body = table.render();
 	}
 
-	return E('div', { 'class': 'cbi-section', 'style': 'margin-top:1em' }, [ header, body ]);
+	return E('div', { 'class': 'cbi-section mwan3-section-gap' }, [ header, body ]);
 }
 
 function renderStatus(interfaces) {
 	if (!interfaces)
-		return [ E('em', {}, _('No interfaces found')) ];
+		return [ components.emptyHint(_('No interfaces found')) ];
 
 	return Object.keys(interfaces).map(function(iface) {
 		return renderInterfacePanel(iface, interfaces[iface]);
-	});
-}
-
-function updateLiveStatus(result) {
-	var el = document.getElementById('mwan3-detail-status');
-	if (!el) return;
-	while (el.firstChild) el.removeChild(el.firstChild);
-	renderStatus(result.interfaces).forEach(function(section) {
-		el.appendChild(section);
 	});
 }
 
@@ -184,15 +125,20 @@ return view.extend({
 	},
 
 	render: function(result) {
+		components.loadStyle();
 		result = result || {};
 
+		var statusRegion = E('div', {}, renderStatus(result.interfaces));
+
 		poll.add(function() {
-			return callMwan3Status('interfaces').then(updateLiveStatus);
-		});
+			return callMwan3Status('interfaces').then(function(res) {
+				dom.content(statusRegion, renderStatus((res || {}).interfaces));
+			});
+		}, 5);
 
 		return E('div', { 'class': 'cbi-map' }, [
-			E('h2', { 'style': 'margin-bottom:1em' }, _('MultiWAN Manager - Status')),
-			E('div', { 'id': 'mwan3-detail-status' }, renderStatus(result.interfaces)),
+			E('h2', { 'class': 'mwan3-title' }, _('MultiWAN Manager - Status')),
+			statusRegion,
 		]);
 	},
 

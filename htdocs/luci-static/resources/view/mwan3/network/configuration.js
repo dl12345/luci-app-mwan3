@@ -1,102 +1,23 @@
 'use strict';
 'require uci';
 'require view';
-'require validation';
+'require mwan3.ipmath as ipmath';
+'require mwan3.components as components';
 
-document.querySelector('head').appendChild(E('link', {
-	'rel': 'stylesheet',
-	'type': 'text/css',
-	'href': L.resource('view/mwan3/mwan3.css')
-}));
-
-const COLORS = {
-	success: '#5cb85c',
-	danger:  '#d9534f',
-	warning: '#f0ad4e',
-	muted:   '#888888',
-	info:    '#5bc0de',
-};
-
-/*
- * CIDR containment for the rule-shadowing check.
- * A is a superset of B if every IP in B's range is also in A's range.
- * Supports both IPv4 (uint32) and IPv6 (BigInt).
- */
-
-/* ---- IPv4 ---- */
-function ipv4ToUint(ip) {
-	var parts = ip.split('.');
-	return ((parseInt(parts[0], 10) << 24) |
-	        (parseInt(parts[1], 10) << 16) |
-	        (parseInt(parts[2], 10) << 8)  |
-	         parseInt(parts[3], 10)) >>> 0;
-}
-
-function ipv4CidrContains(a, b) {
-	var slashA = a.indexOf('/'), slashB = b.indexOf('/');
-	var prefA  = slashA < 0 ? 32 : parseInt(a.substring(slashA + 1), 10);
-	var prefB  = slashB < 0 ? 32 : parseInt(b.substring(slashB + 1), 10);
-	if (prefA > prefB) return false; /* A is more specific than B */
-	var maskA   = prefA === 0 ? 0 : ((0xFFFFFFFF << (32 - prefA)) >>> 0);
-	var netA    = (ipv4ToUint(slashA < 0 ? a : a.substring(0, slashA)) & maskA) >>> 0;
-	var netB    = (ipv4ToUint(slashB < 0 ? b : b.substring(0, slashB)) & maskA) >>> 0;
-	return netA === netB;
-}
-
-/* ---- IPv6 ---- */
-function expandIPv6(ip) {
-	var halves = ip.split('::');
-	if (halves.length === 2) {
-		var left  = halves[0] ? halves[0].split(':') : [];
-		var right = halves[1] ? halves[1].split(':') : [];
-		var fill  = 8 - left.length - right.length;
-		for (var i = 0; i < fill; i++) left.push('0');
-		return left.concat(right);
-	}
-	return ip.split(':');
-}
-
-function ipv6ToBigInt(ip) {
-	var groups = expandIPv6(ip);
-	var result = BigInt(0);
-	for (var i = 0; i < 8; i++)
-		result = (result << BigInt(16)) | BigInt(parseInt(groups[i] || '0', 16));
-	return result;
-}
-
-function ipv6CidrContains(a, b) {
-	var slashA = a.indexOf('/'), slashB = b.indexOf('/');
-	var prefA  = slashA < 0 ? 128 : parseInt(a.substring(slashA + 1), 10);
-	var prefB  = slashB < 0 ? 128 : parseInt(b.substring(slashB + 1), 10);
-	if (prefA > prefB) return false; /* A is more specific than B */
-	var allOnes = (BigInt(1) << BigInt(128)) - BigInt(1);
-	var maskA   = prefA === 0 ? BigInt(0) : allOnes ^ ((BigInt(1) << BigInt(128 - prefA)) - BigInt(1));
-	var netA    = ipv6ToBigInt(slashA < 0 ? a : a.substring(0, slashA)) & maskA;
-	var netB    = ipv6ToBigInt(slashB < 0 ? b : b.substring(0, slashB)) & maskA;
-	return netA === netB;
-}
-
-/* True if CIDR A contains CIDR B (A is a superset of B) */
-function cidrContains(a, b) {
-	if (a.indexOf(',') >= 0 || b.indexOf(',') >= 0) return false;
-	var a_v6 = !!validation.parseIPv6(a.split('/')[0]);
-	var b_v6 = !!validation.parseIPv6(b.split('/')[0]);
-	if (a_v6 && b_v6) return ipv6CidrContains(a, b);
-	if (!a_v6 && !b_v6) return ipv4CidrContains(a, b);
-	return false;
-}
+/* Static analysis of the mwan3 UCI configuration. No live system state is
+   consulted. */
 
 /* Port spec containment: A contains B if every port in B is also in A */
 function portSpecContains(a, b) {
-	if (!a) return true;  /* A has no restriction -> contains everything */
-	if (!b) return false; /* A is restricted, B is unrestricted -> not contained */
-	/* Both non-empty: conservative - only flag exact string match */
+	if (!a) return true;  /* A has no restriction, contains everything */
+	if (!b) return false; /* A is restricted, B is unrestricted, not contained */
+	/* Both non-empty: conservative, only flag exact string match */
 	return a === b;
 }
 
 /*
  * Returns true if rule A (earlier) is a superset of rule B (later),
- * i.e., every packet matching B also matches A -> B is shadowed.
+ * i.e., every packet matching B also matches A so B is shadowed.
  * We are deliberately conservative: we only flag clear cases.
  */
 function ruleAContainsB(a, b) {
@@ -113,13 +34,13 @@ function ruleAContainsB(a, b) {
 	/* Source IP */
 	if (a.src_ip) {
 		if (!b.src_ip)             return false; /* A restricts, B does not */
-		if (a.src_ip !== b.src_ip && !cidrContains(a.src_ip, b.src_ip)) return false;
+		if (a.src_ip !== b.src_ip && !ipmath.cidrContains(a.src_ip, b.src_ip)) return false;
 	}
 
 	/* Destination IP */
 	if (a.dest_ip) {
 		if (!b.dest_ip)               return false;
-		if (a.dest_ip !== b.dest_ip && !cidrContains(a.dest_ip, b.dest_ip)) return false;
+		if (a.dest_ip !== b.dest_ip && !ipmath.cidrContains(a.dest_ip, b.dest_ip)) return false;
 	}
 
 	/* Ports (conservative: only flag identical specs or no restriction on A) */
@@ -146,9 +67,9 @@ function ruleAContainsB(a, b) {
 /* ---- Issue collection ---- */
 
 function collectIssues(uciData) {
-	var interfaces = uciData.interfaces; /* map name -> true */
-	var members    = uciData.members;    /* map name -> {interface, metric, weight} */
-	var policies   = uciData.policies;   /* map name -> {use_member:[...]} */
+	var interfaces = uciData.interfaces; /* map name to true */
+	var members    = uciData.members;    /* map name to {interface, metric, weight} */
+	var policies   = uciData.policies;   /* map name to {use_member:[...]} */
 	var rules      = uciData.rules;      /* ordered array */
 
 	var issues = [];
@@ -194,7 +115,7 @@ function collectIssues(uciData) {
 					_('This member will be ignored; the policy may have fewer active members than expected.'));
 		});
 
-		/* All members reference the same interface -> no real redundancy */
+		/* All members reference the same interface so no real redundancy */
 		var usedIfaces = {};
 		useMembers.forEach(function(mname) {
 			if (members[mname]) usedIfaces[members[mname].interface] = true;
@@ -253,8 +174,8 @@ function collectIssues(uciData) {
 
 /* ---- Rendering ---- */
 
-function severityColor(s) {
-	return s === 'error' ? COLORS.danger : s === 'warning' ? COLORS.warning : COLORS.info;
+function issueSeverity(s) {
+	return s === 'error' ? 'danger' : s === 'warning' ? 'warning' : 'info';
 }
 
 function severityLabel(s) {
@@ -265,37 +186,29 @@ function renderSummary(issues) {
 	var errors   = issues.filter(function(i) { return i.severity === 'error';   }).length;
 	var warnings = issues.filter(function(i) { return i.severity === 'warning'; }).length;
 
-	var color  = errors ? COLORS.danger : warnings ? COLORS.warning : COLORS.success;
+	var severity = errors ? 'danger' : warnings ? 'warning' : 'success';
 	var label  = errors   ? errors   + ' ' + (errors   === 1 ? _('error')   : _('errors'))   + ', '
 	                       + warnings + ' ' + (warnings === 1 ? _('warning') : _('warnings'))
 	           : warnings ? warnings + ' ' + (warnings === 1 ? _('warning') : _('warnings'))
 	           : _('No issues found');
 
-	return E('div', {
-		'style': 'border:2px solid ' + color + '; border-radius:4px; padding:0.6em 1em; margin-bottom:1em; font-weight:bold; color:' + color,
-	}, label);
+	return components.summaryBar(severity, label);
 }
 
 function renderIssues(issues) {
 	if (!issues.length)
-		return E('div', {
-			'style': 'border:2px solid ' + COLORS.success + '; border-radius:4px; padding:0.6em 1em; color:' + COLORS.success,
-		}, _('Configuration looks consistent. No issues detected.'));
+		return components.card('success',
+			_('Configuration looks consistent. No issues detected.'), 'mwan3-ok');
 
-	return E('div', {
-		'style': 'display:flex; flex-direction:column; gap:0.5em',
-	}, issues.map(function(iss) {
-		var color = severityColor(iss.severity);
-		return E('div', {
-			'style': 'border:2px solid ' + color + '; border-radius:4px; padding:0.6em 1em',
-		}, [
-			E('div', { 'style': 'display:flex; align-items:baseline; gap:0.6em; margin-bottom:0.2em' }, [
-				E('span', {
-					'style': 'font-size:0.78em; font-weight:bold; text-transform:uppercase; color:' + color,
-				}, severityLabel(iss.severity)),
-				E('span', { 'style': 'font-weight:bold' }, iss.subject),
+	return E('div', { 'class': 'mwan3-issues' }, issues.map(function(iss) {
+		var severity = issueSeverity(iss.severity);
+		return components.card(severity, [
+			E('div', { 'class': 'mwan3-issue-head' }, [
+				E('span', { 'class': 'mwan3-issue-label ' + components.textClass(severity) },
+					severityLabel(iss.severity)),
+				E('span', { 'class': 'mwan3-strong' }, iss.subject),
 			]),
-			E('div', { 'style': 'color:' + COLORS.muted + '; font-size:0.92em' }, iss.detail),
+			E('div', { 'class': 'mwan3-muted mwan3-issue-detail' }, iss.detail),
 		]);
 	}));
 }
@@ -306,6 +219,8 @@ return view.extend({
 	},
 
 	render: function() {
+		components.loadStyle();
+
 		/* Build lookup structures from UCI */
 		var interfaces = {};
 		uci.sections('mwan3', 'interface').forEach(function(s) {
@@ -339,7 +254,7 @@ return view.extend({
 		return E('div', { 'class': 'cbi-map' }, [
 			E('h2', {}, _('MultiWAN Manager - Configuration')),
 			E('div', { 'class': 'cbi-section' }, [
-				E('p', { 'style': 'color:' + COLORS.muted },
+				E('p', { 'class': 'mwan3-muted' },
 					_('Static analysis of the mwan3 UCI configuration. No live system state is consulted.')),
 				renderSummary(issues),
 				renderIssues(issues),

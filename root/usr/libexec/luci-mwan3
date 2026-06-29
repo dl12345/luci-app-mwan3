@@ -12,6 +12,14 @@
 
 ID=0
 
+# Default rule-base priorities, applied when the matching mwan3.globals UCI
+# option is unset. These mirror the core mwan3 defaults and the LuCI
+# constants in mwan3/constants.js; keep all three in step.
+
+IIF_RULE_BASE_DEFAULT=1000
+FWMARK_RULE_BASE_DEFAULT=2000
+UNREACHABLE_RULE_BASE_DEFAULT=3000
+
 usage() {
 	local status="$1"
 	local msg="$2"
@@ -98,9 +106,9 @@ diag_rules() {
 		exit 2
 	}
 
-	config_get iif_base globals iif_rule_base 1000
-	config_get fwmark_base globals fwmark_rule_base 2000
-	config_get unreachable_base globals unreachable_rule_base 3000
+	config_get iif_base globals iif_rule_base "$IIF_RULE_BASE_DEFAULT"
+	config_get fwmark_base globals fwmark_rule_base "$FWMARK_RULE_BASE_DEFAULT"
+	config_get unreachable_base globals unreachable_rule_base "$UNREACHABLE_RULE_BASE_DEFAULT"
 
 	iif_prio=$((iif_base + ID))
 	fwmark_prio=$((fwmark_base + ID))

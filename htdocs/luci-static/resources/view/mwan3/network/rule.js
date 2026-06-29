@@ -5,6 +5,8 @@
 'require ui';
 'require validation';
 'require rpc';
+'require mwan3.validators as validators';
+'require mwan3.constants as constants';
 
 const callNftsetInfo = rpc.declare({
 	object: 'mwan3',
@@ -12,36 +14,7 @@ const callNftsetInfo = rpc.declare({
 	expect: { sets: {} }
 });
 
-function makeBlurOnly(opt) {
-	opt.render = function(config_name, section_id, in_table) {
-		return Promise.resolve(form.Value.prototype.render.apply(this, arguments)).then(function(node) {
-			/* The validation keyup listener is registered in bubble phase during
-			 * render. We suppress it by adding a capture-phase listener on the
-			 * same input: at the target, capture listeners run before bubble
-			 * listeners, so stopImmediatePropagation() prevents validation from
-			 * firing on every keystroke. Validation still runs on blur. */
-			var input = node && node.querySelector && node.querySelector('input');
-			if (input) {
-				input.addEventListener('keyup', function(ev) {
-					ev.stopImmediatePropagation();
-				}, true);
-			}
-			return node;
-		});
-	};
-}
-
-const stubValidator = {
-	factory: validation,
-	apply(type, value, args) {
-		if (value != null)
-			this.value = value;
-		return validation.types[type].apply(this, args);
-	},
-	assert(condition) {
-		return !!condition;
-	}
-};
+const stubValidator = validators.stub();
 
 return view.extend({
 	load: function() {
@@ -77,18 +50,8 @@ return view.extend({
 			const el = form.GridSection.prototype.renderSectionAdd.apply(this, arguments);
 			const nameEl = el.querySelector('.cbi-section-create-name');
 			ui.addValidator(nameEl, 'uciname', true, function(v) {
-				let sections = [
-					...uci.sections('mwan3', 'interface'),
-					...uci.sections('mwan3', 'member'),
-					...uci.sections('mwan3', 'policy'),
-					...uci.sections('mwan3', 'rule')
-				];
-
-				for (let j = 0; j < sections.length; j++) {
-					if (sections[j]['.name'] == v) {
-						return _('Rules may not share the same name as configured interfaces, members or policies.');
-					}
-				}
+				if (validators.sectionNameInUse(v))
+					return _('Rules may not share the same name as configured interfaces, members or policies.');
 				if (v.length > 15) return _('Name length shall not exceed 15 characters');
 				return true;
 			}, 'blur', 'keyup');
@@ -142,7 +105,6 @@ return view.extend({
 			}
 			return true;
 		};
-		makeBlurOnly(o);
 
 		o = s.option(form.Value, 'src_port', _('Source port'),
 			_('May be entered as a single or multiple port(s) (eg "22" or "80,443") or as a portrange (eg "1024-2048") without quotes'));
@@ -184,7 +146,6 @@ return view.extend({
 			}
 			return true;
 		};
-		makeBlurOnly(o);
 
 		o = s.option(form.Value, 'fwmark', _('Fwmark'),
 			_('Match packet mark; enter value/mask in hex. Mask must not overlap mwan3 internal mark bits.'));
@@ -217,12 +178,11 @@ return view.extend({
 			const parts = value.split('/');
 			if (parts.length !== 2 || !hexre.test(parts[0]) || !hexre.test(parts[1]))
 				return _('Format must be value/mask in hex notation (e.g. 0x80000/0xff0000)');
-			const mmx_mask = parseInt(uci.get('mwan3', 'globals', 'mmx_mask') || '0x3f00', 16);
+			const mmx_mask = parseInt(uci.get('mwan3', 'globals', 'mmx_mask') || constants.MMX_MASK_DEFAULT, 16);
 			if ((parseInt(parts[1], 16) & mmx_mask) !== 0)
 				return _('Mask overlaps mwan3 internal mark bits (0x' + mmx_mask.toString(16) + ')');
 			return true;
 		};
-		makeBlurOnly(o);
 
 		o = s.option(form.Value, 'dest_port', _('Destination port'),
 			_('May be entered as a single or multiple port(s) (eg "22" or "80,443") or as a portrange (eg "1024-2048") without quotes'));

@@ -11,17 +11,23 @@ return view.extend({
 	},
 
 	handleSave(ev) {
-		const value = (document.querySelector('textarea').value || '').trim().replace(/\r\n/g, '\n') + '\n';
+		const value = (this.editor.getValue() || '').trim().replace(/\r\n/g, '\n') + '\n';
 
-		return fs.write('/etc/mwan3.user', value).then(function(rc) {
-			document.querySelector('textarea').value = value;
-				ui.addNotification(null, E('p', _('Contents have been saved.')), 'info');
-			}).catch(function(e) {
-				ui.addNotification(null, E('p', _('Unable to save contents: %s').format(e.message)));
-			});
-		},
+		return fs.write('/etc/mwan3.user', value).then(() => {
+			this.editor.setValue(value);
+			ui.addNotification(null, E('p', _('Contents have been saved.')), 'info');
+		}).catch((e) => {
+			ui.addNotification(null, E('p', _('Unable to save contents: %s').format(e.message)));
+		});
+	},
 
 	render(mwan3user) {
+		this.editor = new ui.Textarea(mwan3user != null ? mwan3user : '', {
+			rows: 10,
+			wrap: false,
+			disabled: isReadonlyView
+		});
+
 		return E([
 			E('h2', _('MultiWAN Manager - Notify')),
 			E('p', { 'class': 'cbi-section-descr' },
@@ -43,7 +49,7 @@ return view.extend({
 			_('* %s: Is only called by mwan3track if tracking has failed').format('disonnected') + '<br />' +
 			_('%s: Name of the interface which went up or down (e.g. "wan" or "wwan")').format('$INTERFACE') + '<br />' +
 			_('%s: Name of Physical device which interface went up or down (e.g. "eth0" or "wwan0")').format('$DEVICE') + '<br />'),
-			E('p', {}, E('textarea', { 'style': 'width:100%', 'rows': 10, 'disabled': isReadonlyView }, [ mwan3user != null ? mwan3user : '' ]))
+			this.editor.render()
 		]);
 	},
 

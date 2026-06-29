@@ -4,65 +4,9 @@
 'require uci';
 'require ui';
 'require validation';
+'require mwan3.validators as validators';
 
-function makeBlurOnly(opt) {
-	opt.render = function(config_name, section_id, in_table) {
-		return Promise.resolve(form.Value.prototype.render.apply(this, arguments)).then(function(node) {
-			/* The validation keyup listener is registered in bubble phase during
-			 * render. We suppress it by adding a capture-phase listener on the
-			 * same input: at the target, capture listeners run before bubble
-			 * listeners, so stopImmediatePropagation() prevents validation from
-			 * firing on every keystroke. Validation still runs on blur. */
-			var input = node && node.querySelector && node.querySelector('input');
-			if (input) {
-				input.addEventListener('keyup', function(ev) {
-					ev.stopImmediatePropagation();
-				}, true);
-			}
-			return node;
-		});
-	};
-}
-
-function makeBlurOnlyList(opt) {
-	opt.render = function(config_name, section_id, in_table) {
-		return Promise.resolve(form.DynamicList.prototype.render.apply(this, arguments)).then(function(node) {
-			function suppress(input) {
-				input.addEventListener('keyup', function(ev) {
-					ev.stopImmediatePropagation();
-				}, true);
-			}
-			node.querySelectorAll('input').forEach(suppress);
-			/* DynamicList adds inputs dynamically when the user clicks "+".
-			 * Watch for new inputs and attach the same suppressor to each. */
-			new MutationObserver(function(mutations) {
-				for (var i = 0; i < mutations.length; i++) {
-					var added = mutations[i].addedNodes;
-					for (var j = 0; j < added.length; j++) {
-						if (added[j].querySelectorAll)
-							added[j].querySelectorAll('input').forEach(suppress);
-					}
-				}
-			}).observe(node, { childList: true, subtree: true });
-			return node;
-		});
-	};
-}
-
-/* Workaround: LuCI's datatype validator corrupts this.value before passing
- * it to custom validate functions (see markdown/luci-custom-validate-ipv6.md).
- * Use stubValidator for format checks instead of o.datatype. */
-var stubValidator = {
-	factory: validation,
-	apply: function(type, value, args) {
-		if (value != null)
-			this.value = value;
-		return validation.types[type].apply(this, args);
-	},
-	assert: function(condition) {
-		return !!condition;
-	}
-};
+var stubValidator = validators.stub();
 
 return view.extend({
 	load: function() {
@@ -103,42 +47,6 @@ return view.extend({
 
 		o = s.option(form.Value, 'name', _('Name'));
 		o.rmempty = false;
-		o.render = function(config_name, section_id, in_table) {
-			return Promise.resolve(form.Value.prototype.render.apply(this, arguments)).then(function(node) {
-				var input = node && node.querySelector && node.querySelector('input');
-				if (input && !input.value) {
-					/* Field is empty on render (new section). Mark pristine so
-					 * checkDepends-triggered triggerValidation calls are suppressed
-					 * until the user actually interacts with the field. */
-					input._mwan3_pristine = true;
-					input.classList.remove('cbi-input-invalid');
-					var unpristine = function() { input._mwan3_pristine = false; };
-					input.addEventListener('blur',  unpristine, { once: true });
-					input.addEventListener('input', unpristine, { once: true });
-					/* After the modal is in the DOM, attach a capture-phase listener
-					 * to the Save button. The capture fires before LuCI's bubble-phase
-					 * click handler, so _mwan3_pristine is cleared before checkDepends
-					 * is called from map.save(), allowing triggerValidation to add the
-					 * red border and give the user visual feedback. */
-					requestAnimationFrame(function() {
-						var modal = document.querySelector('#modal_overlay > .modal.cbi-modal');
-						var saveBtn = modal && modal.querySelector('.cbi-button-positive.important');
-						if (saveBtn && modal.contains(input))
-							saveBtn.addEventListener('click', unpristine,
-								{ once: true, capture: true });
-					});
-				}
-				return node;
-			});
-		};
-		o.triggerValidation = function(section_id) {
-			var elem = this.getUIElement(section_id);
-			if (!elem) return true;
-			var input = elem.node && elem.node.querySelector && elem.node.querySelector('input');
-			if (input && input._mwan3_pristine)
-				return true;
-			return elem.triggerValidation();
-		};
 		o.validate = function(section_id, value) {
 			if (!value || value.length === 0)
 				return true;
@@ -175,7 +83,6 @@ return view.extend({
 			return true;
 		};
 		o.modalonly = true;
-		makeBlurOnlyList(o);
 
 		o = s.option(form.DynamicList, 'domain', _('Domains'),
 			_('Domain names resolved by dnsmasq and added to the set at runtime (eg "youtube.com")'));
@@ -184,7 +91,7 @@ return view.extend({
 		o = s.option(form.FileUpload, 'loadfile', _('Include File'),
 			_('File of IP addresses or CIDRs, one per line; lines beginning with # are ignored'));
 		o.root_directory = '/etc/luci-uploads';
-		o.enable_delete = true;
+		o.enable_remove = true;
 		o.enable_upload = true;
 		o.datatype = 'file';
 		o.rmempty = true;
