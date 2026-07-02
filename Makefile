@@ -15,6 +15,10 @@ PKG_RELEASE:=1
 
 PKG_MAINTAINER:=Florian Eckert <fe@dev.tdt.de>
 
+ifeq ($(wildcard ../../luci.mk),)
+include $(TOPDIR)/feeds/luci/luci.mk
+else
 include ../../luci.mk
+endif
 
 # call BuildPackage - OpenWrt buildroot signature

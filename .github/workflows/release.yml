@@ -7,10 +7,16 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
+    inputs:
+      release:
+        type: boolean
+        required: false
+        default: false
+        description: "Release"
 
 jobs:
   build:
-    name: Build for ${{ matrix.version }}
+    name: Build ${{ matrix.format }} for ${{ matrix.version }}
     runs-on: ubuntu-latest
     env:
       REPO_APK_KEY: ${{ secrets.REPO_APK_KEY }}
@@ -19,7 +25,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - version: 24.10.2
+            format: ipk
+            arch: x86_64-24.10.2
+            luci_ref: openwrt-24.10
           - version: openwrt-25.12
+            format: apk
+            arch: x86_64-openwrt-25.12
+            luci_ref: openwrt-25.12
 
     steps:
       - name: Checkout repo
@@ -36,13 +49,13 @@ jobs:
             --exclude='feed' \
             --exclude='.github' \
             ./ feed/applications/${PKG_NAME}/
-          curl -sL "https://raw.githubusercontent.com/openwrt/luci/${{ matrix.version }}/luci.mk" \
+          curl -fsSL "https://raw.githubusercontent.com/openwrt/luci/${{ matrix.luci_ref }}/luci.mk" \
             -o feed/luci.mk
 
       - name: Build with OpenWrt SDK
         uses: openwrt/gh-action-sdk@v8
         env:
-          ARCH: x86_64-${{ matrix.version }}
+          ARCH: ${{ matrix.arch }}
           FEEDNAME: lucimwan3nft
           PACKAGES: ${{ env.PKG_NAME }}
           INDEX: 0
@@ -57,23 +70,27 @@ jobs:
           PKG_SRC_SUFFIX="$(grep '^PKG_SRC_SUFFIX' Makefile | sed 's/PKG_SRC_SUFFIX:=//')"
           echo "PKG_VERSION=${PKG_SRC_PREFIX}.${PKG_SRC_SUFFIX}" >> "$GITHUB_ENV"
 
-      - name: Rename APK with version
+      - name: Rename packages with version
         run: |
           set -euo pipefail
-          for f in $(find bin/packages -type f -path "*/lucimwan3nft/${PKG_NAME}[_-][0-9]*.apk"); do
-            dir=$(dirname "$f")
-            mv -v "$f" "$dir/${PKG_NAME}_${PKG_VERSION}.apk"
+          for ext in ipk apk; do
+            for f in $(find bin/packages -type f -path "*/lucimwan3nft/${PKG_NAME}[_-][0-9]*.${ext}"); do
+              dir=$(dirname "$f")
+              mv -v "$f" "$dir/${PKG_NAME}_${PKG_VERSION}.${ext}"
+            done
           done
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.PKG_NAME }}-${{ matrix.version }}
-          path: bin/packages/*/lucimwan3nft/${{ env.PKG_NAME }}*.apk
+          name: ${{ env.PKG_NAME }}-${{ matrix.format }}-${{ matrix.version }}
+          path: |
+            bin/packages/*/lucimwan3nft/${{ env.PKG_NAME }}*.ipk
+            bin/packages/*/lucimwan3nft/${{ env.PKG_NAME }}*.apk
           if-no-files-found: ignore
 
   release:
-    if: startsWith(github.ref, 'refs/tags/v')
+    # if: startsWith(github.ref, 'refs/tags/v')
     name: Release ${{ github.repository }}
     needs: build
     runs-on: ubuntu-latest
@@ -100,7 +117,9 @@ jobs:
         with:
           tag_name: v${{ steps.version.outputs.version }}
           name: Build v${{ steps.version.outputs.version }}
-          files: ./release-assets/**/*.apk
+          files: |
+            ./release-assets/**/*.ipk
+            ./release-assets/**/*.apk
           draft: false
           prerelease: false
         env:
