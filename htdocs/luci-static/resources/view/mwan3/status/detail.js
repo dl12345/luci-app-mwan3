@@ -70,7 +70,7 @@ function buildTrackRows(d, trackIps) {
 			loss    = [ Math.round(Number(t.packetloss) || 0), E('span', {}, t.packetloss + '%') ];
 		}
 
-		return [ t.ip, [ statusRaw, statusEl ], latency, loss ];
+		return [ components.text(t.ip), [ statusRaw, statusEl ], latency, loss ];
 	});
 }
 
@@ -79,7 +79,7 @@ function renderInterfacePanel(iface, d) {
 	var ti = trackingInfo(d);
 
 	var header = components.card(si.severity, [
-		E('strong', { 'class': 'mwan3-detail-label' }, iface),
+		E('strong', { 'class': 'mwan3-detail-label' }, components.text(iface)),
 		components.statusText(si.label, si.severity, true),
 		E('strong', { 'class': 'mwan3-detail-label' }, _('Tracking') + ':'),
 		components.statusText(ti.label, ti.severity, true),

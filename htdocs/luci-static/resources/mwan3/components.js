@@ -67,10 +67,18 @@ function card(severity, children, extraClass) {
 function summaryBar(severity, text) {
 	return E('div', {
 		'class': 'mwan3-summary ' + cardClass(severity) + ' ' + textClass(severity)
-	}, text);
+	}, [text]);
 }
 
 /* ---- Inline primitives ---- */
+
+/* Return a text node for a value so a caller can place UCI-derived or other
+   free-form data as an escaped child, rather than letting E() assign a bare
+   string to innerHTML where it would be parsed as HTML. */
+
+function text(value) {
+	return document.createTextNode(value == null ? '' : '' + value);
+}
 
 /* Severity-coloured inline text, optionally bold. */
 
@@ -78,11 +86,11 @@ function statusText(text, severity, bold) {
 	var cls = textClass(severity);
 	if (bold)
 		cls += ' mwan3-strong';
-	return E('span', { 'class': cls }, text);
+	return E('span', { 'class': cls }, [text]);
 }
 
 function badge(text) {
-	return E('span', { 'class': 'mwan3-badge' }, text);
+	return E('span', { 'class': 'mwan3-badge' }, [text]);
 }
 
 function familyBadge(setType) {
@@ -90,11 +98,11 @@ function familyBadge(setType) {
 }
 
 function mono(text) {
-	return E('span', { 'class': 'mwan3-mono' }, text);
+	return E('span', { 'class': 'mwan3-mono' }, [text]);
 }
 
 function emptyHint(text) {
-	return E('em', {}, text);
+	return E('em', {}, [text]);
 }
 
 /* ---- Presence badge ---- */
@@ -158,6 +166,7 @@ function kvBlock(pairs) {
 return baseclass.extend({
 	loadStyle: loadStyle,
 	textClass: textClass,
+	text: text,
 	card: card,
 	summaryBar: summaryBar,
 	statusText: statusText,

@@ -61,7 +61,7 @@ function buildMemberRows(elems) {
 	return elems.map(function(e) {
 		var hasCount = (e.packets != null);
 		return [
-			E('span', { 'class': 'mwan3-mono', 'data-value': e.value }, e.value),
+			E('span', { 'class': 'mwan3-mono', 'data-value': e.value }, components.text(e.value)),
 			hasCount ? [ Number(e.packets) || 0, components.mono(String(e.packets)) ] : '',
 			hasCount ? [ Number(e.bytes) || 0, components.mono(format.fmtBytes(e.bytes)) ] : '',
 		];
@@ -179,7 +179,7 @@ function renderSetPanel(name, meta, uciMeta) {
 		: null;
 
 	const headerChildren = [
-		E('strong', { 'class': 'mwan3-ipset-name' }, name),
+		E('strong', { 'class': 'mwan3-ipset-name' }, components.text(name)),
 		components.familyBadge(meta.type),
 	];
 	if (hasCounters)
@@ -192,7 +192,7 @@ function renderSetPanel(name, meta, uciMeta) {
 	if (domainList.length > 0) {
 		membersChildren.push(E('div', { 'class': 'mwan3-ipset-grouptitle' }, _('Domains')));
 		membersChildren.push(E('div', { 'class': 'mwan3-ipset-domains' },
-			domainList.map(function(d) { return E('div', {}, d); })));
+			domainList.map(function(d) { return E('div', {}, components.text(d)); })));
 		membersChildren.push(E('div', { 'class': 'mwan3-ipset-grouptitle' }, _('Members')));
 	}
 	membersChildren.push(membersBody);
@@ -203,7 +203,7 @@ function renderSetPanel(name, meta, uciMeta) {
 		E('div', { 'class': 'mwan3-ipset-header' }, headerChildren),
 	];
 	if (metaParts.length > 0)
-		panelChildren.push(E('div', { 'class': 'mwan3-ipset-meta' }, metaParts.join(' | ')));
+		panelChildren.push(E('div', { 'class': 'mwan3-ipset-meta' }, components.text(metaParts.join(' | '))));
 	panelChildren.push(membersArea);
 
 	return E('div', { 'class': 'mwan3-ipset-panel' }, panelChildren);

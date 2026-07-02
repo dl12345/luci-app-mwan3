@@ -58,11 +58,11 @@ function renderPolicies(policies) {
 					severity = 'muted';
 
 				return E('div', { 'class': 'mwan3-nowrap ' + components.textClass(severity) },
-					m.interface + ' (' + m.percent + '%)');
+					components.text(m.interface + ' (' + m.percent + '%)'));
 			});
 
 			cards.push(components.card(null, [
-				E('div', { 'class': 'mwan3-policy-title' }, _('Policy') + ': ' + pname),
+				E('div', { 'class': 'mwan3-policy-title' }, components.text(_('Policy') + ': ' + pname)),
 				...members,
 			], 'mwan3-card--sm mwan3-card--policy'));
 		});
@@ -86,9 +86,9 @@ function renderRuleRows(rules) {
 		if (r.sticky === '1') match.push(_('sticky'));
 
 		rows.push([
-			r['.name'],
-			match.join(', ') || _('(all traffic)'),
-			r.use_policy || '-',
+			components.text(r['.name']),
+			components.text(match.join(', ') || _('(all traffic)')),
+			components.text(r.use_policy || '-'),
 		]);
 	});
 

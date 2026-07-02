@@ -199,7 +199,7 @@ function renderPolicyDetail(policyName, policiesData, uciPolicies) {
 		var label = m.interface
 			+ ' (' + _('metric') + '\u00a0' + m.metric + ', ' + _('weight') + '\u00a0' + m.weight + ')'
 			+ ' \u2014 ' + (m.percent > 0 ? m.percent + '%' : m.status);
-		return E('div', { 'class': 'mwan3-sim-member ' + components.textClass(sev) }, label);
+		return E('div', { 'class': 'mwan3-sim-member ' + components.textClass(sev) }, components.text(label));
 	});
 
 	/* Determine overall policy outcome */
@@ -214,12 +214,12 @@ function renderPolicyDetail(policyName, policiesData, uciPolicies) {
 		var active = liveMembers.filter(function(m) { return m.percent > 0; });
 		outcome = active.length === 1
 			? E('div', { 'class': 'mwan3-sim-detail-sm ' + components.textClass('success') },
-				_('Traffic will use') + ': ' + active[0].interface)
+				components.text(_('Traffic will use') + ': ' + active[0].interface))
 			: E('div', { 'class': 'mwan3-sim-detail-sm ' + components.textClass('success') },
 				_('Traffic will be load-balanced across ') + active.length + _(' members'));
 	} else {
 		outcome = E('div', { 'class': 'mwan3-sim-detail-sm ' + components.textClass('danger') },
-			_('All members offline - last resort') + ': ' + lastResort);
+			components.text(_('All members offline - last resort') + ': ' + lastResort));
 	}
 
 	return E('div', {}, [
@@ -269,7 +269,7 @@ function renderSimResult(rules, matchedIdx, allMatched, sim, policiesData, uciPo
 	/* Primary match card */
 	cards.push(components.card(severity, [
 		E('div', { 'class': 'mwan3-sim-title' },
-			_('First matching rule') + ': ' + matched['.name']),
+			components.text(_('First matching rule') + ': ' + matched['.name'])),
 		E('div', {}, [ E('strong', {}, _('Match') + ':\u00a0'), matchSummary(matched) ]),
 		E('div', {}, [ E('strong', {}, _('Policy') + ':\u00a0'), pName ]),
 		renderPolicyDetail(pName, policiesData, uciPolicies),
@@ -294,8 +294,8 @@ function renderSimResult(rules, matchedIdx, allMatched, sim, policiesData, uciPo
 		);
 		table.update(shadowed.map(function(r) {
 			return [
-				r['.name'],
-				matchSummary(r),
+				components.text(r['.name']),
+				components.text(matchSummary(r)),
 				components.statusText(r.use_policy || '-', 'muted'),
 			];
 		}));
@@ -374,14 +374,14 @@ return view.extend({
 			if (srcRaw && !looksLikeFqdn(srcRaw) &&
 			    !validation.parseIPv4(srcRaw) && !validation.parseIPv6(srcRaw)) {
 				dom.content(resultArea, E('p', { 'class': components.textClass('danger') },
-					_('Invalid source IP address') + ': ' + srcRaw));
+					components.text(_('Invalid source IP address') + ': ' + srcRaw)));
 				return;
 			}
 
 			if (dstRaw && !looksLikeFqdn(dstRaw) &&
 			    !validation.parseIPv4(dstRaw) && !validation.parseIPv6(dstRaw)) {
 				dom.content(resultArea, E('p', { 'class': components.textClass('danger') },
-					_('Invalid destination IP address') + ': ' + dstRaw));
+					components.text(_('Invalid destination IP address') + ': ' + dstRaw)));
 				return;
 			}
 
@@ -399,7 +399,7 @@ return view.extend({
 					var srcAddrs = pickFamilyAddrs(resolved[0], family);
 					if (!srcAddrs.length) {
 						dom.content(resultArea, E('p', { 'class': components.textClass('danger') },
-							_('Could not resolve source hostname') + ': ' + srcRaw));
+							components.text(_('Could not resolve source hostname') + ': ' + srcRaw)));
 						return;
 					}
 					srcIp = srcAddrs[0];
@@ -410,7 +410,7 @@ return view.extend({
 					var dstAddrs = pickFamilyAddrs(resolved[1], family);
 					if (!dstAddrs.length) {
 						dom.content(resultArea, E('p', { 'class': components.textClass('danger') },
-							_('Could not resolve destination hostname') + ': ' + dstRaw));
+							components.text(_('Could not resolve destination hostname') + ': ' + dstRaw)));
 						return;
 					}
 					dstIp = dstAddrs[0];

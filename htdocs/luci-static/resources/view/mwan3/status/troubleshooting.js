@@ -81,8 +81,8 @@ return view.extend({
 				content = filterVmapChains(content);
 
 			return E('details', { 'class': 'mwan3-ts' }, [
-				E('summary', { 'class': 'mwan3-ts-summary' }, s.title),
-				E('pre', { 'class': 'mwan3-ts-pre' }, content),
+				E('summary', { 'class': 'mwan3-ts-summary' }, components.text(s.title)),
+				E('pre', { 'class': 'mwan3-ts-pre' }, components.text(content)),
 			]);
 		});
 
