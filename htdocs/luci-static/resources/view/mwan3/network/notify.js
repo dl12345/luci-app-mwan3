@@ -10,7 +10,7 @@ return view.extend({
 		return L.resolveDefault(fs.read('/etc/mwan3.user'), '');
 	},
 
-	handleSave(ev) {
+	handleSave: isReadonlyView ? null : function(ev) {
 		const value = (this.editor.getValue() || '').trim().replace(/\r\n/g, '\n') + '\n';
 
 		return fs.write('/etc/mwan3.user', value).then(() => {

@@ -67,9 +67,6 @@
 				"exec"
 			],
 			"file": {
-				"/etc/mwan3.user": [
-					"read"
-				],
 				"/usr/bin/httping": [
 					"list"
 				],
@@ -85,7 +82,6 @@
 			},
 			"ubus": {
 				"file": [
-					"read",
 					"list"
 				],
 				"mwan3": [
@@ -102,16 +98,7 @@
 			]
 		},
 		"write": {
-			"file": {
-				"/etc/mwan3.user": [
-					"write"
-				]
-			},
 			"ubus": {
-				"file": [
-					"write",
-					"remove"
-				],
 				"mwan3": [
 					"nftset_flush",
 					"nftset_reload",
@@ -121,6 +108,34 @@
 			"uci": [
 				"mwan3"
 			]
+		}
+	},
+	"luci-app-mwan3-notify": {
+		"description": "Grant access to edit the mwan3.user hotplug hook",
+		"read": {
+			"file": {
+				"/etc/mwan3.user": [
+					"read"
+				]
+			},
+			"ubus": {
+				"file": [
+					"read"
+				]
+			}
+		},
+		"write": {
+			"file": {
+				"/etc/mwan3.user": [
+					"write"
+				]
+			},
+			"ubus": {
+				"file": [
+					"write",
+					"remove"
+				]
+			}
 		}
 	}
 }

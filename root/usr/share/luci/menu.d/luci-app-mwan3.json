@@ -141,6 +141,11 @@
 		"action": {
 			"type": "view",
 			"path": "mwan3/network/notify"
+		},
+		"depends": {
+			"acl": [
+				"luci-app-mwan3-notify"
+			]
 		}
 	}
 }
