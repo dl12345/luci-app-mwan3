@@ -1,150 +1,342 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:211
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:227
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:249
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:219
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:235
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:257
 msgid "%d hour"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:206
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:222
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:244
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:214
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:230
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:252
 msgid "%d minute"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:207
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:208
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:209
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:210
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:223
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:224
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:225
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:226
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:245
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:246
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:247
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:248
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:215
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:216
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:217
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:218
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:231
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:232
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:233
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:234
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:253
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:254
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:255
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:256
 msgid "%d minutes"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:193
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:200
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:216
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:238
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:201
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:208
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:224
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:246
 msgid "%d second"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:195
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:201
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:202
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:203
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:204
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:205
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:217
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:218
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:219
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:220
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:221
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:239
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:240
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:241
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:242
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:243
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:209
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:210
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:211
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:212
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:213
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:225
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:226
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:227
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:228
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:229
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:247
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:248
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:249
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:250
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:251
 msgid "%d seconds"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:45
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:51
 msgid ""
 "%s: Name of Physical device which interface went up or down (e.g. \"eth0\" "
 "or \"wwan0\")"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:39
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:45
 msgid "%s: Name of the action that triggered this event"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:44
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:50
 msgid ""
 "%s: Name of the interface which went up or down (e.g. \"wan\" or \"wwan\")"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:40
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:41
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:90
+msgid "(all traffic)"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:91
+msgid "(none - interface offline)"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/widgets.js:382
+msgid "(none)"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:46
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:47
 msgid "* %s: Is called by netifd and mwan3track"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:43
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:49
 msgid "* %s: Is only called by mwan3track if tracking has failed"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:42
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:48
 msgid "* %s: Is only called by mwan3track if tracking was successful"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/diagnostics.js:71
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/widgets.js:459
+msgid "+ Add interface"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/widgets.js:570
+msgid "+ Add tier"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/widgets.js:493
+msgid "- New policy -"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/diagnostics.js:54
 msgid "-- Interface Selection --"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:109
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:236
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:265
 msgid "-- Please choose --"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:99
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:60
+msgid "A set with this name already exists"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/components.js:120
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/components.js:122
+msgid "Absent"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:107
 msgid ""
 "Acceptable values: 1-100. This many Tracking IP addresses must respond for "
 "the link to be deemed up"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:62
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:58
 msgid "Acceptable values: 1-1000. Defaults to 1 if not set"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:58
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:54
 msgid "Acceptable values: 1-256. Defaults to 1 if not set"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:26
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/detail.js:18
+msgid "Active"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:223
+msgid "Add..."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:93
+msgid "Address"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:352
+msgid "Address family"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:117
 msgid "Alert"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:37
-msgid "Also scan this Routing table for connected networks"
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:222
+msgid "All members offline - last resort"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/diagnostics.js:65
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:196
+msgid ""
+"All three rules must be present when an interface is online, and on IPv4-"
+"family interfaces a fourth, the source rule, is expected too. The iif rule "
+"handles traffic coming back in from the WAN (return path). The fwmark rule "
+"handles traffic going out to the WAN (forward path). The unreachable rule is "
+"a safety net that catches packets marked for this interface when the fwmark "
+"lookup cannot route them. The source rule handles traffic the router "
+"originates from the WAN's own address, keeping its replies on the right WAN. "
+"A missing iif rule means return traffic may route incorrectly or be dropped. "
+"A missing fwmark rule means policy routing is completely non-functional for "
+"that interface. A missing unreachable rule means packets for a down "
+"interface may be silently misrouted. A missing source rule means router-"
+"originated traffic sourced from the WAN's own address may egress the wrong "
+"WAN. An interface shown offline after a soft tracker failure keeps all of "
+"these rules; mwan3 steers traffic away from it in the firewall policy. A "
+"hard ifdown then removes the iif, fwmark and source rules and flushes its "
+"routing table, but the unreachable rule is a service-lifetime backstop and "
+"stays until mwan3 is stopped."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:109
+msgid "All traffic assigned to this policy will use the last-resort behaviour."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:304
+msgid "Also matched (shadowed by first rule)"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/widgets.js:181
+msgid "At least one interface entry is required"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:63
+msgid ""
+"Automatically track the next hop peer. Applies only to point to point "
+"connections."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:72
+msgid ""
+"Base priority for per-interface fwmark lookup ip rules. Must be at least %d "
+"above IIF rule base."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:94
+msgid ""
+"Base priority for per-interface fwmark unreachable ip rules. Must be at "
+"least %d above Fwmark rule base."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:52
+msgid ""
+"Base priority for per-interface incoming interface ip rules. Default "
+"preserves historical behaviour."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:132
+msgid "Bypass networks"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:93
+msgid "Bytes"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/widgets.js:232
+msgid ""
+"Cannot create member \"%s\": name already in use with different settings. "
+"Rename or remove it first."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:39
+msgid ""
+"Cannot delete IP set \"%s\": referenced by rule(s): %s. Remove those rule "
+"references first."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/diagnostics.js:63
 msgid "Check IP rules"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:140
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:148
 msgid "Check link quality"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/diagnostics.js:66
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/diagnostics.js:64
 msgid "Check routing table"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:96
-msgid "Collecting data ..."
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:167
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:172
+msgid "Collapse"
+msgstr ""
+
+#: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:131
+msgid "Configuration"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:201
+msgid "Configuration looks consistent. No issues detected."
 msgstr ""
 
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:18
 msgid "Contents have been saved."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:27
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:413
+msgid "Could not resolve destination hostname"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:402
+msgid "Could not resolve source hostname"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:114
+msgid "Counters"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:118
 msgid "Critical"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:32
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:123
 msgid "Debug"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:85
-msgid "Destination address"
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:147
+msgid "Delete failed:"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:89
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:150
+msgid "Delete selected"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:292
+msgid "Delete unused member definitions"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:115
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:238
+msgid "Destination"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:332
+msgid "Destination IP/Name"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:263
+msgid "Destination NFT set"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:276
+msgid ""
+"Destination NFT set and destination address both match destination - use one "
+"or the other"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:283
+msgid "Destination NFT set is IPv4 but source address is IPv6"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:281
+msgid "Destination NFT set is IPv6 but source address is IPv4"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:143
+msgid "Destination address must be IPv4 when family is set to IPv4 only"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:145
+msgid "Destination address must be IPv6 when family is set to IPv6 only"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:187
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:347
 msgid "Destination port"
 msgstr ""
 
@@ -152,99 +344,208 @@ msgstr ""
 msgid "Diagnostics"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:57
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/status/include/90_mwan3.js:66
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/components.js:145
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/detail.js:21
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/detail.js:40
 msgid "Disabled"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:267
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:163
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:205
+msgid "Dismiss"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:88
+msgid ""
+"Domain names resolved by dnsmasq and added to the set at runtime (eg "
+"\"youtube.com\")"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:87
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:193
+msgid "Domains"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/detail.js:20
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/detail.js:46
+msgid "Down"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:275
 msgid ""
 "Downed interface will be deemed up after this many successful ping tests"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:41
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/status/include/90_mwan3.js:49
-msgid "Downtime"
-msgstr ""
-
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:25
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:116
 msgid "Emergency"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:92
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:97
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:138
+msgid "Empty address in comma-separated list"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:119
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:301
+msgid "Enable"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:100
 msgid "Enable ssl tracking"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:55
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:46
 msgid "Enabled"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:124
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:111
 msgid "Enables debug level logging for mwan3"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:118
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:289
 msgid ""
 "Enables firewall rule logging (global mwan3 logging must also be enabled)"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:122
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:108
 msgid "Enables global firewall logging"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:93
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:101
 msgid "Enables https tracking on ssl port 443"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:15
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:325
+msgid ""
+"Enter traffic parameters to simulate which mwan3 rule matches and which "
+"policy would handle the traffic. IP fields accept addresses or hostnames - "
+"hostnames are resolved via the local DNS server. Rules with a constraint on "
+"a field you leave blank will not match."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:47
 msgid "Enter value in hex, starting with <code>0x</code>"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:28
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:108
+msgid "Entry lifetime in seconds. 0 means entries do not expire"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:80
+msgid "Entry must be an IPv4 address when family is set to IPv4"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:82
+msgid "Entry must be an IPv6 address when family is set to IPv6"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:182
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:119
 msgid "Error"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/diagnostics.js:108
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/diagnostics.js:93
 msgid "Execute"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:59
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:162
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:172
+msgid "Expand"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:50
 msgid "Expect interface state on up event"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:213
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:114
+msgid "Failed to load members"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:221
 msgid "Failure interval"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:145
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:153
 msgid "Failure latency [ms]"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:158
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:166
 msgid "Failure packet loss [%]"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:23
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:65
+msgid "Family"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:184
+msgid "Field reference"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:92
+msgid ""
+"File of IP addresses or CIDRs, one per line; lines beginning with # are "
+"ignored"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:114
 msgid "Firewall loglevel"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:14
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:46
 msgid "Firewall mask"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:280
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:272
+msgid "First matching rule"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:175
+msgid "Flush"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:288
 msgid "Flush conntrack table"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:281
-msgid "Flush global firewall conntrack table on interface events"
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:289
+msgid ""
+"Flush the entire global conntrack table on selected events. Per-interface "
+"conntrack entries are already flushed automatically on ifdown."
 msgstr ""
 
-#: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:59
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:235
+msgid "Flush: flush the nft set of all elements."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:180
+msgid "Format must be value/mask in hex notation (e.g. 0x80000/0xff0000)"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:150
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:335
+msgid "Fwmark"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:66
+msgid "Fwmark rule base"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:84
+msgid ""
+"Fwmark rule base (%d) + %d max interfaces + 1 = %d, must be less than "
+"Unreachable rule base (%d)"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:82
+msgid ""
+"Fwmark rule base (%d) must exceed IIF rule base (%d) + %d max interfaces = %d"
+msgstr ""
+
+#: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:75
 msgid "Globals"
 msgstr ""
 
-#: applications/luci-app-mwan3/root/usr/share/rpcd/acl.d/luci-app-mwan3.json:51
+#: applications/luci-app-mwan3/root/usr/share/rpcd/acl.d/luci-app-mwan3.json:64
 msgid "Grant access for luci-app-mwan3 configuration"
 msgstr ""
 
@@ -252,493 +553,1126 @@ msgstr ""
 msgid "Grant access for luci-app-mwan3 status information"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/diagnostics.js:68
+#: applications/luci-app-mwan3/root/usr/share/rpcd/acl.d/luci-app-mwan3.json:114
+msgid "Grant access to edit the mwan3.user hotplug hook"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/diagnostics.js:66
 msgid "Hotplug ifdown"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/diagnostics.js:67
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/diagnostics.js:65
 msgid "Hotplug ifup"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:107
-msgid "IPset"
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:51
+msgid "IIF rule base"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:67
-msgid "IPv4"
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:62
+msgid ""
+"IIF rule base (%d) + %d max interfaces = %d, must be less than Fwmark rule "
+"base (%d)"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:61
-msgid "IPv4 and IPv6"
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:25
+#: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:55
+#: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:115
+msgid "IP Sets"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:62
-msgid "IPv4 only"
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:96
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:189
+msgid "IP rule (fwmark)"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:68
-msgid "IPv6"
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:95
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:187
+msgid "IP rule (iif)"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:63
-msgid "IPv6 only"
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:99
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:193
+msgid "IP rule (source)"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:31
-msgid "Info"
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:97
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:191
+msgid "IP rule (unreachable)"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:158
+msgid "IP rule present but no mwan3 UCI interface with this index"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:20
+msgid "IP sets are nftables address sets referenced by mwan3 rules."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:70
+msgid "IPs / Networks"
 msgstr ""
 
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:58
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:66
+msgid "IPv4"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:258
+msgid "IPv4 Priority order"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:63
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:353
+msgid "IPv4 and IPv6"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:64
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:354
+msgid "IPv4 only"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:59
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:67
+msgid "IPv6"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:264
+msgid "IPv6 Priority order"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:68
+msgid "IPv6 SNAT"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:65
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:355
+msgid "IPv6 only"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/detail.js:49
+msgid "Ignored"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:91
+msgid "Include File"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:185
+msgid "Index (N)"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:122
+msgid "Info"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:49
 msgid "Initial state"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:50
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/diagnostics.js:83
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:65
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/status/include/90_mwan3.js:77
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/status/include/90_mwan3.js:101
-#: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:67
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:168
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:46
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/diagnostics.js:76
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:27
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/status/include/90_mwan3.js:35
+#: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:83
 msgid "Interface"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:252
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:260
 msgid "Interface down"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:266
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:274
 msgid "Interface up"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:253
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:261
 msgid "Interface will be deemed down after this many failed ping tests"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:25
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:46
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:138
+msgid "Interfaces"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:26
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:39
 msgid ""
 "Interfaces may not share the same name as configured members, policies or "
 "rules."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:65
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:59
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:56
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:61
 msgid "Internet Protocol"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:230
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:76
+msgid "Invalid IP address or prefix"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:99
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:140
+msgid "Invalid IP address or prefix:"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:384
+msgid "Invalid destination IP address"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:54
+msgid ""
+"Invalid name: use letters, digits, _ . or - only, starting with a letter or _"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:377
+msgid "Invalid source IP address"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:238
 msgid "Keep failure interval"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:231
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:239
 msgid "Keep ping failure interval during failure state"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:61
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:270
 msgid "Last resort"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:34
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/widgets.js:578
+msgid "Last resort:"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/detail.js:97
+msgid "Latency"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:40
 msgid "Lines beginning with # are comments and are not executed."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:21
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:243
 msgid ""
-"Load-balanced member interfaces distribute more traffic out those with "
-"higher weights."
+"Live comparison of ip rules and routing tables against the mwan3 UCI "
+"configuration. Refreshes automatically."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:19
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:117
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:227
+msgid "Live member state"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:141
+msgid "Load all (5000)"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:139
+msgid "Load more (1000)"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:388
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:134
+msgid "Loading..."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:107
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:288
 msgid "Logging"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:22
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:113
 msgid "Loglevel"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:127
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:183
+msgid "Mask overlaps mwan3 internal mark bits (0x"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:273
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:286
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:116
+msgid "Match"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:264
+msgid ""
+"Match destination addresses against this nft set (declare sets in /etc/"
+"config/mwan3; dnsmasq syntax: nftset=/youtube.com/4#inet#mwan3#youtube)"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:151
+msgid ""
+"Match packet mark; enter value/mask in hex. Mask must not overlap mwan3 "
+"internal mark bits."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:235
+msgid "Match source addresses against this nft set"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:100
+msgid "Max Entries"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:135
 msgid "Max TTL"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:81
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:90
-msgid ""
-"May be entered as a single or multiple port(s) (eg \"22\" or \"80,443\") or "
-"as a portrange (eg \"1024:2048\") without quotes"
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:101
+msgid "Maximum number of elements in the set. Leave empty for no limit"
 msgstr ""
 
-#: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:75
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:110
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:188
+msgid ""
+"May be entered as a single or multiple port(s) (eg \"22\" or \"80,443\") or "
+"as a portrange (eg \"1024-2048\") without quotes"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:86
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:98
+#: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:91
 msgid "Member"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:19
-msgid "Member interfaces with lower metrics are used first."
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:196
+msgid "Members"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:20
-msgid "Member interfaces with the same metric will be load-balanced."
-msgstr ""
-
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:54
-msgid "Member used"
-msgstr ""
-
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:18
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:22
 msgid ""
 "Members are profiles attaching a metric and weight to an MWAN interface."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:20
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:41
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:24
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:37
 msgid ""
 "Members may not share the same name as configured interfaces, policies or "
 "rules."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:288
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:57
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:296
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:53
 msgid "Metric"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/status/include/90_mwan3.js:19
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/components.js:117
+msgid "Missing"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/status/include/90_mwan3.js:14
 #: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:3
-#: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:47
+#: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:63
 msgid "MultiWAN Manager"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/diagnostics.js:79
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:255
+msgid "MultiWAN Manager - Configuration"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/diagnostics.js:72
 msgid "MultiWAN Manager - Diagnostics"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:10
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:42
 msgid "MultiWAN Manager - Globals"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:21
-msgid "MultiWAN Manager - Interfaces"
-msgstr ""
-
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:17
-msgid "MultiWAN Manager - Members"
-msgstr ""
-
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:26
-msgid "MultiWAN Manager - Notify"
-msgstr ""
-
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:93
-msgid "MultiWAN Manager - Overview"
-msgstr ""
-
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:17
-msgid "MultiWAN Manager - Policies"
-msgstr ""
-
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:19
-msgid "MultiWAN Manager - Rules"
-msgstr ""
-
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/detail.js:12
-msgid "MultiWAN Manager - Status"
-msgstr ""
-
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/troubleshooting.js:12
-msgid "MultiWAN Manager - Troubleshooting"
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:19
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:233
+msgid "MultiWAN Manager - IP Sets"
 msgstr ""
 
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:22
+msgid "MultiWAN Manager - Interfaces"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:21
+msgid "MultiWAN Manager - Members"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:32
+msgid "MultiWAN Manager - Notify"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:135
+msgid "MultiWAN Manager - Overview"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:213
+msgid "MultiWAN Manager - Policies"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:240
+msgid "MultiWAN Manager - Routing Health"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:30
+msgid "MultiWAN Manager - Rules"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/detail.js:140
+msgid "MultiWAN Manager - Status"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:324
+msgid "MultiWAN Manager - Traffic Path Simulator"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/troubleshooting.js:90
+msgid "MultiWAN Manager - Troubleshooting"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:23
 msgid ""
 "Mwan3 requires that all interfaces have a unique metric configured in /etc/"
 "config/network."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:49
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:44
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:48
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:53
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:48
+msgid "Name"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:40
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:38
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:251
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:55
 msgid "Name length shall not exceed 15 characters"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:108
-msgid ""
-"Name of IPset rule. Requires IPset rule in /etc/dnsmasq.conf (eg \"ipset=/"
-"youtube.com/youtube\")"
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/widgets.js:529
+msgid "Name:"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:24
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:56
+msgid "Names beginning with \"mwan3_\" are reserved for internal use"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:25
 msgid "Names may contain characters A-Z, a-z, 0-9, _ and no spaces-"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:19
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:22
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:27
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:23
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:38
 msgid "Names may contain characters A-Z, a-z, 0-9, _ and no spaces."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:23
-msgid "Names must be 15 characters or less."
-msgstr ""
-
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:23
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:24
 msgid "Names must match the interface name found in /etc/config/network."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:98
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:128
+msgid ""
+"Networks from these routing tables bypass mwan3 policy routing and use the "
+"default route. Enter routing table number or name (see /etc/iproute2/"
+"rt_tables)."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:197
 msgid "No"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:21
-msgid "No MWAN interfaces found"
-msgstr ""
-
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:44
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/status/include/90_mwan3.js:52
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/components.js:140
 msgid "No Tracking"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:296
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:202
+msgid "No data available"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:90
+msgid "No default route"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:304
 msgid "No interface metric set!"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:31
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/detail.js:115
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:20
+msgid "No interfaces found"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:193
+msgid "No issues found"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:216
+msgid "No mwan3 interfaces configured"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:71
+msgid "No policies configured"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:40
+msgid "No policy data available"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:250
+msgid "No rule matched"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:123
+msgid "No rules configured"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:152
+msgid "No stale rules"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/detail.js:94
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/detail.js:104
+msgid "No tracking IPs configured"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:230
+msgid "No user-defined IP sets configured."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:293
+msgid "None"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/detail.js:60
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/detail.js:61
+msgid "Not enabled"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:182
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:150
+msgid "Note"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:37
 msgid "Notes:"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:30
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:121
 msgid "Notice"
 msgstr ""
 
-#: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:99
+#: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:139
 msgid "Notify"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:62
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:38
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/status/include/90_mwan3.js:46
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/components.js:137
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/components.js:138
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:53
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:74
 msgid "Offline"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:61
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:31
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/status/include/90_mwan3.js:40
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/components.js:134
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/components.js:135
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:52
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:73
 msgid "Online"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:152
+msgid "Orphaned members"
 msgstr ""
 
 #: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:15
 msgid "Overview"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:103
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/detail.js:97
+msgid "Packet Loss"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:93
+msgid "Packets"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/detail.js:19
+msgid "Paused"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:111
 msgid "Ping count"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/diagnostics.js:63
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/diagnostics.js:61
 msgid "Ping default gateway"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:198
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:206
 msgid "Ping interval"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:214
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:222
 msgid "Ping interval during failure detection"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:236
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:244
 msgid "Ping interval during failure recovering"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:112
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:120
 msgid "Ping size"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:191
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:199
 msgid "Ping timeout"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/diagnostics.js:64
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/diagnostics.js:62
 msgid "Ping tracking IP"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:18
-msgid ""
-"Policies are profiles grouping one or more members controlling how Mwan3 "
-"distributes traffic."
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:143
+msgid "Policies"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:24
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:45
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:214
+msgid "Policies control how mwan3 distributes traffic."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:250
 msgid ""
 "Policies may not share the same name as configured interfaces, members or "
 "rules"
 msgstr ""
 
-#: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:83
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:215
+msgid "Policies may not share the same name as interfaces, members or rules."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:108
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:114
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:126
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:137
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:292
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:274
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:286
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:65
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:116
+#: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:99
 msgid "Policy"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:121
-msgid "Policy assigned"
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:199
+msgid "Policy Builder"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:66
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/widgets.js:168
+msgid "Policy name is required"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/widgets.js:170
+msgid "Policy name may only contain A-Z, a-z, 0-9 and _"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/widgets.js:172
+msgid "Policy name must be 15 characters or less"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:216
+msgid "Policy names must be alphanumeric with underscore and <= 15 characters."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:190
+msgid "Policy not found in configuration"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/widgets.js:509
+msgid "Policy:"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/components.js:116
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/components.js:121
+msgid "Present"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/components.js:119
+msgid "Present (unexpected)"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:150
+msgid "Priority"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:68
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:338
 msgid "Protocol"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:35
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:41
 msgid ""
 "Put your custom mwan3 action here, they will be executed with each netifd "
 "hotplug interface event on interfaces for which mwan3 is enabled."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:235
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:243
 msgid "Recovery interval"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:168
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:176
 msgid "Recovery latency [ms]"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:181
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:189
 msgid "Recovery packet loss [%]"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:39
-msgid "Routing table %d"
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:176
+msgid "Reload"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:36
-msgid "Routing table lookup"
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:236
+msgid ""
+"Reload: reload the set with static entries defined in the config and from "
+"the loadfile."
 msgstr ""
 
-#: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:91
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/widgets.js:404
+msgid "Remove this entry"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/widgets.js:471
+msgid "Remove tier"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:178
+msgid "Resolve"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:237
+msgid ""
+"Resolve: flush dnsmasq's cache and explicitly resolve every defined domain "
+"using dnsmasq to populate the set."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:59
+msgid "Resolved"
+msgstr ""
+
+#: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:47
+msgid "Routing"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:102
+msgid "Routing table"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:129
+msgid "Routing table 220"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:127
+msgid "Routing table bypass"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:146
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:155
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:156
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:116
+#: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:107
 msgid "Rule"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:21
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:148
+msgid "Rules"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:32
 msgid "Rules are based on IP address, port or protocol."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:22
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:33
 msgid "Rules are matched from top to bottom."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:23
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:34
 msgid "Rules below a matching rule are ignored."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:28
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:50
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:39
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:54
 msgid ""
 "Rules may not share the same name as configured interfaces, members or "
 "policies."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:20
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:31
 msgid "Rules specify which traffic will use a particular MWAN policy."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:102
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:194
+msgid "Save"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:119
+msgid "Save failed:"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/detail.js:86
+msgid "Score"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:201
 msgid "Seconds. Acceptable values: 1-1000000. Defaults to 600 if not set"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:76
-msgid "Source address"
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:225
+msgid "Selected NFT set is IPv4 but family is set to IPv6 only"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:80
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:223
+msgid "Selected NFT set is IPv6 but family is set to IPv4 only"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:100
+msgid "Set is empty"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:22
+msgid "Set names must not begin with \"mwan3_\" (reserved for internal use)."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:21
+msgid ""
+"Sets can be populated with static entries, loaded from a file, or populated "
+"at runtime by dnsmasq name resolution."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:286
+msgid "Shadowed rule"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:125
+msgid "Showing first %d entries. The set may contain more elements."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:527
+msgid "Simulate"
+msgstr ""
+
+#: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:123
+msgid "Simulator"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:78
+msgid "Source"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:329
+msgid "Source IP/Name"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:234
+msgid "Source NFT set"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:247
+msgid ""
+"Source NFT set and source address both match source - use one or the other"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:254
+msgid "Source NFT set is IPv4 but destination address is IPv6"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:252
+msgid "Source NFT set is IPv6 but destination address is IPv4"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:102
+msgid "Source address must be IPv4 when family is set to IPv4 only"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:104
+msgid "Source address must be IPv6 when family is set to IPv6 only"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:258
+msgid "Source and destination NFT sets have different address families"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:109
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:342
 msgid "Source port"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:66
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/status/include/90_mwan3.js:83
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/status/include/90_mwan3.js:107
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:69
+msgid ""
+"Source-NAT mwan3-rerouted router-originated IPv6 traffic egressing this "
+"interface. Leave blank or set to 0 to disable (default). Set to 1 to SNAT to "
+"the interface's primary global address. Set to a literal IPv6 address to "
+"SNAT to that address (e.g. NPTv6-style fixed source). Default is off because "
+"RFC 6724 source-address selection and SADR routing can solve the same "
+"problem without translation, and NAT66 is harmful in PA/ULA designs."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:163
+msgid "Stale IP rules"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:258
+msgid ""
+"Static analysis of the mwan3 UCI configuration. No live system state is "
+"consulted."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:71
+msgid ""
+"Static entries: IP addresses or CIDR subnets (eg \"192.168.1.1\" or "
+"\"10.0.0.0/8\")"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/detail.js:97
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:28
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/status/include/90_mwan3.js:36
 #: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:23
 msgid "Status"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:94
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:193
 msgid "Sticky"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:101
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:200
 msgid "Sticky timeout"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:77
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:86
-msgid "Supports CIDR notation (eg \"192.168.100.0/24\") without quotes"
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:79
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:116
+msgid ""
+"Supports CIDR notation (eg \"192.168.100.0/24\") and comma-separated "
+"addresses (eg \"8.8.8.8,8.8.4.4\") without quotes"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/diagnostics.js:91
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/detail.js:97
+msgid "Target IP"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/diagnostics.js:80
 msgid "Task"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:29
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:174
+msgid "Terminal policy"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:186
+msgid ""
+"The 1-based position of the interface in UCI section order. This single "
+"number drives everything else: it is the routing table number, determines "
+"all three ip rule priorities, and is encoded in the fwmark value. If you "
+"reorder interfaces in UCI their indices change and mwan3 must rebuild all "
+"rules and tables."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:40
+msgid ""
+"The Enable checkbox is greyed if the rule references a currently disabled IP "
+"set."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:23
+msgid ""
+"The Enable checkbox is greyed if the set is referenced by an enabled rule."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:42
+msgid ""
+"The Policy tab creates and manages members automatically. Only edit this "
+"section if you need custom metric or weight values."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:35
 msgid "The file is also preserved during sysupgrade."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:33
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:39
 msgid ""
 "The first line of the script must be &#34;#!/bin/sh&#34; without quotes."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:37
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:153
+msgid ""
+"The following members are no longer referenced by any policy. Select those "
+"to delete:"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:43
 msgid ""
 "There are three main environment variables that are passed to this script."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:289
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:165
+msgid ""
+"These ip rules are in mwan3’s priority range but do not correspond to any "
+"currently configured interface. They may remain from a previous "
+"configuration."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:297
 msgid ""
 "This displays the metric assigned to this interface in /etc/config/network"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:32
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:38
 msgid "This file is interpreted as a shell script."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:72
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:80
 msgid ""
 "This hostname or IP address will be pinged to determine if the link is up or "
 "down. Leave blank to assume interface is always online"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:28
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:169
+msgid "This interface will not be used for load balancing or failover."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:99
+msgid "This member is defined but has no effect."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:115
+msgid ""
+"This member will be ignored; the policy may have fewer active members than "
+"expected."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/widgets.js:175
+msgid "This name is already in use"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:138
+msgid "This policy is defined but has no effect."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:127
+msgid ""
+"This provides no redundancy; failover will not occur if that interface goes "
+"down."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:192
+msgid ""
+"This rule matches the same fwmark as the fwmark lookup rule but returns ICMP "
+"unreachable instead of performing a table lookup. Because it runs at a lower "
+"priority than the fwmark lookup rule, it only fires when the lookup rule has "
+"been removed (interface down) or when the routing table has no matching "
+"route. It prevents packets marked for a down interface from falling through "
+"to the main routing table and being silently misrouted out a different WAN. "
+"Unlike the iif and fwmark rules, it is installed for every configured "
+"interface at service start and removed only at service stop, so it stays "
+"present whether the interface is currently online, offline, or disabled."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:190
+msgid ""
+"This rule says: any packet carrying fwmark value N, stamped by mwan3's "
+"prerouting chain, look it up in routing table N. This is the forward-path "
+"rule. mwan3's nftables prerouting chain marks outbound packets according to "
+"your policy rules, and this ip rule translates that mark into a routing "
+"table lookup, sending the packet out through the correct WAN. Without this "
+"rule, policy routing decisions made in nftables have no effect on actual "
+"packet routing."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/notify.js:34
 msgid "This section allows you to modify the content of \"/etc/mwan3.user\"."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:71
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/widgets.js:196
+msgid "Tier %d %s shares must total 100%% (currently %d%%)"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/widgets.js:431
+msgid "Tier %d - Failover"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/widgets.js:186
+msgid "Tier %d has an entry with no interface selected"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/widgets.js:430
+msgid "Tier 1 - Primary"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:107
+msgid "Timeout"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:62
+msgid "Track gateway"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:115
+msgid "Track per-element packet and byte counts"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/detail.js:84
+msgid "Tracking"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:79
 msgid "Tracking hostname or IP address"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:76
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:84
 msgid "Tracking method"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:98
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:106
 msgid "Tracking reliability"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:25
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:87
+msgid ""
+"Traffic assigned to any policy using this member will not be routed "
+"correctly."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:36
 msgid ""
 "Traffic destined for known (other than default) networks is handled by the "
 "main routing table."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:95
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:194
 msgid ""
 "Traffic from the same source IP address that previously matched this rule "
 "within the sticky timeout period will use the same WAN interface"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:26
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:37
 msgid ""
 "Traffic matching a rule, but all WAN interfaces for that policy are down "
 "will be blackholed."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:24
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:147
+msgid "Traffic matching this rule will be blackholed silently."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:35
 msgid "Traffic not matching any rule is routed using the main routing table."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:133
+msgid ""
+"Traffic to these networks bypasses mwan3 policy routing and uses the default "
+"route. Enter IPv4 or IPv6 CIDR."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:219
+msgid "Traffic will be load-balanced across"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:252
+msgid "Traffic will be routed using the main routing table."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:217
+msgid "Traffic will use"
 msgstr ""
 
 #: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:39
@@ -749,65 +1683,338 @@ msgstr ""
 msgid "Unable to save contents: %s"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:34
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:48
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/status/include/90_mwan3.js:43
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/status/include/90_mwan3.js:56
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/detail.js:22
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/detail.js:52
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:75
+msgid "Unknown"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:88
+msgid "Unreachable rule base"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:103
+msgid ""
+"Unreachable rule base (%d) must exceed Fwmark rule base (%d) + %d max "
+"interfaces + 1 = %d"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/detail.js:43
+msgid "Up"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/components.js:143
 msgid "Uptime"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:67
-msgid "View the content of /etc/protocols for protocol description"
-msgstr ""
-
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:124
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:110
 msgid "Verbose logging"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:29
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:69
+msgid "View the content of /etc/protocols for protocol description"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:182
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:120
 msgid "Warning"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:61
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:57
 msgid "Weight"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:62
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:271
 msgid ""
 "When all policy members are offline use this behavior for matched traffic"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:97
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:196
 msgid "Yes"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:65
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:127
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:162
+msgid "all traffic"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:156
+msgid ""
+"appears earlier and matches a superset of its traffic. The later rule will "
+"never be evaluated."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/widgets.js:539
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:274
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:298
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:169
 msgid "blackhole (drop)"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:284
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:292
 msgid "connected (mwan3)"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:66
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:128
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:186
+msgid "counters"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/widgets.js:540
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:275
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:299
 msgid "default (use main routing table)"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:285
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:104
+msgid "default route"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:138
+msgid "degraded"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:293
 msgid "disconnected (mwan3)"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:283
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:158
+msgid "dport"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:155
+msgid "dst"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:330
+msgid "e.g. 192.168.1.5 or hostname"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:333
+msgid "e.g. 8.8.4.4 or hostname"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:343
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:348
+msgid "e.g. 80 or 443 1024:2048 or 80,443"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:190
+msgid "error"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:190
+msgid "errors"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:139
+msgid "failing"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:126
+msgid "has multiple members but all reference the same interface"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:108
+msgid "has no members"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:291
 msgid "ifdown (netifd)"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:282
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:290
 msgid "ifup (netifd)"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:64
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:126
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:188
+msgid ""
+"iif stands for input interface. This rule says: any packet that arrived on "
+"this WAN device, look it up in routing table N. Its purpose is return-path "
+"routing - when a reply comes back from the internet on this WAN, it must go "
+"back to the LAN client via the same WAN, not whatever the main routing table "
+"would choose. Without this rule, asymmetric routing breaks TCP sessions. "
+"mwan3 removes it only on a hard ifdown; a soft tracker failure leaves it in "
+"place, so seeing it present for an interface shown offline is the normal, "
+"expected state."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:113
+msgid "index"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:137
+msgid "interface healthy"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:137
+msgid "interfaces healthy"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:238
+msgid "is in the connected set"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:168
+msgid "is not referenced by any member"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:98
+msgid "is not used by any policy"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:137
+msgid "is not used by any rule"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:155
+msgid "is unreachable"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:160
+msgid "mark"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:219
+msgid "members"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:200
+msgid "metric"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:60
+msgid "more"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:126
+msgid "mwan3 does not appear to be running. No routing state to check."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:241
+msgid ""
+"mwan3 exempts directly connected networks from policy routing before any "
+"rule is evaluated. Traffic is forwarded via the main routing table "
+"regardless of configured rules. Use firewall rules, not mwan3 policies, to "
+"control access to these networks."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:192
+msgid "mwan3 not running - cannot show live member state"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:236
+msgid "mwan3 rules bypassed - directly connected network"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:159
+msgid "nftset"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/widgets.js:517
+msgid "policy name"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:59
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:187
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:189
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:191
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:193
+msgid "priority"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:156
+msgid "proto"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:86
+msgid "references undefined interface"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:114
+msgid "references undefined member"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:146
+msgid "references undefined policy"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:66
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:80
+msgid "some members undefined"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:157
+msgid "sport"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:153
+msgid "src"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:154
+msgid "src nftset"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:194
+msgid ""
+"src stands for source address. This rule says: any packet whose source is "
+"one of this WAN's own global IPv4 addresses, look it up in routing table N. "
+"It provides return routing for traffic the router itself sources from a "
+"WAN's own address: a lookup starting from that address resolves back to its "
+"own WAN, so router-originated replies keep the correct source and leave by "
+"the WAN the flow arrived on instead of whatever the main table would choose. "
+"WireGuard is the practical case, where a tunnel bound to a WAN address must "
+"answer its peers on that same WAN. mwan3 installs these rules on ifup and "
+"connected events and removes them on a hard ifdown; a soft tracker failure "
+"leaves them in place, exactly as for the iif and fwmark rules, so seeing "
+"them present on an interface shown offline is expected. Unlike the "
+"unreachable backstop they do not persist for the whole service lifetime; "
+"they are swept when the service stops. A device holding several global IPv4 "
+"addresses gets one rule per address, all at the same priority. Source rules "
+"exist only for IPv4-family interfaces, so this row does not appear on others."
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:141
+msgid "stale rule"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:141
+msgid "stale rules"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:161
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/overview.js:86
+msgid "sticky"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:104
+msgid "table"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:103
+msgid "unlimited"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/widgets.js:538
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:273
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:297
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:168
 msgid "unreachable (reject)"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:170
+msgid "use main routing table"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:191
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:192
+msgid "warning"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:191
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/configuration.js:192
+msgid "warnings"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/simulator.js:200
+msgid "weight"
 msgstr ""
