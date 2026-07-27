@@ -5,6 +5,7 @@
 'require ui';
 'require validation';
 'require rpc';
+'require network';
 'require mwan3.validators as validators';
 'require mwan3.constants as constants';
 'require mwan3.format as format';
@@ -20,6 +21,7 @@ return view.extend({
 		return Promise.all([
 			callNftsetInfo(),
 			uci.load('mwan3'),
+			L.resolveDefault(network.getHostHints(), null)
 		]);
 	},
 
@@ -74,17 +76,36 @@ return view.extend({
 		o.value('icmp');
 		o.value('esp');
 
+		o = s.option(form.DynamicList, 'src_mac', _('Source MAC'),
+			_('Match the MAC address of the client device as seen on the local network. The match sees the last layer 2 hop, so every client behind a downstream router presents that router\'s address.'));
+		o.datatype = 'macaddr';
+		o.modalonly = true;
+		/* Host hints only populate the drop-down. If the call is unavailable
+		   the field falls back to free entry, keeping the page renderable. */
+		const mac_hints = data[2] ? data[2].getMACHints() : [];
+		for (const [mac, hint] of mac_hints)
+			o.value(mac, format.fmtMacChoice(mac, hint));
+		o.cfgvalue = function(section_id) {
+			const list = validators.parseMacList(uci.get('mwan3', section_id, 'src_mac'));
+			return list.length ? list : null;
+		};
+		o.write = function(section_id, value) {
+			uci.set('mwan3', section_id, 'src_mac', validators.parseMacList(value).join(','));
+		};
+
 		o = s.option(form.Value, 'src_ip', _('Source'),
 			_('Supports CIDR notation (eg "192.168.100.0/24") and comma-separated addresses (eg "8.8.8.8,8.8.4.4") without quotes'));
 		o.textvalue = function(section_id) {
 			const ip = this.cfgvalue(section_id);
 			const set = uci.get('mwan3', section_id, 'ipset_src');
 			const port = uci.get('mwan3', section_id, 'src_port');
+			const mac = format.fmtMacList(uci.get('mwan3', section_id, 'src_mac'));
 			const addr = (ip && ip.length > 0) ? format.fmtAddrList(ip) : (set && set.length > 0) ? set : null;
 			const parts = [];
 			if (addr && port && port.length > 0) parts.push(addr + ':' + port);
 			else if (addr) parts.push(addr);
 			else if (port && port.length > 0) parts.push('*:' + port);
+			if (mac) parts.push('mac:' + mac);
 			return parts.length > 0 ? parts.join(' ') : '-';
 		};
 		o.validate = function(section_id, value) {

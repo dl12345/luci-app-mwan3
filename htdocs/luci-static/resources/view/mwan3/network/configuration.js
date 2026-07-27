@@ -3,6 +3,7 @@
 'require view';
 'require mwan3.ipmath as ipmath';
 'require mwan3.components as components';
+'require mwan3.validators as validators';
 
 /* Static analysis of the mwan3 UCI configuration. No live system state is
    consulted. */
@@ -35,6 +36,12 @@ function ruleAContainsB(a, b) {
 	if (a.src_ip) {
 		if (!b.src_ip)             return false; /* A restricts, B does not */
 		if (a.src_ip !== b.src_ip && !ipmath.cidrContains(a.src_ip, b.src_ip)) return false;
+	}
+
+	/* Source MAC (conservative: only equal lists contain each other) */
+	if (a.src_mac) {
+		if (!b.src_mac) return false;
+		if (validators.parseMacList(a.src_mac).join(',') !== validators.parseMacList(b.src_mac).join(',')) return false;
 	}
 
 	/* Destination IP */

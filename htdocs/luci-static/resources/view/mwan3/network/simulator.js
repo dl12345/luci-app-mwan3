@@ -6,8 +6,10 @@
 'require ui';
 'require form';
 'require validation';
+'require network';
 'require mwan3.components as components';
 'require mwan3.ipmath as ipmath';
+'require mwan3.validators as validators';
 'require mwan3.format as format';
 
 const callMwan3Status = rpc.declare({
@@ -30,6 +32,8 @@ const callResolveHost = rpc.declare({
 	params: ['host', 'family'],
 	expect: {},
 });
+
+const stubValidator = validators.stub();
 
 /* ---- FQDN helpers ---- */
 
@@ -97,6 +101,12 @@ function ruleMatches(rule, sim, nftsetCache) {
 		if (!srcAddrs.some(function(a) { return ipmath.ipInCidr(sim.src_ip, a); })) return false;
 	}
 
+	/* Source MAC: same, compared against the rule's comma list */
+	if (rule.src_mac) {
+		if (!sim.src_mac) return false;
+		if (validators.parseMacList(rule.src_mac).indexOf(sim.src_mac.toUpperCase()) < 0) return false;
+	}
+
 	/* Destination IP: same */
 	if (rule.dest_ip) {
 		if (!sim.dst_ip) return false;
@@ -153,6 +163,7 @@ function matchSummary(rule) {
 	else if (rule.family === 'ipv6') parts.push('IPv6');
 	if (rule.src_ip)    parts.push(_('src') + ' ' + format.fmtAddrList(rule.src_ip));
 	if (rule.ipset_src) parts.push(_('src nftset') + ' ' + rule.ipset_src);
+	if (rule.src_mac)   parts.push(_('mac') + ' ' + format.fmtMacList(rule.src_mac));
 	if (rule.dest_ip)   parts.push(_('dst') + ' ' + format.fmtAddrList(rule.dest_ip));
 	if (rule.proto && rule.proto !== 'all') parts.push(_('proto') + ' ' + rule.proto);
 	if (rule.src_port)  parts.push(_('sport') + ' ' + rule.src_port);
@@ -312,10 +323,13 @@ function renderSimResult(rules, matchedIdx, allMatched, sim, policiesData, uciPo
 
 return view.extend({
 	load: function() {
-		return uci.load('mwan3');
+		return Promise.all([
+			uci.load('mwan3'),
+			network.getHostHints()
+		]);
 	},
 
-	render: function() {
+	render: function(data) {
 		components.loadStyle();
 
 		var self = this;
@@ -329,6 +343,12 @@ return view.extend({
 
 		var oSrc = s.option(form.Value, 'src_ip', _('Source IP/Name'));
 		oSrc.placeholder = _('e.g. 192.168.1.5 or hostname');
+
+		var oSrcMac = s.option(form.Value, 'src_mac', _('Source MAC'));
+		oSrcMac.placeholder = _('e.g. 00:11:22:33:44:55');
+		data[1].getMACHints().forEach(function(entry) {
+			oSrcMac.value(entry[0], format.fmtMacChoice(entry[0], entry[1]));
+		});
 
 		var oDst = s.option(form.Value, 'dst_ip', _('Destination IP/Name'));
 		oDst.placeholder = _('e.g. 8.8.4.4 or hostname');
@@ -362,6 +382,7 @@ return view.extend({
 
 		var handleSimulate = function() {
 			var srcRaw  = (oSrc.formvalue('sim')  || '').trim();
+			var srcMac  = (oSrcMac.formvalue('sim') || '').trim();
 			var dstRaw  = (oDst.formvalue('sim')  || '').trim();
 			var proto   = oProto.formvalue('sim') || 'all';
 			var srcPort = (oSport.formvalue('sim') || '').trim();
@@ -383,6 +404,12 @@ return view.extend({
 			    !validation.parseIPv4(dstRaw) && !validation.parseIPv6(dstRaw)) {
 				dom.content(resultArea, E('p', { 'class': components.textClass('danger') },
 					components.text(_('Invalid destination IP address') + ': ' + dstRaw)));
+				return;
+			}
+
+			if (srcMac && !stubValidator.apply('macaddr', srcMac)) {
+				dom.content(resultArea, E('p', { 'class': components.textClass('danger') },
+					components.text(_('Invalid source MAC address') + ': ' + srcMac)));
 				return;
 			}
 
@@ -420,6 +447,7 @@ return view.extend({
 
 				var sim = {
 					src_ip:   srcIp,
+					src_mac:  srcMac,
 					dst_ip:   dstIp,
 					proto:    proto,
 					src_port: srcPort,
@@ -496,7 +524,10 @@ return view.extend({
 		};
 
 		return m.render().then(function(mapNode) {
-			/* Give every input and select a uniform width so the fields align. */
+			/* Give every input and select a uniform width so the fields align.
+			   Source MAC is absent deliberately: it renders as a dropdown that
+			   sizes itself to its longest label, and a fixed width truncates
+			   that label rather than holding the width. */
 			[ oSrc, oDst, oMark, oProto, oSport, oDport, oFam ].forEach(function(o) {
 				var w = o.getUIElement('sim');
 				var c = (w && w.node) ? w.node.querySelector('input, select') : null;

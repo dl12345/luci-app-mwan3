@@ -54,6 +54,20 @@ function ipv6Cidr(value, minPrefix, maxPrefix) {
 	return !!(m && validation.parseIPv6(m[1]) && +m[2] >= minPrefix && +m[2] <= maxPrefix);
 }
 
+/* Entries of a comma-separated MAC address option as an array. Accepts the
+   stored string or an already split array, trims each entry and drops empty
+   ones. Entries are folded to upper case, matching the case the host hints
+   use, so two spellings of one address cannot appear as separate items. */
+
+function parseMacList(value) {
+	var list = Array.isArray(value) ? value : String(value != null ? value : '').split(',');
+	return list.map(function(entry) {
+		return String(entry).trim().toUpperCase();
+	}).filter(function(entry) {
+		return entry.length > 0;
+	});
+}
+
 /* True if a name is already used by an interface, member, policy or rule
    section, optionally ignoring the section whose name is exceptName. */
 
@@ -78,5 +92,6 @@ return baseclass.extend({
 	ipFamily: ipFamily,
 	ipAddrOrPrefix: ipAddrOrPrefix,
 	ipv6Cidr: ipv6Cidr,
+	parseMacList: parseMacList,
 	sectionNameInUse: sectionNameInUse,
 });

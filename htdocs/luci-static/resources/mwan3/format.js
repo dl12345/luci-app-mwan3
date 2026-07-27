@@ -1,5 +1,6 @@
 'use strict';
 'require baseclass';
+'require mwan3.validators as validators';
 
 /* Value formatters shared across the status views. */
 
@@ -50,9 +51,29 @@ function fmtAddrList(value) {
 	}));
 }
 
+/* The MAC list goes through the parser that folds entries to the upper case
+   the host hints use. */
+
+function fmtMacList(value) {
+	return summarise(validators.parseMacList(value));
+}
+
+/* Drop-down label for a known host: the MAC address with its name hint. The
+   hint is capped, because the widget sizes itself to the entries it is given
+   and one unusually long hostname would otherwise stretch the control past
+   the width the rest of the list needs. The address is never shortened. */
+
+function fmtMacChoice(mac, hint) {
+	if (!hint) return mac;
+	var h = hint.length > 36 ? hint.substring(0, 35) + '…' : hint;
+	return '%s (%s)'.format(mac, h);
+}
+
 return baseclass.extend({
 	formatDuration: formatDuration,
 	fmtBytes: fmtBytes,
 	fmtAddr: fmtAddr,
 	fmtAddrList: fmtAddrList,
+	fmtMacList: fmtMacList,
+	fmtMacChoice: fmtMacChoice,
 });

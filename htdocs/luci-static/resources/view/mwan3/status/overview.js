@@ -81,6 +81,8 @@ function renderRuleRows(rules) {
 		var dst = format.fmtAddr(format.fmtAddrList(r.dest_ip) || r.ipset, r.dest_port);
 		if (r.proto && r.proto !== 'all') match.push('proto: ' + r.proto);
 		if (src) match.push('src: ' + src);
+		var mac = format.fmtMacList(r.src_mac);
+		if (mac) match.push('mac: ' + mac);
 		if (dst) match.push('dst: ' + dst);
 		if (r.fwmark && r.fwmask) match.push('mark: ' + r.fwmark + '/' + r.fwmask);
 		if (r.sticky === '1') match.push(_('sticky'));
