@@ -8,6 +8,7 @@
 'require validation';
 'require mwan3.components as components';
 'require mwan3.ipmath as ipmath';
+'require mwan3.format as format';
 
 const callMwan3Status = rpc.declare({
 	object: 'mwan3',
@@ -150,9 +151,9 @@ function matchSummary(rule) {
 	var parts = [];
 	if (rule.family === 'ipv4') parts.push('IPv4');
 	else if (rule.family === 'ipv6') parts.push('IPv6');
-	if (rule.src_ip)    parts.push(_('src') + ' ' + rule.src_ip);
+	if (rule.src_ip)    parts.push(_('src') + ' ' + format.fmtAddrList(rule.src_ip));
 	if (rule.ipset_src) parts.push(_('src nftset') + ' ' + rule.ipset_src);
-	if (rule.dest_ip)   parts.push(_('dst') + ' ' + rule.dest_ip);
+	if (rule.dest_ip)   parts.push(_('dst') + ' ' + format.fmtAddrList(rule.dest_ip));
 	if (rule.proto && rule.proto !== 'all') parts.push(_('proto') + ' ' + rule.proto);
 	if (rule.src_port)  parts.push(_('sport') + ' ' + rule.src_port);
 	if (rule.dest_port) parts.push(_('dport') + ' ' + rule.dest_port);

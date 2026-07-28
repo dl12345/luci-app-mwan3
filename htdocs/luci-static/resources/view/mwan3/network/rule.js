@@ -7,6 +7,7 @@
 'require rpc';
 'require mwan3.validators as validators';
 'require mwan3.constants as constants';
+'require mwan3.format as format';
 
 const callNftsetInfo = rpc.declare({
 	object: 'mwan3',
@@ -20,7 +21,7 @@ return view.extend({
 	load: function() {
 		return Promise.all([
 			callNftsetInfo(),
-			uci.load('mwan3')
+			uci.load('mwan3'),
 		]);
 	},
 
@@ -81,11 +82,12 @@ return view.extend({
 			const ip = this.cfgvalue(section_id);
 			const set = uci.get('mwan3', section_id, 'ipset_src');
 			const port = uci.get('mwan3', section_id, 'src_port');
-			const addr = (ip && ip.length > 0) ? ip : (set && set.length > 0) ? set : null;
-			if (addr && port && port.length > 0) return addr + ':' + port;
-			if (addr) return addr;
-			if (port && port.length > 0) return '*:' + port;
-			return '-';
+			const addr = (ip && ip.length > 0) ? format.fmtAddrList(ip) : (set && set.length > 0) ? set : null;
+			const parts = [];
+			if (addr && port && port.length > 0) parts.push(addr + ':' + port);
+			else if (addr) parts.push(addr);
+			else if (port && port.length > 0) parts.push('*:' + port);
+			return parts.length > 0 ? parts.join(' ') : '-';
 		};
 		o.validate = function(section_id, value) {
 			if (!value || value.length === 0)
@@ -120,7 +122,7 @@ return view.extend({
 			const port = uci.get('mwan3', section_id, 'dest_port');
 			const fwmark = uci.get('mwan3', section_id, 'fwmark');
 			const fwmask = uci.get('mwan3', section_id, 'fwmask');
-			const addr = (ip && ip.length > 0) ? ip : (set && set.length > 0) ? set : null;
+			const addr = (ip && ip.length > 0) ? format.fmtAddrList(ip) : (set && set.length > 0) ? set : null;
 			const parts = [];
 			if (addr && port && port.length > 0) parts.push(addr + ':' + port);
 			else if (addr) parts.push(addr);

@@ -31,8 +31,28 @@ function fmtAddr(addr, port) {
 	return null;
 }
 
+/* Compact display form of a list: the first entry followed by a count of the
+   remainder. A comma-joined list is one long token with nothing to break on,
+   which stretches an auto-layout table column and overflows the cell of a
+   fixed-layout one. The complete list stays visible in the rule editing modal.
+   Returns null for an empty list, as fmtAddr does for an empty value. */
+
+function summarise(list) {
+	if (!list.length) return null;
+	return list.length > 1 ? '%s +%d'.format(list[0], list.length - 1) : list[0];
+}
+
+function fmtAddrList(value) {
+	return summarise((value || '').split(',').map(function(a) {
+		return a.trim();
+	}).filter(function(a) {
+		return a.length > 0;
+	}));
+}
+
 return baseclass.extend({
 	formatDuration: formatDuration,
 	fmtBytes: fmtBytes,
 	fmtAddr: fmtAddr,
+	fmtAddrList: fmtAddrList,
 });

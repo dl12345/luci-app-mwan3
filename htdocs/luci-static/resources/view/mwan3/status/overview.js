@@ -77,8 +77,8 @@ function renderRuleRows(rules) {
 	(rules || []).forEach(function(r) {
 		if (r.enabled === '0') return;
 		var match = [];
-		var src = format.fmtAddr(r.src_ip || r.ipset_src, r.src_port);
-		var dst = format.fmtAddr(r.dest_ip || r.ipset, r.dest_port);
+		var src = format.fmtAddr(format.fmtAddrList(r.src_ip) || r.ipset_src, r.src_port);
+		var dst = format.fmtAddr(format.fmtAddrList(r.dest_ip) || r.ipset, r.dest_port);
 		if (r.proto && r.proto !== 'all') match.push('proto: ' + r.proto);
 		if (src) match.push('src: ' + src);
 		if (dst) match.push('dst: ' + dst);
