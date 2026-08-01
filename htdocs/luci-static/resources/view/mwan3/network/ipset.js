@@ -6,8 +6,6 @@
 'require validation';
 'require mwan3.validators as validators';
 
-var stubValidator = validators.stub();
-
 return view.extend({
 	load: function() {
 		return uci.load('mwan3');
@@ -72,7 +70,7 @@ return view.extend({
 		o.validate = function(section_id, value) {
 			if (!value || value.length === 0)
 				return true;
-			if (!stubValidator.apply('ipaddr', value))
+			if (!validators.ipAddrOrPrefix(value))
 				return _('Invalid IP address or prefix');
 			var family = this.map.lookupOption('family', section_id)[0].formvalue(section_id);
 			var is_v6 = !!validation.parseIPv6(value.split('/')[0]);

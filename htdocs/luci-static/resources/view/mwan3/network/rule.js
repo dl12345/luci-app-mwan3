@@ -15,8 +15,6 @@ const callNftsetInfo = rpc.declare({
 	expect: { sets: {} }
 });
 
-const stubValidator = validators.stub();
-
 return view.extend({
 	load: function() {
 		return Promise.all([
@@ -97,7 +95,7 @@ return view.extend({
 			for (var i = 0; i < addrs.length; i++) {
 				if (!addrs[i].length)
 					return _('Empty address in comma-separated list');
-				if (!stubValidator.apply('ipaddr', addrs[i]))
+				if (!validators.ipAddrOrPrefix(addrs[i]))
 					return _('Invalid IP address or prefix: ') + addrs[i];
 				var is_v6 = !!validation.parseIPv6(addrs[i].split('/')[0]);
 				if (family === 'ipv4' && is_v6)
@@ -138,7 +136,7 @@ return view.extend({
 			for (var i = 0; i < addrs.length; i++) {
 				if (!addrs[i].length)
 					return _('Empty address in comma-separated list');
-				if (!stubValidator.apply('ipaddr', addrs[i]))
+				if (!validators.ipAddrOrPrefix(addrs[i]))
 					return _('Invalid IP address or prefix: ') + addrs[i];
 				var is_v6 = !!validation.parseIPv6(addrs[i].split('/')[0]);
 				if (family === 'ipv4' && is_v6)

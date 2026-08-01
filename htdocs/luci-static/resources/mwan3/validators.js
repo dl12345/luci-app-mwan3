@@ -6,8 +6,11 @@
 /* Shared validation helpers for the network configuration views. */
 
 /* Workaround shim: the stock datatype validator overwrites this.value before
-   it reaches a custom validate function, so format checks call this stub
-   directly instead of relying on a plain o.datatype. */
+   it reaches a custom validate function, so format checks call a type
+   function directly instead of relying on a plain o.datatype. Use it only for
+   types the framework publishes no parser for; address checks go through
+   ipAddrOrPrefix() or ipv6Cidr() below. It must never be given list(), which
+   writes to this.field, a member the shim does not provide. */
 
 function stub() {
 	return {
@@ -32,6 +35,25 @@ function ipFamily(ip) {
 	return validation.parseIPv6(first) ? 'ipv6' : 'ipv4';
 }
 
+/* True for an IPv4 or IPv6 address, optionally carrying a prefix length or,
+   for IPv4, a dotted netmask. Accepts what the ipaddr datatype accepts. */
+
+function ipAddrOrPrefix(value) {
+	var m = value.match(/^(\d+\.\d+\.\d+\.\d+)(?:\/(\d+\.\d+\.\d+\.\d+)|\/(\d{1,2}))?$/);
+	if (m && validation.parseIPv4(m[1]) && (m[2] ? validation.parseIPv4(m[2]) : (m[3] ? +m[3] <= 32 : true)))
+		return true;
+	m = value.match(/^([0-9a-fA-F:.]+)(?:\/(\d{1,3}))?$/);
+	return !!(m && validation.parseIPv6(m[1]) && (m[2] ? +m[2] <= 128 : true));
+}
+
+/* True for an IPv6 address carrying a prefix length within the inclusive
+   range minPrefix to maxPrefix. The prefix is mandatory. */
+
+function ipv6Cidr(value, minPrefix, maxPrefix) {
+	var m = value.match(/^([0-9a-fA-F:.]+)\/(\d{1,3})$/);
+	return !!(m && validation.parseIPv6(m[1]) && +m[2] >= minPrefix && +m[2] <= maxPrefix);
+}
+
 /* True if a name is already used by an interface, member, policy or rule
    section, optionally ignoring the section whose name is exceptName. */
 
@@ -54,5 +76,7 @@ function sectionNameInUse(value, exceptName) {
 return baseclass.extend({
 	stub: stub,
 	ipFamily: ipFamily,
+	ipAddrOrPrefix: ipAddrOrPrefix,
+	ipv6Cidr: ipv6Cidr,
 	sectionNameInUse: sectionNameInUse,
 });
