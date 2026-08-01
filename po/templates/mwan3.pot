@@ -1,56 +1,56 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:219
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:235
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:257
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:224
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:240
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:262
 msgid "%d hour"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:214
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:230
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:252
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:219
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:235
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:257
 msgid "%d minute"
 msgstr ""
 
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:220
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:221
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:222
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:223
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:236
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:237
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:238
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:239
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:258
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:259
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:260
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:261
+msgid "%d minutes"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:206
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:213
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:229
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:251
+msgid "%d second"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:208
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:214
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:215
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:216
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:217
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:218
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:230
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:231
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:232
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:233
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:234
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:252
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:253
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:254
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:255
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:256
-msgid "%d minutes"
-msgstr ""
-
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:201
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:208
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:224
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:246
-msgid "%d second"
-msgstr ""
-
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:203
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:209
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:210
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:211
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:212
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:213
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:225
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:226
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:227
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:228
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:229
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:247
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:248
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:249
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:250
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:251
 msgid "%d seconds"
 msgstr ""
 
@@ -124,7 +124,7 @@ msgstr ""
 msgid "Absent"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:107
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:112
 msgid ""
 "Acceptable values: 1-100. This many Tracking IP addresses must respond for "
 "the link to be deemed up"
@@ -195,7 +195,7 @@ msgstr ""
 msgid "At least one interface entry is required"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:63
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:68
 msgid ""
 "Automatically track the next hop peer. Applies only to point to point "
 "connections."
@@ -243,7 +243,7 @@ msgstr ""
 msgid "Check IP rules"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:148
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:153
 msgid "Check link quality"
 msgstr ""
 
@@ -371,7 +371,7 @@ msgstr ""
 msgid "Down"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:275
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:280
 msgid ""
 "Downed interface will be deemed up after this many successful ping tests"
 msgstr ""
@@ -390,11 +390,11 @@ msgstr ""
 msgid "Enable"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:100
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:105
 msgid "Enable ssl tracking"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:46
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:51
 msgid "Enabled"
 msgstr ""
 
@@ -411,7 +411,7 @@ msgstr ""
 msgid "Enables global firewall logging"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:101
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:106
 msgid "Enables https tracking on ssl port 443"
 msgstr ""
 
@@ -453,7 +453,7 @@ msgstr ""
 msgid "Expand"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:50
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:55
 msgid "Expect interface state on up event"
 msgstr ""
 
@@ -461,15 +461,15 @@ msgstr ""
 msgid "Failed to load members"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:221
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:226
 msgid "Failure interval"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:153
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:158
 msgid "Failure latency [ms]"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:166
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:171
 msgid "Failure packet loss [%]"
 msgstr ""
 
@@ -503,11 +503,11 @@ msgstr ""
 msgid "Flush"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:288
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:293
 msgid "Flush conntrack table"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:289
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:294
 msgid ""
 "Flush the entire global conntrack table on selected events. Per-interface "
 "conntrack entries are already flushed automatically on ifdown."
@@ -539,6 +539,10 @@ msgstr ""
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:82
 msgid ""
 "Fwmark rule base (%d) must exceed IIF rule base (%d) + %d max interfaces = %d"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:33
+msgid "General Settings"
 msgstr ""
 
 #: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:75
@@ -613,7 +617,7 @@ msgstr ""
 msgid "IPs / Networks"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:58
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:63
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:64
 msgid "IPv4"
 msgstr ""
@@ -632,7 +636,7 @@ msgstr ""
 msgid "IPv4 only"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:59
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:64
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/ipset.js:65
 msgid "IPv6"
 msgstr ""
@@ -641,8 +645,12 @@ msgstr ""
 msgid "IPv6 Priority order"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:68
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:73
 msgid "IPv6 SNAT"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:34
+msgid "IPv6 Settings"
 msgstr ""
 
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:66
@@ -666,7 +674,7 @@ msgstr ""
 msgid "Info"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:49
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:54
 msgid "Initial state"
 msgstr ""
 
@@ -679,15 +687,15 @@ msgstr ""
 msgid "Interface"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:260
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:265
 msgid "Interface down"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:274
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:279
 msgid "Interface up"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:261
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:266
 msgid "Interface will be deemed down after this many failed ping tests"
 msgstr ""
 
@@ -696,13 +704,13 @@ msgid "Interfaces"
 msgstr ""
 
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:26
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:39
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:44
 msgid ""
 "Interfaces may not share the same name as configured members, policies or "
 "rules."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:56
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:61
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:62
 msgid "Internet Protocol"
 msgstr ""
@@ -733,11 +741,11 @@ msgstr ""
 msgid "Invalid source MAC address"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:238
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:243
 msgid "Keep failure interval"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:239
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:244
 msgid "Keep ping failure interval during failure state"
 msgstr ""
 
@@ -826,7 +834,7 @@ msgstr ""
 msgid "Max Entries"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:135
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:140
 msgid "Max TTL"
 msgstr ""
 
@@ -863,7 +871,7 @@ msgid ""
 "rules."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:296
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:301
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:53
 msgid "Metric"
 msgstr ""
@@ -945,7 +953,7 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:40
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:45
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/member.js:38
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/policy.js:251
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:56
@@ -996,7 +1004,7 @@ msgstr ""
 msgid "No default route"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:304
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:309
 msgid "No interface metric set!"
 msgstr ""
 
@@ -1070,14 +1078,14 @@ msgstr ""
 
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/components.js:137
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/components.js:138
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:53
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:58
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:74
 msgid "Offline"
 msgstr ""
 
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/components.js:134
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/mwan3/components.js:135
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:52
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:57
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/routing.js:73
 msgid "Online"
 msgstr ""
@@ -1102,7 +1110,7 @@ msgstr ""
 msgid "Paused"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:111
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:116
 msgid "Ping count"
 msgstr ""
 
@@ -1110,23 +1118,23 @@ msgstr ""
 msgid "Ping default gateway"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:206
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:211
 msgid "Ping interval"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:222
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:227
 msgid "Ping interval during failure detection"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:244
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:249
 msgid "Ping interval during failure recovering"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:120
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:125
 msgid "Ping size"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:199
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:204
 msgid "Ping timeout"
 msgstr ""
 
@@ -1217,16 +1225,20 @@ msgid ""
 "hotplug interface event on interfaces for which mwan3 is enabled."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:243
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:248
 msgid "Recovery interval"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:176
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:181
 msgid "Recovery latency [ms]"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:189
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:194
 msgid "Recovery packet loss [%]"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:36
+msgid "Reliability Settings"
 msgstr ""
 
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/status/ipsets.js:176
@@ -1413,7 +1425,7 @@ msgstr ""
 msgid "Source port"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:69
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:74
 msgid ""
 "Source-NAT mwan3-rerouted router-originated IPv6 traffic egressing this "
 "interface. Leave blank or set to 0 to disable (default). Set to 1 to SNAT to "
@@ -1526,7 +1538,7 @@ msgid ""
 "configuration."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:297
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:302
 msgid ""
 "This displays the metric assigned to this interface in /etc/config/network"
 msgstr ""
@@ -1535,7 +1547,7 @@ msgstr ""
 msgid "This file is interpreted as a shell script."
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:80
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:85
 msgid ""
 "This hostname or IP address will be pinged to determine if the link is up or "
 "down. Leave blank to assume interface is always online"
@@ -1617,7 +1629,7 @@ msgstr ""
 msgid "Timeout"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:62
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:67
 msgid "Track gateway"
 msgstr ""
 
@@ -1629,15 +1641,19 @@ msgstr ""
 msgid "Tracking"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:79
-msgid "Tracking hostname or IP address"
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:35
+msgid "Tracking Settings"
 msgstr ""
 
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:84
+msgid "Tracking hostname or IP address"
+msgstr ""
+
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:89
 msgid "Tracking method"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:106
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:111
 msgid "Tracking reliability"
 msgstr ""
 
@@ -1766,7 +1782,7 @@ msgstr ""
 msgid "blackhole (drop)"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:292
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:297
 msgid "connected (mwan3)"
 msgstr ""
 
@@ -1788,7 +1804,7 @@ msgstr ""
 msgid "degraded"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:293
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:298
 msgid "disconnected (mwan3)"
 msgstr ""
 
@@ -1837,11 +1853,11 @@ msgstr ""
 msgid "has no members"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:291
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:296
 msgid "ifdown (netifd)"
 msgstr ""
 
-#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:290
+#: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:295
 msgid "ifup (netifd)"
 msgstr ""
 

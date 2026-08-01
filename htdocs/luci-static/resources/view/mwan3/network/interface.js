@@ -30,6 +30,11 @@ return view.extend({
 		s.anonymous = false;
 		s.nodescriptions = true;
 
+		s.tab('general', _('General Settings'));
+		s.tab('ipv6', _('IPv6 Settings'));
+		s.tab('tracking', _('Tracking Settings'));
+		s.tab('reliability', _('Reliability Settings'));
+
 		/* This name length error check can likely be removed when mwan3 migrates to nftables */
 		s.renderSectionAdd = function(extra_class) {
 			var el = form.GridSection.prototype.renderSectionAdd.apply(this, arguments),
@@ -43,29 +48,29 @@ return view.extend({
 			return el;
 		};
 
-		o = s.option(form.Flag, 'enabled', _('Enabled'));
+		o = s.taboption('general', form.Flag, 'enabled', _('Enabled'));
 		o.default = false;
 
-		o = s.option(form.ListValue, 'initial_state', _('Initial state'),
+		o = s.taboption('general', form.ListValue, 'initial_state', _('Initial state'),
 			_('Expect interface state on up event'));
 		o.default = 'online';
 		o.value('online', _('Online'));
 		o.value('offline', _('Offline'));
 		o.modalonly = true;
 
-		o = s.option(form.ListValue, 'family', _('Internet Protocol'));
+		o = s.taboption('general', form.ListValue, 'family', _('Internet Protocol'));
 		o.default = 'ipv4';
 		o.value('ipv4', _('IPv4'));
 		o.value('ipv6', _('IPv6'));
 		o.modalonly = true;
 
-		o = s.option(form.Flag, 'track_gateway', _('Track gateway'),
+		o = s.taboption('tracking', form.Flag, 'track_gateway', _('Track gateway'),
 			_('Automatically track the next hop peer. Applies only to point to point connections.'));
 		o.depends('family', 'ipv4');
 		o.default = '0';
 		o.modalonly = true;
 
-		o = s.option(form.Value, 'snat6', _('IPv6 SNAT'),
+		o = s.taboption('ipv6', form.Value, 'snat6', _('IPv6 SNAT'),
 			_('Source-NAT mwan3-rerouted router-originated IPv6 traffic egressing this interface. ' +
 			  'Leave blank or set to 0 to disable (default). Set to 1 to SNAT to the interface\'s primary global address. ' +
 			  'Set to a literal IPv6 address to SNAT to that address (e.g. NPTv6-style fixed source). ' +
@@ -76,12 +81,12 @@ return view.extend({
 		o.rmempty = true;
 		o.modalonly = true;
 
-		o = s.option(form.DynamicList, 'track_ip', _('Tracking hostname or IP address'),
+		o = s.taboption('tracking', form.DynamicList, 'track_ip', _('Tracking hostname or IP address'),
 			_('This hostname or IP address will be pinged to determine if the link is up or down. Leave blank to assume interface is always online'));
 		o.datatype = 'host';
 		o.modalonly = true;
 
-		o = s.option(form.ListValue, 'track_method', _('Tracking method'));
+		o = s.taboption('tracking', form.ListValue, 'track_method', _('Tracking method'));
 		o.default = 'ping';
 		o.value('ping');
 		if (stats[0].type === 'file') {
@@ -97,18 +102,18 @@ return view.extend({
 			o.value('arping');
 		}
 
-		o = s.option(form.Flag, 'httping_ssl', _('Enable ssl tracking'),
+		o = s.taboption('tracking', form.Flag, 'httping_ssl', _('Enable ssl tracking'),
 			_('Enables https tracking on ssl port 443'));
 		o.depends('track_method', 'httping');
 		o.rmempty = false;
 		o.modalonly = true;
 
-		o = s.option(form.Value, 'reliability', _('Tracking reliability'),
+		o = s.taboption('reliability', form.Value, 'reliability', _('Tracking reliability'),
 			_('Acceptable values: 1-100. This many Tracking IP addresses must respond for the link to be deemed up'));
 		o.datatype = 'range(1, 100)';
 		o.default = '1';
 
-		o = s.option(form.ListValue, 'count', _('Ping count'));
+		o = s.taboption('tracking', form.ListValue, 'count', _('Ping count'));
 		o.default = '1';
 		o.value('1');
 		o.value('2');
@@ -117,7 +122,7 @@ return view.extend({
 		o.value('5');
 		o.modalonly = true;
 
-		o = s.option(form.Value, 'size', _('Ping size'));
+		o = s.taboption('tracking', form.Value, 'size', _('Ping size'));
 		o.default = '56';
 		o.depends('track_method', 'ping');
 		o.value('8');
@@ -132,7 +137,7 @@ return view.extend({
 		o.datatype = 'range(1, 65507)';
 		o.modalonly = true;
 
-		o =s.option(form.Value, 'max_ttl', _('Max TTL'));
+		o =s.taboption('tracking', form.Value, 'max_ttl', _('Max TTL'));
 		o.default = '60';
 		o.depends('track_method', 'ping');
 		o.value('10');
@@ -145,12 +150,12 @@ return view.extend({
 		o.datatype = 'range(1, 255)';
 		o.modalonly = true;
 
-		o = s.option(form.Flag, 'check_quality', _('Check link quality'));
+		o = s.taboption('reliability', form.Flag, 'check_quality', _('Check link quality'));
 		o.depends('track_method', 'ping');
 		o.default = false;
 		o.modalonly = true;
 
-		o = s.option(form.Value, 'failure_latency', _('Failure latency [ms]'));
+		o = s.taboption('reliability', form.Value, 'failure_latency', _('Failure latency [ms]'));
 		o.depends('check_quality', '1');
 		o.default = '1000';
 		o.value('25');
@@ -163,7 +168,7 @@ return view.extend({
 		o.value('300');
 		o.modalonly = true;
 
-		o = s.option(form.Value, 'failure_loss', _('Failure packet loss [%]'));
+		o = s.taboption('reliability', form.Value, 'failure_loss', _('Failure packet loss [%]'));
 		o.depends('check_quality', '1');
 		o.default = '40';
 		o.value('2');
@@ -173,7 +178,7 @@ return view.extend({
 		o.value('25');
 		o.modalonly = true;
 
-		o = s.option(form.Value, 'recovery_latency', _('Recovery latency [ms]'));
+		o = s.taboption('reliability', form.Value, 'recovery_latency', _('Recovery latency [ms]'));
 		o.depends('check_quality', '1');
 		o.default = '500';
 		o.value('25');
@@ -186,7 +191,7 @@ return view.extend({
 		o.value('300');
 		o.modalonly = true;
 
-		o = s.option(form.Value, 'recovery_loss', _('Recovery packet loss [%]'));
+		o = s.taboption('reliability', form.Value, 'recovery_loss', _('Recovery packet loss [%]'));
 		o.depends('check_quality', '1');
 		o.default = '10';
 		o.value('2');
@@ -196,14 +201,14 @@ return view.extend({
 		o.value('25');
 		o.modalonly = true;
 
-		o = s.option(form.ListValue, "timeout", _("Ping timeout"));
+		o = s.taboption('tracking', form.ListValue, "timeout", _("Ping timeout"));
 		o.default = '4';
 		o.value('1', _('%d second').format('1'));
 		for (var i = 2; i <= 10; i++)
 			o.value(String(i), _('%d seconds').format(i));
 		o.modalonly = true;
 
-		o = s.option(form.ListValue, 'interval', _('Ping interval'));
+		o = s.taboption('tracking', form.ListValue, 'interval', _('Ping interval'));
 		o.default = '10';
 		o.value('1', _('%d second').format('1'));
 		o.value('3', _('%d seconds').format('3'));
@@ -218,7 +223,7 @@ return view.extend({
 		o.value('1800', _('%d minutes').format('30'));
 		o.value('3600', _('%d hour').format('1'));
 
-		o = s.option(form.Value, 'failure_interval', _('Failure interval'),
+		o = s.taboption('tracking', form.Value, 'failure_interval', _('Failure interval'),
 			_('Ping interval during failure detection'));
 		o.default = '5';
 		o.value('1', _('%d second').format('1'));
@@ -235,12 +240,12 @@ return view.extend({
 		o.value('3600', _('%d hour').format('1'));
 		o.modalonly = true;
 
-		o = s.option(form.Flag, 'keep_failure_interval', _('Keep failure interval'),
+		o = s.taboption('tracking', form.Flag, 'keep_failure_interval', _('Keep failure interval'),
 			_('Keep ping failure interval during failure state'));
 		o.default = false;
 		o.modalonly = true;
 
-		o = s.option(form.Value, 'recovery_interval', _('Recovery interval'),
+		o = s.taboption('tracking', form.Value, 'recovery_interval', _('Recovery interval'),
 			_('Ping interval during failure recovering'));
 		o.default = '5';
 		o.value('1', _('%d second').format('1'));
@@ -257,7 +262,7 @@ return view.extend({
 		o.value('3600', _('%d hour').format('1'));
 		o.modalonly = true;
 
-		o = s.option(form.ListValue, 'down', _('Interface down'),
+		o = s.taboption('reliability', form.ListValue, 'down', _('Interface down'),
 			_('Interface will be deemed down after this many failed ping tests'));
 		o.default = '5';
 		o.value('1');
@@ -271,7 +276,7 @@ return view.extend({
 		o.value('9');
 		o.value('10');
 
-		o = s.option(form.ListValue, 'up', _('Interface up'),
+		o = s.taboption('reliability', form.ListValue, 'up', _('Interface up'),
 			_('Downed interface will be deemed up after this many successful ping tests'));
 		o.default = "5";
 		o.value('1');
@@ -285,7 +290,7 @@ return view.extend({
 		o.value('9');
 		o.value('10');
 
-		o = s.option(form.DynamicList, 'flush_conntrack', _('Flush conntrack table'),
+		o = s.taboption('general', form.DynamicList, 'flush_conntrack', _('Flush conntrack table'),
 			_('Flush the entire global conntrack table on selected events. Per-interface conntrack entries are already flushed automatically on ifdown.'));
 		o.value('ifup', _('ifup (netifd)'));
 		o.value('ifdown', _('ifdown (netifd)'));
@@ -293,7 +298,7 @@ return view.extend({
 		o.value('disconnected', _('disconnected (mwan3)'));
 		o.modalonly = true;
 
-		o = s.option(form.DummyValue, 'metric', _('Metric'),
+		o = s.taboption('general', form.DummyValue, 'metric', _('Metric'),
 			_('This displays the metric assigned to this interface in /etc/config/network'));
 		o.rawhtml = true;
 		o.cfgvalue = function(s) {
