@@ -104,6 +104,20 @@ return view.extend({
 			return true;
 		};
 
+		o = s.option(form.Flag, 'ipv6_routing', _('IPv6 multi-WAN routing'),
+			_('Route forwarded IPv6 traffic by its source prefix, so a device egresses the WAN whose delegated prefix it is addressed from. Every other IPv6 multi-WAN option requires this.'));
+		o.enabled = 'on';
+		o.disabled = 'off';
+		o.default = 'off';
+
+		o = s.option(form.ListValue, 'ipv6_failover_type', _('IPv6 failover type'),
+			_('Action taken for the traffic of an IPv6 WAN that tracking has declared down. Translate carries that traffic over a surviving WAN, translating its source addresses so they are valid there. Deprecate instead marks the failed WAN\'s prefix deprecated in router advertisements, so devices prefer a surviving prefix and leave natively with no translation at all.'));
+		o.default = 'off';
+		o.value('off', _('Off'));
+		o.value('translate', _('Translate'));
+		o.value('deprecate', _('Deprecate'));
+		o.depends('ipv6_routing', 'on');
+
 		o = s.option(form.Flag, 'logging', _('Logging'),
 			_('Enables global firewall logging'));
 

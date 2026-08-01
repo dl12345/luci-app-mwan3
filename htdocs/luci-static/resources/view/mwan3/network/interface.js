@@ -4,6 +4,7 @@
 'require view';
 'require uci';
 'require ui';
+'require mwan3.ipmath as ipmath';
 'require mwan3.validators as validators';
 
 return view.extend({
@@ -46,6 +47,66 @@ return view.extend({
 				return true;
 			}, 'blur', 'keyup');
 			return el;
+		};
+
+		/* The 1:1 translation options are gated on the globals ipv6_routing
+		   option, which no dependency can reach from this view, and one of them
+		   is a family of options named after the other interface sections, so
+		   they are built per row here rather than declared statically. uci.get
+		   reads staged values, so turning the global on and saving reveals them
+		   without an apply. With it off they are never declared, so a modal
+		   save cannot strip a stored translation configuration. */
+
+		s.addModalOptions = function(modalSection, section_id) {
+			if (uci.get('mwan3', 'globals', 'ipv6_routing') !== 'on')
+				return;
+
+			var o = modalSection.taboption('ipv6', form.Value, 'ipv6_translate_pool',
+				_('1:1 translation pool'),
+				_('Carry the traffic of the other IPv6 WANs on this interface by 1:1 prefix translation, giving each carried LAN segment its own stable target prefix. Enter auto to carve the targets out of this interface\'s own delegation, or a prefix routed to this interface to carve out of that instead. Leave blank to carry foreign traffic by masquerade.'));
+			o.depends('family', 'ipv6');
+			o.value('auto');
+			o.validate = function(section_id, value) {
+				if (!value || value.length === 0 || value === 'auto')
+					return true;
+				if (!validators.ipv6Cidr(value, 1, 64))
+					return _('Enter auto or an IPv6 prefix with a length between /1 and /64');
+				return true;
+			};
+
+			uci.sections('mwan3', 'interface').forEach(function(section) {
+				var name = section['.name'];
+
+				if (name === section_id || section.family !== 'ipv6')
+					return;
+
+				o = modalSection.taboption('ipv6', form.DynamicList, 'ipv6_translate_prefix_' + name,
+					_('Translation override for %s').format(name),
+					_('Map the delegated prefixes of %s onto target prefixes of your own choosing, preserving their internal subnet layout and taking precedence over the pool carve for that WAN. Entries pair positionally with its delegated prefixes, and each target must be at least as large as the delegation it maps.').format(name));
+				o.depends('family', 'ipv6');
+				o.validate = function(section_id, value) {
+					if (!value || value.length === 0)
+						return true;
+					if (!validators.ipv6Cidr(value, 1, 64))
+						return _('Enter an IPv6 prefix with a length between /1 and /64');
+					return true;
+				};
+			});
+
+			o = modalSection.taboption('ipv6', form.DynamicList, 'ipv6_translate_ula',
+				_('ULA segments to carry'),
+				_('Carry ULA addressed LAN segments by 1:1 translation as well, which the delegated prefixes never cover. Enter auto to carry every ULA segment the router assigns or has delegated downstream, or a ULA prefix to name one directly, such as a segment behind a downstream router.'));
+			o.depends({ family: 'ipv6', ipv6_translate_pool: /^./ });
+			o.value('auto');
+			o.validate = function(section_id, value) {
+				if (!value || value.length === 0 || value === 'auto')
+					return true;
+				if (!validators.ipv6Cidr(value, 1, 64))
+					return _('Enter auto or an IPv6 prefix with a length between /1 and /64');
+				if (!ipmath.ipv6CidrContains('fc00::/7', value))
+					return _('A carried ULA segment must lie inside fc00::/7');
+				return true;
+			};
 		};
 
 		o = s.taboption('general', form.Flag, 'enabled', _('Enabled'));
