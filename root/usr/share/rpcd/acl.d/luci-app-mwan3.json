@@ -82,7 +82,7 @@
 			},
 			"ubus": {
 				"file": [
-					"list"
+					"stat"
 				],
 				"mwan3": [
 					"status",
