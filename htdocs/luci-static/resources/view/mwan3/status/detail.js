@@ -70,7 +70,15 @@ function buildTrackRows(d, trackIps) {
 			loss    = [ Math.round(Number(t.packetloss) || 0), E('span', {}, t.packetloss + '%') ];
 		}
 
-		return [ components.text(t.ip), [ statusRaw, statusEl ], latency, loss ];
+		/* Wrap the address in an element carrying data-value: ui.Table treats
+		   any node with a nodeType as an element and calls hasAttribute() on
+		   it, which a bare text node does not implement. The attribute also
+		   gives the sorter the raw address to derive an ordered key from. */
+
+		return [
+			E('span', { 'data-value': t.ip }, components.text(t.ip)),
+			[ statusRaw, statusEl ], latency, loss
+		];
 	});
 }
 
