@@ -76,6 +76,28 @@ return view.extend({
 		o.rmempty = true;
 		o.modalonly = true;
 
+		o = s.option(form.Value, 'netmap6', _('IPv6 prefix translation'),
+			_('Rewrite the source prefix of mwan3-rerouted forwarded IPv6 traffic egressing this ' +
+			  'interface, preserving the interface identifier (nftables NETMAP). Applies to LAN hosts ' +
+			  'whose address comes from another WAN\'s delegated prefix, which upstream BCP38/uRPF ' +
+			  'would otherwise drop. Router-originated traffic is covered by IPv6 SNAT above, not here. ' +
+			  'Pick the delegated prefix when the upstream assigns one over DHCPv6-PD and it may change; ' +
+			  'type a literal prefix when the prefix is static or comes from somewhere netifd does not ' +
+			  'report, such as a tunnel broker or a ULA range.'));
+		o.value('0', _('Disabled'));
+		o.value('1', _('Follow this interface\'s delegated prefix'));
+		o.depends('family', 'ipv6');
+		o.placeholder = _('Disabled');
+		o.rmempty = true;
+		o.modalonly = true;
+		o.validate = function(section_id, value) {
+			if (!value || value.length === 0 || value === '0' || value === '1')
+				return true;
+			if (!validators.ipv6Cidr(value, 1, 128))
+				return _('Expected an IPv6 prefix such as 2001:db8::/64, or one of the listed choices');
+			return true;
+		};
+
 		o = s.option(form.DynamicList, 'track_ip', _('Tracking hostname or IP address'),
 			_('This hostname or IP address will be pinged to determine if the link is up or down. Leave blank to assume interface is always online'));
 		o.datatype = 'host';
