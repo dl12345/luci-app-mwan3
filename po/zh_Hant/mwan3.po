@@ -220,6 +220,11 @@ msgstr "執行"
 msgid "Expect interface state on up event"
 msgstr "在 up 事件發生時的預期介面狀態"
 
+#: htdocs/luci-static/resources/view/mwan3/network/interface.js:97
+msgid ""
+"Expected an IPv6 prefix such as 2001:db8::/64, or one of the listed choices"
+msgstr "應為 IPv6 前綴（例如 2001:db8::/64），或列出的選項之一"
+
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:213
 msgid "Failure interval"
 msgstr "故障偵測間隔"
@@ -247,6 +252,10 @@ msgstr "重新整理連線追蹤表"
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:281
 msgid "Flush global firewall conntrack table on interface events"
 msgstr "在介面事件觸發時重新整理全域防火牆連線追蹤表"
+
+#: htdocs/luci-static/resources/view/mwan3/network/interface.js:88
+msgid "Follow this interface's delegated prefix"
+msgstr "跟隨此介面的委派前綴"
 
 #: applications/luci-app-mwan3/root/usr/share/luci/menu.d/luci-app-mwan3.json:59
 msgid "Globals"
@@ -291,6 +300,10 @@ msgstr "IPv6"
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/rule.js:63
 msgid "IPv6 only"
 msgstr "僅 IPv6"
+
+#: htdocs/luci-static/resources/view/mwan3/network/interface.js:79
+msgid "IPv6 prefix translation"
+msgstr "IPv6 前綴轉換"
 
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:31
 msgid "Info"
@@ -617,6 +630,23 @@ msgstr "恢復延遲 [ms]"
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/interface.js:181
 msgid "Recovery packet loss [%]"
 msgstr "恢復封包遺失 [%]"
+
+#: htdocs/luci-static/resources/view/mwan3/network/interface.js:80
+msgid ""
+"Rewrite the source prefix of mwan3-rerouted forwarded IPv6 traffic egressing "
+"this interface, preserving the interface identifier (nftables NETMAP). "
+"Applies to LAN hosts whose address comes from another WAN's delegated "
+"prefix, which upstream BCP38/uRPF would otherwise drop. Router-originated "
+"traffic is covered by IPv6 SNAT above, not here. Pick the delegated prefix "
+"when the upstream assigns one over DHCPv6-PD and it may change; type a "
+"literal prefix when the prefix is static or comes from somewhere netifd does "
+"not report, such as a tunnel broker or a ULA range."
+msgstr ""
+"改寫由 mwan3 重新路由、從此介面送出的轉發 IPv6 流量的來源前綴，並保留介面識別"
+"碼（nftables NETMAP）。適用於位址來自另一條 WAN 委派前綴的 LAN 主機——這類流量"
+"會被上游的 BCP38/uRPF 丟棄。路由器自身送出的流量由上方的 IPv6 SNAT 處理，不在"
+"此列。上游透過 DHCPv6-PD 下發且前綴可能變動時，請選擇委派前綴；前綴固定、或來"
+"自 netifd 無法回報的位置（例如隧道代理或 ULA 範圍）時，請直接填寫具體前綴。"
 
 #: applications/luci-app-mwan3/htdocs/luci-static/resources/view/mwan3/network/globals.js:39
 msgid "Routing table %d"
