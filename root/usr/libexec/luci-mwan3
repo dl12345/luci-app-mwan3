@@ -101,9 +101,10 @@ diag_rules() {
 		printf("IP rules for %s (%s), table %d:\n", name, d.family || "unknown", d.table.id);
 		for (let key in ["iif_rule", "fwmark_rule", "unreach_rule", "src_rule"]) {
 			const r = d[key];
-			if (r == null) { printf("  %s: not applicable / not reported\n", key); continue; }
-			printf("  %s (priority %d): %s\n", key, r.priority, r.present ? "present" : "absent");
+			if (r == null) continue;
+			printf("  %s (priority %d): %s\n", key, r.priority, r.present == null ? "not checked" : r.present ? "present" : "absent");
 			for (let address in r.addresses || []) printf("    from %s lookup %d\n", address, d.table.id);
+			for (let address in r.missing_addresses || []) printf("    MISSING source rule for %s\n", address);
 		}
 		for (let r in d.additional_rules || []) printf("  observed: %J\n", r);
 	' "$iface"
