@@ -88,101 +88,41 @@ iface_number() {
 }
 
 diag_rules() {
-	local iface="$1"
-
-	local number=0
-	local iif_base fwmark_base unreachable_base
-	local iif_prio fwmark_prio unreachable_prio
-	local iif_rule iif_result
-	local fwmark_rule fwmark_result
-	local unreachable_rule unreachable_result
-	local found=0 missing=0
-
-	config_load mwan3
-	config_foreach iface_number 'interface' "$iface"
-
-	[ "$ID" = "0" ] && {
-		echo "Unable to get mwan3 interface number for \"$iface\"."
-		exit 2
-	}
-
-	config_get iif_base globals iif_rule_base "$IIF_RULE_BASE_DEFAULT"
-	config_get fwmark_base globals fwmark_rule_base "$FWMARK_RULE_BASE_DEFAULT"
-	config_get unreachable_base globals unreachable_rule_base "$UNREACHABLE_RULE_BASE_DEFAULT"
-
-	iif_prio=$((iif_base + ID))
-	fwmark_prio=$((fwmark_base + ID))
-	unreachable_prio=$((unreachable_base + ID))
-
-	iif_rule="$(ip rule | grep "^${iif_prio}:")"
-	iif_result="$?"
-
-	fwmark_rule="$(ip rule | grep "^${fwmark_prio}:")"
-	fwmark_result="$?"
-
-	unreachable_rule="$(ip rule | grep "^${unreachable_prio}:")"
-	unreachable_result="$?"
-
-	echo "IP rules for interface \"$iface\" (index $ID):"
-	echo ""
-
-	if [ "$iif_result" = 0 ]; then
-		echo "  iif rule (priority $iif_prio): found"
-		echo "    $iif_rule"
-		found=$((found + 1))
-	else
-		echo "  iif rule (priority $iif_prio): missing"
-		missing=$((missing + 1))
-	fi
-
-	if [ "$fwmark_result" = 0 ]; then
-		echo "  fwmark rule (priority $fwmark_prio): found"
-		echo "    $fwmark_rule"
-		found=$((found + 1))
-	else
-		echo "  fwmark rule (priority $fwmark_prio): missing"
-		missing=$((missing + 1))
-	fi
-
-	if [ "$unreachable_result" = 0 ]; then
-		echo "  unreachable rule (priority $unreachable_prio): found"
-		echo "    $unreachable_rule"
-		found=$((found + 1))
-	else
-		echo "  unreachable rule (priority $unreachable_prio): missing"
-		missing=$((missing + 1))
-	fi
-
-	echo ""
-	if [ "$missing" = 0 ]; then
-		echo "All 3 IP rules for interface \"$iface\" found."
-	else
-		echo "$found of 3 IP rules for interface \"$iface\" found, $missing missing."
-	fi
+	# Use the same diagnostic as the status page instead of independently
+	# testing three IPv4 priorities for every interface, including IPv6.
+	local iface="$1" report
+	report="$(ubus call mwan3 routing_health)" || return 1
+	printf '%s\n' "$report" | ucode -e '
+		import { readfile } from "fs";
+		const report = json(readfile("/dev/stdin"));
+		const name = ARGV[0];
+		const d = report.interfaces[name];
+		if (!d) die("Unknown mwan3 interface");
+		printf("IP rules for %s (%s), table %d:\n", name, d.family || "unknown", d.table.id);
+		for (let key in ["iif_rule", "fwmark_rule", "unreach_rule", "src_rule"]) {
+			const r = d[key];
+			if (r == null) continue;
+			printf("  %s (priority %d): %s\n", key, r.priority, r.present == null ? "not checked" : r.present ? "present" : "absent");
+			for (let address in r.addresses || []) printf("    from %s lookup %d\n", address, d.table.id);
+			for (let address in r.missing_addresses || []) printf("    MISSING source rule for %s\n", address);
+		}
+		for (let r in d.additional_rules || []) printf("  observed: %J\n", r);
+	' "$iface"
 }
 
 diag_routes() {
-	local iface="$1"
-
-	local table table_result
-
+	local iface="$1" number=0 family
 	config_load mwan3
 	config_foreach iface_number 'interface' "$iface"
-
-	[ "$ID" = "0" ] && {
-		echo "Unable to get mwan3 interface number for \"$iface\"."
-		exit 2
-	}
-
-	table="$(ip route list table $ID)"
-	table_result="$?"
-
-	if [ "$table_result" = 0 ]; then
-		echo "Routing table \"$ID\" for interface \"$iface\" found"
-		echo "$table"
-	else
-		echo "Routing table \"$ID\" for interface \"$iface\" not found"
-	fi
+	[ "$ID" != "0" ] || { echo "Unknown mwan3 interface"; return 2; }
+	config_get family "$iface" family ipv4
+	case "$family" in
+		ipv4) family=4 ;;
+		ipv6) family=6 ;;
+		*) echo "Invalid interface protocol family"; return 2 ;;
+	esac
+	echo "IPv$family routing table $ID for interface $iface:"
+	ip -"$family" route list table "$ID"
 }
 
 diag_cmd() {
